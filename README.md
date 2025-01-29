@@ -1,2 +1,2 @@
 # SSMA
-Summer school in multivariate analysis
+This repository will soon contain content for the summer school in (model-based) multivariate analysis.
