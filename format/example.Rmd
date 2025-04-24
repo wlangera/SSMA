@@ -1,0 +1,99 @@
+---
+title: "My awesome title"
+institute: "Terribly long department name with way too many words"
+author: "Incredible scientist"
+output: 
+  beamer_presentation:
+    toc: false
+    slide_level: 2
+    latex_engine: xelatex
+    includes:
+      in_header: header.tex
+urlcolor: orange
+editor_options: 
+  chunk_output_type: console
+header-includes:
+  - \usepackage{booktabs}
+  - \usepackage{longtable}
+  - \usepackage{multicol}
+  - \usepackage{hyperref}
+  - \newcommand{\highlight}[2]{\colorbox{#1!17}{$\vphantom{(^\top}#2$}}
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+
+default_source_hook <- knit_hooks$get('source')
+default_output_hook <- knit_hooks$get('output')
+
+knit_hooks$set(
+  source = function(x, options) {
+    paste0(
+      "\n::: {.codebox data-latex=\"\"}\n\n",
+      default_source_hook(x, options),
+      "\n\n:::\n\n")
+  }
+)
+
+knit_hooks$set(
+  output = function(x, options) {
+    paste0(
+      "\n::: {.codebox data-latex=\"\"}\n\n",
+      default_output_hook(x, options),
+      "\n\n:::\n\n")
+  }
+)
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# This is a slide
+
+\columnsbegin
+\column{0.5\textwidth}
+
+This is a column
+
+\column{0.5\textwidth}
+ 
+ This is another column
+\columnsend
+
+# Equation format
+
+- Matrices in uppercase and bold
+- Vectors in lowercase and bold
+- Scalars lowercase and unbolded
+- Parenthesis order [\{()\}]
+
+# Equation format
+
+\begin{equation}
+\eta_{ij} = \beta_{0j} + \textbf{u}_i^\top\symbf{\gamma}
+\end{equation}
+
+$\textbf{u}_i$ the score of site $i = 1\ldots n$ and $\symbf{\gamma}_j$ the loading for species $j = 1\ldots m$
+
+or
+
+\begin{equation}
+\symbf{\eta} = \textbf{1}^\top\symbf{\beta}_0 + \textbf{U}\symbf{\Gamma}^\top
+\end{equation}
+
+where $\textbf{U}$ is a $n \times d$ matrix of latent variables and $\symbf{\Gamma}$ is a $m \times d$ matrix of loadings.
+
+\footnotesize note that lowercase bolded $\eta$ an exception to the aforementioned format
+
+# Latent variables
+
+- $\textbf{u}_i = \symbf{\epsilon}_i$ is an unconstrained or residual LV
+- $\textbf{u}_i = \textbf{B}^\top\textbf{x}_i^{lv}$ is a constrained LV
+- $\textbf{u}_i = \textbf{B}^\top\textbf{x}_i +  \symbf{\epsilon}_i$ is an informed LV
+
+# Design matrices
+
+- $\textbf{X}$ for `formula`
+- $\textbf{X}^{lv}$ for `lv.formula`
+- $\textbf{X}^{r}$ for `row.eff`
+
+and similarly with $\textbf{Z}$ for random effect design matrices.
