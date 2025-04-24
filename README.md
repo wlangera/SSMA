@@ -43,68 +43,64 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 # Detailed schedule
 |   Day   |Time         |Subject                                                         |Lecturer|
 |---------|-------------|:---------------------------------------------------------------|:-------|
-|Monday   |09:00 - 09:30| Welcome, introduction, getting started                         |Bert    |
-|         |09:30 - 10:15| Recap of Basic statistical concepts                            |        |
-|         |10:15 - 10:45| Break                                                          |        |
-|         |10:45 - 11:45| Practical 1: Sampling variation and simulation                 |        |
-|         |11:45 - 12:30| Recap of Generalised Linear Models                             |        |
-|         |12:30 - 13:30| Lunch                                                          |        |
-|         |13:30 - 14:15| Practical 2: Fitting GLMs                                      |        |
-|         |14:15 - 15:00| Multispecies GLMs                                              |        |
-|         |15:00 - 15:30| Break                                                          |        |
-|         |15:30 - 16:30| Practical 3: Fitting multispecies GLMs                         |        |
-|         |16:30 - 17:15| Introduction to the gllvm R-package                            |Jenni   |
-|         |             |                                                                |        |  
-|         |             |                                                                |        |
-|         |19:00 - 20:00| Icebreaker                                                     |        |
+|Monday   |<sub>09:00 - 09:30</sub>| Welcome, introduction, getting started              |Bert    |
+|         |<sub>09:30 - 10:15</sub>| Recap of Basic statistical concepts                 |        |
+|         |<sub>10:15 - 10:45</sub>| ☕ Break                                             |        |
+|         |<sub>10:45 - 11:45</sub>| Practical 1: Sampling variation and simulation      |        |
+|         |<sub>11:45 - 12:30</sub>| Recap of Generalised Linear Models                  |        |
+|         |<sub>12:30 - 13:30</sub>| 🍽 Lunch                                            |        |
+|         |<sub>13:30 - 14:15</sub>| Practical 2: Fitting GLMs                           |        |
+|         |<sub>14:15 - 15:00</sub>| Multispecies GLMs                                   |        |
+|         |<sub>15:00 - 15:30</sub>| ☕ Break                                             |        |
+|         |<sub>15:30 - 16:30</sub>| Practical 3: Fitting multispecies GLMs              |        |
+|         |<sub>16:30 - 17:15</sub>| Introduction to the gllvm R-package                 |Jenni   |
+|         |             |          |                                                     |        |
+|         |<sub>19:00 - 20:00</sub>| 🎉 Icebreaker                                       |        |
 |---------|-------------|----------------------------------------------------------------|--------|
-|Tuesday  |09:00 - 09:45| Multispecies random effects models                             |Pekka   |
-|         |09:45 - 10:45| Practical 4: Fitting multispecies GLMMs                        |        |
-|         |10:45 - 11:15| Break                                                          |        |
-|         |11:15 - 12:00| Joint Species Distribution Models                              |        |
-|         |12:00 - 13:00| Lunch                                                          |        |
-|         |13:00 - 14:00| Practical 5: Fitting JSDM                                      |        |
-|         |14:00 - 14:45| Accommodating spatial or temporal autocorrelation              |Francis |
-|         |14:45 - 15:15| Break                                                          |Jenni   |
-|         |15:15 - 16:15| Practical 6: Spatial or temporal JSDM                          |Pekka   |
-|         |16:15 - 17:00| Phylogenetic GLMM/JSDM                                         |Bert    |
-|         |             |                                                                |        |
-|         |             |                                                                |        |
-|         |19:00 - 19:45| Random canonical coefficients                                  |        |
-|         |19:45 - 20:30| Practical 12: Random canonical coefficients                    |        |<!--correlated LVs ordination?-->
+|Tuesday  |<sub>09:00 - 09:45</sub>| Multispecies random effects models                  |Pekka   |
+|         |<sub>09:45 - 10:45</sub>| Practical 4: Fitting multispecies GLMMs             |        |
+|         |<sub>10:45 - 11:15</sub>| ☕ Break                                             |        |
+|         |<sub>11:15 - 12:00</sub>| Joint Species Distribution Models                   |        |
+|         |<sub>12:00 - 13:00</sub>| 🍽 Lunch                                            |        |
+|         |<sub>13:00 - 14:00</sub>| Practical 5: Fitting JSDM                           |        |
+|         |<sub>14:00 - 14:45</sub>| Accommodating spatial or temporal autocorrelation   |Francis |
+|         |<sub>14:45 - 15:15</sub>| ☕ Break                                             |Jenni   |
+|         |<sub>15:15 - 16:15</sub>| Practical 6: Spatial or temporal JSDM               |Pekka   |
+|         |<sub>16:15 - 17:00</sub>| Phylogenetic GLMM/JSDM                              |Bert    |
+|         |             |          |                                                     |        |
+|         |<sub>19:00 - 19:45</sub>| Random canonical coefficients                       |        |
+|         |<sub>19:45 - 20:30</sub>| Practical 12: Random canonical coefficients         |        |
 |---------|-------------|----------------------------------------------------------------|--------|
-|Wednesday|09:00 - 09:45| Background of ordination methods                               |Bert    |
-|         |09:45 - 10:45| Practical 8: Model-based unconstrained and residual ordination |        |
-|         |10:45 - 11:15| Break                                                          |        |
-|         |11:15 - 12:00| Conditioning and accommodating nested designs                  |        |
-|         |12:00 - 13:00| Lunch                                                          |        |
-|         |13:00 - 14:00| Practical 9: Conditioning                                      |        |
-|         |14:00 - 14:45| Bringing covariates into the ordination                        |        |
-|         |14:45 - 15:15| Break                                                          |        |
-|         |15:15 - 16:15| Practical 10: Constrained and concurrent ordination            |        |
-|         |16:15 - 17:00| Unimodal/quadratic ordination                                  |        |
-|         |             |                                                                |        |
-|         |             |                                                                |        |
-|         |19:00 - 20:00| Practical 11: Unimodal responses                               |        |
-|         |20:00 - 21:00| Discussion                                                     |        |
+|Wednesday|<sub>09:00 - 09:45</sub>| Background of ordination methods                    |Bert    |
+|         |<sub>09:45 - 10:45</sub>| Practical 8: Model-based unconstrained/residual ordination |        |
+|         |<sub>10:45 - 11:15</sub>| ☕ Break                                             |        |
+|         |<sub>11:15 - 12:00</sub>| Conditioning and accommodating nested designs       |        |
+|         |<sub>12:00 - 13:00</sub>| 🍽 Lunch                                            |        |
+|         |<sub>13:00 - 14:00</sub>| Practical 9: Conditioning                           |        |
+|         |<sub>14:00 - 14:45</sub>| Bringing covariates into the ordination             |        |
+|         |<sub>14:45 - 15:15</sub>| ☕ Break                                             |        |
+|         |<sub>15:15 - 16:15</sub>| Practical 10: Constrained and concurrent ordination |        |
+|         |<sub>16:15 - 17:00</sub>| Unimodal/quadratic ordination                       |        |
+|         |             |          |                                                     |        |
+|         |<sub>19:00 - 20:00</sub>| Practical 11: Unimodal responses                    |        |
+|         |<sub>20:00 - 21:00</sub>| Discussion                                          |        |
 |---------|-------------|----------------------------------------------------------------|--------|
-|Thursday |08:00 - 08:45| GLLVMs from A-Z                                                |Audun   |
-|         |08:45 - 12:30| Participant presentations                                      |        |
-|         |12:30 - 13:15| Lunch                                                          |        |
-|         |13:15 - 17:00| Excursion                                                      |        |
-|         |             |                                                                |        |
-|         |             |                                                                |        |
-|         |19:00 - 20:00| Article discussion                                             |        |
-|         |20:00 - 21:00| Reanalysis in groups                                           |        |
+|Thursday |<sub>08:00 - 08:45</sub>| GLLVMs from A-Z                                     |Audun   |
+|         |<sub>08:45 - 12:30</sub>| 🎤 Participant presentations                        |        |
+|         |<sub>12:30 - 13:15</sub>| 🍽 Lunch                                            |        |
+|         |<sub>13:15 - 17:00</sub>| 🚶 Excursion                                        |        |
+|         |             |          |                                                     |        |
+|         |<sub>19:00 - 20:00</sub>| Article discussion                                  |        |
+|         |<sub>20:00 - 21:00</sub>| Reanalysis in groups                                |        |
 |---------|-------------|----------------------------------------------------------------|--------|
-|Friday   |08:45 - 09:00| Wrap-up                                                        |Bert    |
-|         |09:00 - 09:45| Concepts in model-based clustering                             |Francis |
-|         |09:45 - 10:30| Other packages for (model-based) multivariate analysis         |        |
-|         |10:30 - 11:30| Practical 11: Comparing ordinations                            |        |
-|         |11:30 - 12:30| Early lunch                                                    |        |
-|         |12:30 - 13:30| Opportunity for questions and elaboration                      |        |
-|         |13:30 - 16:00| (Supervised) analysis of own data                              |        |
-|---------|-------------|----------------------------------------------------------------|--------|
+|Friday   |<sub>08:45 - 09:00</sub>| Wrap-up                                             |Bert    |
+|         |<sub>09:00 - 09:45</sub>| Concepts in model-based clustering                  |Francis |
+|         |<sub>09:45 - 10:30</sub>| Other packages for (model-based) multivariate analysis|        |
+|         |<sub>10:30 - 11:30</sub>| Practical 11: Comparing ordinations                 |        |
+|         |<sub>11:30 - 12:30</sub>| 🍽 Early lunch                                      |        |
+|         |<sub>12:30 - 13:30</sub>| Opportunity for questions and elaboration           |        |
+|         |<sub>13:30 - 16:00</sub>| (Supervised) analysis of own data                   |        |
+
 
 
 <!-- auxiliary topics 
