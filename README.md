@@ -53,14 +53,14 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 |         |<sub>14:15 - 15:00</sub>| Multispecies GLMs                                   |        |
 |         |<sub>15:00 - 15:30</sub>| ☕ Break                                             |        |
 |         |<sub>15:30 - 16:30</sub>| Practical 3: Fitting multispecies GLMs              |        |
-|         |<sub>16:30 - 17:15</sub>| Introduction to the gllvm R-package                 |Jenni   |
+|         |<sub>16:30 - 17:15</sub>| Introduction to the gllvm R-package                 |Pekka   |
 |         |             |          |                                                     |        |
 |         |<sub>19:00 - 20:00</sub>| 🎉 Icebreaker                                       |        |
 |---------|-------------|----------------------------------------------------------------|--------|
-|Tuesday  |<sub>09:00 - 09:45</sub>| Multispecies random effects models                  |Pekka   |
+|Tuesday  |<sub>09:00 - 09:45</sub>| Multispecies random effects models                  |Jenni   |
 |         |<sub>09:45 - 10:45</sub>| Practical 4: Fitting multispecies GLMMs             |        |
 |         |<sub>10:45 - 11:15</sub>| ☕ Break                                             |        |
-|         |<sub>11:15 - 12:00</sub>| Joint Species Distribution Models                   |        |
+|         |<sub>11:15 - 12:00</sub>| Joint Species Distribution Models                   |Jenni/Pekka|
 |         |<sub>12:00 - 13:00</sub>| 🍽 Lunch                                            |        |
 |         |<sub>13:00 - 14:00</sub>| Practical 5: Fitting JSDM                           |        |
 |         |<sub>14:00 - 14:45</sub>| Accommodating spatial or temporal autocorrelation   |Francis |
