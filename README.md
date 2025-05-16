@@ -68,8 +68,7 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 |         |<sub>15:15 - 16:15</sub>| Practical 6: Spatial or temporal JSDMs              |Pekka   |
 |         |<sub>16:15 - 17:00</sub>| Phylogenetic GLMM/JSDM                              |Bert    |
 |         |             |          |                                                     |        |
-|         |<sub>19:00 - 19:45</sub>| Random canonical coefficients                       |        |
-|         |<sub>19:45 - 20:30</sub>| Practical 12: Random canonical coefficients         |        |
+|         |<sub>19:00 - 20:00</sub>| Practical 12: Phylogenetic model                    |        |
 |---------|-------------|----------------------------------------------------------------|--------|
 |Wednesday|<sub>09:00 - 09:45</sub>| Background to ordination methods                    |Bert    |
 |         |<sub>09:45 - 10:45</sub>| Practical 8: Model-based unconstrained/residual ordination |        |
@@ -83,15 +82,13 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 |         |<sub>16:15 - 17:00</sub>| Unimodal/quadratic ordination                       |        |
 |         |             |          |                                                     |        |
 |         |<sub>19:00 - 20:00</sub>| Practical 11: Unimodal responses                    |        |
-|         |<sub>20:00 - 21:00</sub>| Discussion                                          |        |
 |---------|-------------|----------------------------------------------------------------|--------|
-|Thursday |<sub>08:00 - 08:45</sub>| GLLVMs from A-Z                                     |Audun   |
-|         |<sub>08:45 - 12:30</sub>| 🎤 Participant presentations                        |        |
+|Thursday |<sub>09:00 - 09:45</sub>| GLLVMs from A-Z                                     |Audun   |
+|         |<sub>09:45 - 12:30</sub>| 🎤 Participant presentations                        |        |
 |         |<sub>12:30 - 13:15</sub>| 🍽 Lunch                                            |        |
 |         |<sub>13:15 - 17:00</sub>| 🚶 Excursion                                        |        |
 |         |             |          |                                                     |        |
-|         |<sub>19:00 - 20:00</sub>| Article discussion                                  |        |
-|         |<sub>20:00 - 21:00</sub>| Reanalysis in groups                                |        |
+|         |<sub>19:00 - 20:00</sub>| Article reanalysis in groups                        |        |
 |---------|-------------|----------------------------------------------------------------|--------|
 |Friday   |<sub>08:45 - 09:00</sub>| Wrap-up                                             |Bert    |
 |         |<sub>09:00 - 09:45</sub>| Concepts in model-based clustering                  |Francis |
@@ -107,6 +104,6 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 a) How to choose an ordination
 b) Cross-validation and prediction
 c) Similarity of JSDMs, ordination, and what we can learn from each other
-d) 
+d) Random canonical coefficients
 
 -->
