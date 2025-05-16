@@ -30,7 +30,7 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 
 ## Thursday
 * GLLVMs from A-z: application, results, inference
-* Participant presentations
+* Participant presentations (more details TBA, but will operate on a first-come basis) 
 * Excursion
 
 ## Friday
