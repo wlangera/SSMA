@@ -31,7 +31,7 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 ## Thursday
 * GLLVMs from A-z: application, results, inference
 * Participant presentations
-* Excurion
+* Excursion
 
 ## Friday
 * Concepts in model-based clustering
@@ -63,8 +63,8 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 |         |<sub>11:15 - 12:00</sub>| Joint Species Distribution Models                   |Jenni/Pekka|
 |         |<sub>12:00 - 13:00</sub>| 🍽 Lunch                                            |        |
 |         |<sub>13:00 - 14:00</sub>| Practical 5: Fitting JSDM                           |        |
-|         |<sub>14:00 - 14:45</sub>| Accommodating spatial or temporal autocorrelation   |Francis |
-|         |<sub>14:45 - 15:15</sub>| ☕ Break                                             |Jenni   |
+|         |<sub>14:00 - 14:45</sub>| Accommodating spatial or temporal autocorrelation   |Francis/Pekka|
+|         |<sub>14:45 - 15:15</sub>| ☕ Break                                             |        |
 |         |<sub>15:15 - 16:15</sub>| Practical 6: Spatial or temporal JSDM               |Pekka   |
 |         |<sub>16:15 - 17:00</sub>| Phylogenetic GLMM/JSDM                              |Bert    |
 |         |             |          |                                                     |        |
