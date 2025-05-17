@@ -68,7 +68,7 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 |         |<sub>15:15 - 16:15</sub>| Practical 6: Spatial or temporal JSDMs              |Pekka   |
 |         |<sub>16:15 - 17:00</sub>| Phylogenetic GLMM/JSDM                              |Bert    |
 |         |             |          |                                                     |        |
-|         |<sub>19:00 - 20:00</sub>| Practical 12: Phylogenetic model                    |        |
+|         |<sub>19:00 - 20:00</sub>| Practical 7: Phylogenetic model                     |        |
 |---------|-------------|----------------------------------------------------------------|--------|
 |Wednesday|<sub>09:00 - 09:45</sub>| Background to ordination methods                    |Bert    |
 |         |<sub>09:45 - 10:45</sub>| Practical 8: Model-based unconstrained/residual ordination |        |
@@ -93,7 +93,7 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 |Friday   |<sub>08:45 - 09:00</sub>| Wrap-up                                             |Bert    |
 |         |<sub>09:00 - 09:45</sub>| Concepts in model-based clustering                  |Francis |
 |         |<sub>09:45 - 10:30</sub>| Other packages for (model-based) multivariate analysis|        |
-|         |<sub>10:30 - 11:30</sub>| Practical 11: Comparing ordinations                 |        |
+|         |<sub>10:30 - 11:30</sub>| Practical 12: Comparing ordinations                 |        |
 |         |<sub>11:30 - 12:30</sub>| 🍽 Early lunch                                      |        |
 |         |<sub>12:30 - 13:30</sub>| Opportunity for questions and elaboration           |        |
 |         |<sub>13:30 - 16:00</sub>| (Supervised) analysis of own data                   |        |
