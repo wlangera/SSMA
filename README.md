@@ -32,13 +32,14 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 * GLLVMs from A-z: application, results, inference
 * Participant presentations (more details TBA, but will operate on a first-come basis) 
 * Excursion
+* (Re)analysing article Part I
 
 ## Friday
 * Concepts in model-based clustering
 * Other packages for (model-based) multivariate analysis
 * Comparing ordinations
-* Recap, Questions, Answers, Discussion
-* (assisted) Analysis of own data
+* (Re)analysing article Part II & General Discussion
+* Analysis of own data
 
 # Detailed schedule
 |   Day   |Time         |Subject                                                         |Lecturer|
@@ -88,15 +89,15 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 |         |<sub>12:30 - 13:15</sub>| 🍽 Lunch                                            |        |
 |         |<sub>13:15 - 17:00</sub>| 🚶 Excursion                                        |        |
 |         |             |          |                                                     |        |
-|         |<sub>19:00 - 20:00</sub>| Article reanalysis in groups                        |        |
+|         |<sub>19:00 - 20:00</sub>| (Re)analysing article Part I                        |        |
 |---------|-------------|----------------------------------------------------------------|--------|
 |Friday   |<sub>08:45 - 09:00</sub>| Wrap-up                                             |Bert    |
 |         |<sub>09:00 - 09:45</sub>| Concepts in model-based clustering                  |Francis |
 |         |<sub>09:45 - 10:30</sub>| Other packages for (model-based) multivariate analysis|        |
 |         |<sub>10:30 - 11:30</sub>| Practical 12: Comparing ordinations                 |        |
 |         |<sub>11:30 - 12:30</sub>| 🍽 Early lunch                                      |        |
-|         |<sub>12:30 - 13:30</sub>| Opportunity for questions and elaboration           |        |
-|         |<sub>13:30 - 16:00</sub>| (Supervised) analysis of own data                   |        |
+|         |<sub>12:30 - 14:00</sub>| (Re)analysing article Part II / Discussion          |        |
+|         |<sub>14:00 - 16:00</sub>| Analysis of own data                                |        |
 
 
 
