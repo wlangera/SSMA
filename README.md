@@ -8,36 +8,33 @@ See https://bertv.folk.ntnu.no/index.html for more details.
 
 The days last from 09:00 to 17:00(ish), and a session after dinner. Each day will consist of a mix of lectures, in-class discussion, live demonstration, and interactive exercises / case studies.
 
-### Monday
-* Welcome, logistics and overview
+### Monday (Background dat)
+* Welcome, logistics, and overview
 * Some background of multivariate methods in ecology
-* Generalised Linear Models
+* Generalised Linear Models and multispecies extensions
 * Introduction to the gllvm R-package
-* Multispecies Generalised Linear Models
 
-## Tuesday
-* Multispecies Generalised Linear Mixed-effects Models
+## Tuesday (JSDMs day)
+* Multispecies mixed effects Models
 * Background of Joint Species Distribution Models
 * Accommodating spatial or temporal autocorrelation
+* Phylogenetic mixed models
 
-## Wednesday
-* Ecological gradient theory
-* (Model-based) Unconstrained ordination
-* Ordination with covariates
-* Conditioning and formulating a model for ordination
-* Unimodal/quadratic ordination 
+## Wednesday (Ordination day)
+* Background to ordination
 * Accommodating nested study designs
+* Bringing covariates into the ordination
+* Unimodal/quadratic ordination 
 
-## Thursday
-* GLLVMs from A-z: application, results, inference
+## Thursday (Workflow/presentation day)
+* GLLVMs from A-Z: application, results, inference
 * Participant presentations (more details TBA, but will operate on a first-come basis) 
 * Excursion
 * (Re)analysing article Part I
 
-## Friday
+## Friday ("What else is out there?" day)
 * Concepts in model-based clustering
 * Other packages for (model-based) multivariate analysis
-* Comparing ordinations
 * (Re)analysing article Part II & General Discussion
 * Analysis of own data
 
