@@ -8,7 +8,7 @@ See https://bertv.folk.ntnu.no/index.html for more details.
 
 The days last from 09:00 to 17:00(ish), and a session after dinner. Each day will consist of a mix of lectures, in-class discussion, live demonstration, and interactive exercises / case studies.
 
-### Monday (Background day)
+## Monday (Background day)
 * Welcome, logistics, and overview
 * Some background of multivariate methods in ecology
 * Generalised Linear Models and multispecies extensions
