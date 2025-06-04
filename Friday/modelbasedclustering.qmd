@@ -61,7 +61,7 @@ knitr::opts_chunk$set(echo = TRUE)
 # Outline
 
 -   Clustering sites and/or species
--   Clustering using covariates
+-   Clustering incoporating covariates
 
 ## Questions so far?
 
@@ -73,9 +73,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Throughout the course of the summer school, many of the models we have studied so far can be written in the generic form:
 
-\begin{equation}
+\begin{equation*}
 \eta_{ij} = \beta_{0j} + \alpha_{i} + \delta_{ij},
-\end{equation}
+\end{equation*}
 
 where:
 
@@ -87,9 +87,9 @@ where:
 
 Throughout the course of the summer school, many of the models we have studied so far can be written in the generic form:
 
-\begin{equation}
+\begin{equation*}
 \eta_{ij} = \beta_{0j} + \alpha_{i} + \delta_{ij},
-\end{equation}
+\end{equation*}
 
 For the next little bit, we will assume $\alpha_i$ is always included i.e., both rows and columns are standardized.
 
@@ -107,9 +107,9 @@ In this lecture, we will talk about another way to model the $\delta_{ij}$'s usi
 
 Consider again the model
 
-\begin{equation}
+\begin{equation*}
 \eta_{ij} = \beta_{0j} + \alpha_{i} + \delta_{ij},
-\end{equation}
+\end{equation*}
 
 and suppose now the $\delta_{ij}$'s are just directly estimated as fixed effects, alongside the $\beta_{0j}$'s and $\alpha_{i}$. We will refer this as the **saturated** model, since:
 
@@ -252,9 +252,9 @@ The above motivates a way of simplifying the saturated model, namely by clusteri
 # Row pattern detection model
 Assume the patterns of site relative abundance can be in clustered into one of $R < n$ groups:
 
-\begin{equation}
+\begin{equation*}
 \eta_{ij} = \beta_{0j} + \alpha_{i} + \delta_{rj}.
-\end{equation}
+\end{equation*}
 
 \textcolor{blue}{Intuition}: The assemblage is comprised of only a small number of ``species profiles". Two sites $i$ and $i'$ in the same species profile have the same relative abundance and only differ in their $\alpha_{i}$'s e.g., site total abundance, sampling effort, and so on.
 
@@ -262,9 +262,9 @@ Assume the patterns of site relative abundance can be in clustered into one of $
 # Column pattern detection model
 Assume the species can be in clustered into one of $C < m$ groups:
 
-\begin{equation}
+\begin{equation*}
 \eta_{ij} = \beta_{0j} + \alpha_{i} + \delta_{ic}.
-\end{equation}
+\end{equation*}
 
 \textcolor{blue}{Intuition}: The species in the assemblage can be classified into a small number of "archetypes" (or guilds?). Two species $j$ and $j'$ in the same guild have the same distribution across sites, and only differ in their $\beta_{0j}$'s e.g., overall prevalence. 
 
@@ -272,137 +272,99 @@ Assume the species can be in clustered into one of $C < m$ groups:
 # Biclustering pattern detection model
 Assume the species can be in clustered into one of $C < m$ groups:
 
-\begin{equation}
+\begin{equation*}
 \eta_{ij} = \beta_{0j} + \alpha_{i} + \delta_{ic}.
-\end{equation}
+\end{equation*}
 
 \textcolor{blue}{Intuition}: Combine the ideas of species profiles and guilds.
 
+We will talk briefly about the stats behind these models a bit later...
 
-# Pattern detection model
 
+# Pattern detection models
+Like model-based unconstrained ordination, clustering/pattern detection offer a parsimonious way of understanding the species community. But their goals are different:
 
-<!-- ## Phylogenetic signal -->
+- Is your goal a low-dimensional representation of how species composition varies over sites, or wanting to find sites with the same/similar species composition?
+- Is your goal a low-dimensional representation of which species primarily drive composition across sites, or wanting to find species with the same/similar distributions? 
 
-<!-- \vspace*{-0.25\baselineskip} -->
+Can read more a bit more about the differing characteristics of ordination versus clustering in Section 10.1 of [Legendre and Legendre, 2012](https://www.google.com.au/books/edition/Numerical_Ecology/DKlUIQcHhOsC?hl=en&gbpv=1&dq=ordination+versus+clustering+ecology&pg=PA523&printsec=frontcover) and Section 3.1 of [McGarigal et al., 2000](https://www.google.com.au/books/edition/Multivariate_Statistics_for_Wildlife_and/mXHrBwAAQBAJ?hl=en&gbpv=1&dq=ordination+versus+clustering+ecology&pg=PA122&printsec=frontcover).
 
-<!--   - 1: Fully phylogenetically structured responses -->
 
-<!--   - 0: Normal ("iid") random effects -->
+# Pattern detection models
+Note environmental covariates and species traits are not utilized in the PD models discussed so far, analogous to model-based unconstrained ordination. We will discuss more about how to incorporate covariates later.
 
-<!-- When it is 0, it does not mean there is nothing going on. -->
+\pause
 
-<!-- Absence of phylogenetic signal: -->
+What about doing both unconstrained ordination and clustering simultaneously?
 
-<!-- \vspace*{-0.25\baselineskip} -->
+\center 
 
-<!--   - Scale mismatch -->
+![](porquenolosdos.jpg){height="40%"}
 
-<!--   - Evolution moves very fast -->
 
-<!--   - Too little information -->
+# Pattern detection models
+Note environmental covariates and species traits are not utilized in the PD models discussed so far, analogous to model-based unconstrained ordination. We will discuss more about how to incorporate covariates later.
 
-<!--   - Traits are phylogenetically structured -->
+What about doing both unconstrained ordination and clustering simultaneously?
 
-<!--   - There are other (flexible) terms in the model -->
+You can! We won't talk about it in this lecture, but see [Hui, 2017](https://doi.org/10.1016/j.csda.2016.07.008) and [Stratton et al., 2024](https://doi.org/10.1111/2041-210X.14389) for some ideas. 
 
-<!--   - Model misspecification -->
 
-<!-- \vspace*{-0.25\baselineskip} -->
+# Pattern detection models -- A bit of statistics
+To fit something like the row pattern detection model with $R < n$,
 
-<!-- Presence of phylogenetic signal: -->
+\begin{equation*}
+\eta_{ij} = \beta_{0j} + \alpha_{i} + \delta_{rj},
+\end{equation*}
 
-<!-- - Related species have similar "traits" (environmental response) -->
+we can assume:
 
-<!-- - Occupy similar environments -->
+\small 
+1. The *prior* probability for site $i$ to belong to cluster $r$ is given by $\pi_r$ (to be estimated);
+2. The species are independent of each conditional on belong to the same cluster (big assumption!);
+3. Species responses $y_{ij}$ come from some distribution with mean given by $\mu_{ij} = g^{-1}(\eta_{ij})$ plus some species-specific dispersion/nuisance parameters as required
 
-<!-- ## Model limitation -->
+\normalsize
+\pause
 
-<!-- This phylogenetic model assumes traits evolve following the Brownian motion model of evolution. This can only generate positive associations. \newline -->
+Statistically, this results in a [finite mixture model](https://en.wikipedia.org/wiki/Mixture_model).
 
-<!-- \vspace*{-\baselineskip} -->
 
-<!-- But, competitive exclusion tells us that species evolve to differentiate resource. -->
+# Pattern detection models -- A bit of statistics
+Statistically, this results in a [finite mixture model](https://en.wikipedia.org/wiki/Mixture_model). 
 
-<!-- - Similar species can (stably) co-occur if they utilize a different resource -->
+Things to think about:
 
-<!-- - Similar species that utilize the same resource should not (stably) co-occur -->
+- What distribution to assume for $y_{ij}$ e.g., presence-absence, counts, biomass, percent cover etc...
+- What to choose for $R$ and/or $C$
+- Do you need the row effects $\alpha_{i}$? Depends on the interpretation...
 
-<!-- The latter results in negative correlations, but no corresponding model for trait evolution has been developed -->
 
-<!-- \footnotesize -->
+# Pattern detection models 
+Brief live demonstration using the \texttt{R} package [clustglm](https://github.com/vuw-clustering/clustglm) and the \texttt{aviurba} dataset in [ade4](https://cran.r-project.org/web/packages/ade4/index.html).
 
-<!-- * unless species do not stably co-occur and/or evolution is still ongoing -->
+\pause
 
-<!-- # Example 2 -->
+- Can use AICs and BICs to choose the number of row/column clusters. Can also use it to decide what kind of PD model you want, but really that should be governed by the question of interest!
+- Model diagnostics are possible like with other models introduced previously;
+- Profile plots as a way of visualizing the uncovered cluster profiles i.e., species profiles, archetypes of guilds;
+- The more mathematically-curious can visit [Pledger and Arnold, 2014](https://doi.org/10.1016/j.csda.2013.05.013)
 
-<!-- ## Example with fungi data (Abrego 2021) -->
 
-<!-- \centering -->
+# The state of play with \texttt{clustglm}
+Unfortunately, [clustglm](https://github.com/vuw-clustering/clustglm) is not actively maintained, and has lots of limitations:
 
-<!-- ![](Abrego.png) -->
+- Handles only a very limited number of response types;
+- Standard errors are not done properly;
+- Slow;
+- Was an attempt to, but at the moment does not really work with replace distance-based clustering
 
-<!-- ## Example with fungi data  -->
 
-<!-- \footnotesize -->
+# The state of play with \texttt{clustglm}
+\center 
 
-<!-- ```{r, echo = FALSE} -->
+![](gapseverywhere.jpg){height="60%"}
 
-<!-- Y = read.csv("../data/fungiY.csv",)[,-1] -->
 
-<!-- X = read.csv("../data/fungiX.csv")[,-1] -->
-
-<!-- tree = ape::read.tree("../data/fungiTree.txt") -->
-
-<!-- ``` -->
-
-<!-- - 215 species (after cleaning) -->
-
-<!-- - 1666 sites -->
-
-<!-- - 19 covariates of various kinds -->
-
-<!-- ![[image from Yang et al. 2021](https://nsojournals.onlinelibrary.wiley.com/doi/10.1111/oik.08388)](fungi.png){width=90%} -->
-
-<!-- ## Example with fungi data -->
-
-<!-- ```{r tree, fig.align="center", fig.height = 6, echo = FALSE} -->
-
-<!-- plot(tree, show.tip.label = FALSE) -->
-
-<!-- ``` -->
-
-<!-- ## Example with fungi data -->
-
-<!-- Phylogenetic models in \texttt{gllvm} use a **nearest neighbour approximation** -->
-
-<!-- - We need to set the number of tips to consider on the tree -->
-
-<!-- - [The ordering of species matters!](https://jenniniku.github.io/gllvm/articles/vignette7.html) -->
-
-<!-- ```{r} -->
-
-<!-- covMat <- ape::vcv(tree) -->
-
-<!-- e <- eigen(covMat) -->
-
-<!-- distMat <- ape::cophenetic.phylo(tree) -->
-
-<!-- ord <- gllvm:::findOrder(covMat = covMat, distMat = distMat, nn = 15, order = order(e$vectors[,1]))$order -->
-
-<!-- species <- colnames(covMat)[ord] -->
-
-<!-- Y <- Y[, species] -->
-
-<!-- covMat <- covMat[species, species] -->
-
-<!-- distMat <- distMat[species, species] -->
-
-<!-- ``` -->
-
-<!-- ## Ordering species -->
-
-<!-- ![See vignette 7](specord-1.png){height=70%} -->
-
-<!-- ## Example with fungi data -->
+# Clustering incorporating covariates
 
