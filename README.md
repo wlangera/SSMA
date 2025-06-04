@@ -8,37 +8,35 @@ See https://bertv.folk.ntnu.no/index.html for more details.
 
 The days last from 09:00 to 17:00(ish), and a session after dinner. Each day will consist of a mix of lectures, in-class discussion, live demonstration, and interactive exercises / case studies.
 
-### Monday
-* Welcome, logistics and overview
+## Monday (Background day)
+* Welcome, logistics, and overview
 * Some background of multivariate methods in ecology
-* Generalised Linear Models
+* Generalised Linear Models and multispecies extensions
 * Introduction to the gllvm R-package
-* Multispecies Generalised Linear Models
 
-## Tuesday
-* Multispecies Generalised Linear Mixed-effects Models
+## Tuesday (JSDMs day)
+* Multispecies mixed effects Models
 * Background of Joint Species Distribution Models
 * Accommodating spatial or temporal autocorrelation
+* Phylogenetic mixed models
 
-## Wednesday
-* Ecological gradient theory
-* (Model-based) Unconstrained ordination
-* Ordination with covariates
-* Conditioning and formulating a model for ordination
-* Unimodal/quadratic ordination 
+## Wednesday (Ordination day)
+* Background to ordination
 * Accommodating nested study designs
+* Bringing covariates into the ordination
+* Unimodal/quadratic ordination 
 
-## Thursday
-* GLLVMs from A-z: application, results, inference
+## Thursday (Workflow/presentation day)
+* GLLVMs from A-Z: application, results, inference
 * Participant presentations (more details TBA, but will operate on a first-come basis) 
 * Excursion
+* (Re)analysing article Part I
 
-## Friday
+## Friday ("What else is out there?" day)
 * Concepts in model-based clustering
 * Other packages for (model-based) multivariate analysis
-* Comparing ordinations
-* Recap, Questions, Answers, Discussion
-* (assisted) Analysis of own data
+* (Re)analysing article Part II & General Discussion
+* Analysis of own data
 
 # Detailed schedule
 |   Day   |Time         |Subject                                                         |Lecturer|
@@ -68,7 +66,7 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 |         |<sub>15:15 - 16:15</sub>| Practical 6: Spatial or temporal JSDMs              |Pekka   |
 |         |<sub>16:15 - 17:00</sub>| Phylogenetic GLMM/JSDM                              |Bert    |
 |         |             |          |                                                     |        |
-|         |<sub>19:00 - 20:00</sub>| Practical 12: Phylogenetic model                    |        |
+|         |<sub>19:00 - 20:00</sub>| Practical 7: Phylogenetic model                     |        |
 |---------|-------------|----------------------------------------------------------------|--------|
 |Wednesday|<sub>09:00 - 09:45</sub>| Background to ordination methods                    |Bert    |
 |         |<sub>09:45 - 10:45</sub>| Practical 8: Model-based unconstrained/residual ordination |        |
@@ -88,15 +86,15 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 |         |<sub>12:30 - 13:15</sub>| 🍽 Lunch                                            |        |
 |         |<sub>13:15 - 17:00</sub>| 🚶 Excursion                                        |        |
 |         |             |          |                                                     |        |
-|         |<sub>19:00 - 20:00</sub>| Article reanalysis in groups                        |        |
+|         |<sub>19:00 - 20:00</sub>| (Re)analysing article Part I                        |        |
 |---------|-------------|----------------------------------------------------------------|--------|
 |Friday   |<sub>08:45 - 09:00</sub>| Wrap-up                                             |Bert    |
 |         |<sub>09:00 - 09:45</sub>| Concepts in model-based clustering                  |Francis |
 |         |<sub>09:45 - 10:30</sub>| Other packages for (model-based) multivariate analysis|        |
-|         |<sub>10:30 - 11:30</sub>| Practical 11: Comparing ordinations                 |        |
+|         |<sub>10:30 - 11:30</sub>| Practical 12: Comparing ordinations                 |        |
 |         |<sub>11:30 - 12:30</sub>| 🍽 Early lunch                                      |        |
-|         |<sub>12:30 - 13:30</sub>| Opportunity for questions and elaboration           |        |
-|         |<sub>13:30 - 16:00</sub>| (Supervised) analysis of own data                   |        |
+|         |<sub>12:30 - 14:00</sub>| (Re)analysing article Part II / Discussion          |        |
+|         |<sub>14:00 - 16:00</sub>| Analysis of own data                                |        |
 
 
 
