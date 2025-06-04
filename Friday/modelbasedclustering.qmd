@@ -240,6 +240,48 @@ ggplot(data, aes(X, Y, fill= Z)) +
     theme(axis.text.x = element_text(angle = 60, hjust = 1))
 ```
 
+# Clustering the $\delta_{ij}$'s
+
+The above motivates a way of simplifying the saturated model, namely by clustering the interaction terms $\delta_{ij}$'s based on the row and/or column indices:
+
+- **Row/site clustering**: $\delta_{rj}$ where $r = 1, \ldots,R < n$;
+- **Column/species clustering**: $\delta_{ic}$ where $c = 1, \ldots, C < m$;
+- **Biclustering**: $\delta_{rc}$.
+
+
+# Row pattern detection model
+Assume the patterns of site relative abundance can be in clustered into one of $R < n$ groups:
+
+\begin{equation}
+\eta_{ij} = \beta_{0j} + \alpha_{i} + \delta_{rj}.
+\end{equation}
+
+\textcolor{blue}{Intuition}: The assemblage is comprised of only a small number of ``species profiles". Two sites $i$ and $i'$ in the same species profile have the same relative abundance and only differ in their $\alpha_{i}$'s e.g., site total abundance, sampling effort, and so on.
+
+
+# Column pattern detection model
+Assume the species can be in clustered into one of $C < m$ groups:
+
+\begin{equation}
+\eta_{ij} = \beta_{0j} + \alpha_{i} + \delta_{ic}.
+\end{equation}
+
+\textcolor{blue}{Intuition}: The species in the assemblage can be classified into a small number of "archetypes" (or guilds?). Two species $j$ and $j'$ in the same guild have the same distribution across sites, and only differ in their $\beta_{0j}$'s e.g., overall prevalence. 
+
+
+# Biclustering pattern detection model
+Assume the species can be in clustered into one of $C < m$ groups:
+
+\begin{equation}
+\eta_{ij} = \beta_{0j} + \alpha_{i} + \delta_{ic}.
+\end{equation}
+
+\textcolor{blue}{Intuition}: Combine the ideas of species profiles and guilds.
+
+
+# Pattern detection model
+
+
 <!-- ## Phylogenetic signal -->
 
 <!-- \vspace*{-0.25\baselineskip} -->
@@ -364,76 +406,3 @@ ggplot(data, aes(X, Y, fill= Z)) +
 
 <!-- ## Example with fungi data -->
 
-<!-- \tiny -->
-
-<!-- ```{r fita, cache = TRUE, message = FALSE, warnings=FALSE, results="hide"} -->
-
-<!-- TMB::openmp(parallel::detectCores()-1, autopar = TRUE, DLL = "gllvm") -->
-
-<!-- model3 <- gllvm::gllvm(y = Y, X=X, family = "binomial", num.lv = 0, beta0com = TRUE, -->
-
-<!--       row.eff = ~(1 | REGION/RESERVE), studyDesign = X[,c("REGION","RESERVE")], -->
-
-<!--       formula = ~(DBH.CM+AVERDP+I(AVERDP^2)+CONNECT10+TEMPR+PRECIP+log.AREA|1),  -->
-
-<!--       colMat = list(covMat, dist = distMat), nn.colMat = 15, max.iter = 10e3, optim.method = "L-BFGS-B") -->
-
-<!-- ``` -->
-
-<!-- \normalsize -->
-
-<!-- This takes a while to fit, but is really incredibly fast (it is just a complex model) -->
-
-<!-- ## Example with fungi data -->
-
-<!-- \supertiny -->
-
-<!-- ```{r fitas} -->
-
-<!-- summary(model3) -->
-
-<!-- ``` -->
-
-<!-- ## Example with fungi data -->
-
-<!-- \footnotesize -->
-
-<!-- ```{r, fig.height = 5, echo = FALSE} -->
-
-<!-- corrplot::corrplot(cov2cor(model3$params$sigmaB), type = "lower", diag = FALSE) -->
-
-<!-- ``` -->
-
-<!-- Correlated effects: trait syndromes. Fungi with a particular preference in temperature range, might also have a preference for less precipitation. -->
-
-<!-- ## Example with fungi data -->
-
-<!-- \footnotesize -->
-
-<!-- ```{r heatmap, cache = TRUE, fig.height = 5, dpi = 150, fig.align="center"} -->
-
-<!-- gllvm::phyloplot(model3, tree) -->
-
-<!-- ``` -->
-
-<!-- ## Conclusion: -->
-
-<!-- There is phylogenetic structuring; species environmental responses are more similar if they have a shared evolutionary history. \newline -->
-
-<!-- Of course, this might be covariate dependent (`colMat.rho.struct = "term"`) -->
-
-<!-- # Summary -->
-
-<!-- - JSDMs is a framework for analysing species co-occurrence data -->
-
-<!-- - Focussed on prediction, but also suitable for inference -->
-
-<!-- - We can also fit models with non-binary data (e.g., counts or biomass) -->
-
-<!-- - The GLLVM framework is used here to implement JSDM efficiently -->
-
-<!-- - We can incorporate random effects -->
-
-<!-- - Phylogenetically structure species' effects -->
-
-<!-- - Above all: we incorporate correlation of species -->
