@@ -13,6 +13,7 @@ format:
       - \usepackage{ulem}
       - \usepackage{booktabs}
       - \usepackage{longtable}
+      - \usepackage{tcolorbox}
       - \tcbuselibrary{skins}
       - \usepackage{tikz}
       - \usetikzlibrary{positioning}
@@ -63,20 +64,20 @@ knitr::opts_chunk$set(echo = TRUE)
 -   Clustering sites and/or species
 -   Clustering incoporating covariates
 
-## Questions so far?
+
+# Questions so far?
 
 \center
 
 ![](../questions.jpg){height="60%"}
 
+
 # The models so far
 
 Throughout the course of the summer school, many of the models we have studied so far can be written in the generic form:
-
 \begin{equation*}
 \eta_{ij} = \beta_{0j} + \alpha_{i} + \delta_{ij},
 \end{equation*}
-
 where:
 
 -   $\beta_{0j}$ are species-specific intercepts (column standardization);
@@ -86,11 +87,9 @@ where:
 # The models so far
 
 Throughout the course of the summer school, many of the models we have studied so far can be written in the generic form:
-
 \begin{equation*}
-\eta_{ij} = \beta_{0j} + \alpha_{i} + \delta_{ij},
+\eta_{ij} = \beta_{0j} + \alpha_{i} + \delta_{ij}.
 \end{equation*}
-
 For the next little bit, we will assume $\alpha_i$ is always included i.e., both rows and columns are standardized.
 
 By doing so, we can focus on the $\delta_{ij}$ part of the model i.e., what is left over after adjusting for heterogeneity in recorded species prevalence and site sampling effort.
@@ -101,16 +100,16 @@ On Wednesday, we covered the idea of model-based ordination or some variation th
 
 \pause
 
-In this lecture, we will talk about another way to model the $\delta_{ij}$'s using ideas from clustering...
+In this lecture, we will talk about another way to model the $\delta_{ij}$'s using ideas from clustering.
+
+
 
 # What to do about $\delta_{ij}$?
 
 Consider again the model
-
 \begin{equation*}
 \eta_{ij} = \beta_{0j} + \alpha_{i} + \delta_{ij},
 \end{equation*}
-
 and suppose now the $\delta_{ij}$'s are just directly estimated as fixed effects, alongside the $\beta_{0j}$'s and $\alpha_{i}$. We will refer this as the **saturated** model, since:
 
 -   it estimates a unique "interaction" for every combination of sites and species;
@@ -251,7 +250,6 @@ The above motivates a way of simplifying the saturated model, namely by clusteri
 
 # Row pattern detection model
 Assume the patterns of site relative abundance can be in clustered into one of $R < n$ groups:
-
 \begin{equation*}
 \eta_{ij} = \beta_{0j} + \alpha_{i} + \delta_{rj}.
 \end{equation*}
@@ -260,8 +258,7 @@ Assume the patterns of site relative abundance can be in clustered into one of $
 
 
 # Column pattern detection model
-Assume the species can be in clustered into one of $C < m$ groups:
-
+Assume the species can be in clustered into one of $C < m$ gr
 \begin{equation*}
 \eta_{ij} = \beta_{0j} + \alpha_{i} + \delta_{ic}.
 \end{equation*}
@@ -271,7 +268,6 @@ Assume the species can be in clustered into one of $C < m$ groups:
 
 # Biclustering pattern detection model
 Assume the species can be in clustered into one of $C < m$ groups:
-
 \begin{equation*}
 \eta_{ij} = \beta_{0j} + \alpha_{i} + \delta_{ic}.
 \end{equation*}
@@ -284,14 +280,14 @@ We will talk briefly about the stats behind these models a bit later...
 # Pattern detection models
 Like model-based unconstrained ordination, clustering/pattern detection offer a parsimonious way of understanding the species community. But their goals are different:
 
-- Is your goal a low-dimensional representation of how species composition varies over sites, or wanting to find sites with the same/similar species composition?
-- Is your goal a low-dimensional representation of which species primarily drive composition across sites, or wanting to find species with the same/similar distributions? 
+- Is your goal a low-dimensional representation of how species composition varies over sites, or wanting to \textcolor{magenta}{find sites with the same/similar species composition}?
+- Is your goal a low-dimensional representation of which species primarily drive composition across sites, or wanting to \textcolor{magenta}{find species with the same/similar distributions}? 
 
 Can read more a bit more about the differing characteristics of ordination versus clustering in Section 10.1 of [Legendre and Legendre, 2012](https://www.google.com.au/books/edition/Numerical_Ecology/DKlUIQcHhOsC?hl=en&gbpv=1&dq=ordination+versus+clustering+ecology&pg=PA523&printsec=frontcover) and Section 3.1 of [McGarigal et al., 2000](https://www.google.com.au/books/edition/Multivariate_Statistics_for_Wildlife_and/mXHrBwAAQBAJ?hl=en&gbpv=1&dq=ordination+versus+clustering+ecology&pg=PA122&printsec=frontcover).
 
 
 # Pattern detection models
-Note environmental covariates and species traits are not utilized in the PD models discussed so far, analogous to model-based unconstrained ordination. We will discuss more about how to incorporate covariates later.
+Note environmental covariates and species traits are not utilized in the PD models discussed so far, analogous to model-based unconstrained ordination. We will discuss how to incorporate covariates later.
 
 \pause
 
@@ -312,11 +308,9 @@ You can! We won't talk about it in this lecture, but see [Hui, 2017](https://doi
 
 # Pattern detection models -- A bit of statistics
 To fit something like the row pattern detection model with $R < n$,
-
 \begin{equation*}
 \eta_{ij} = \beta_{0j} + \alpha_{i} + \delta_{rj},
 \end{equation*}
-
 we can assume:
 
 \small 
@@ -325,7 +319,6 @@ we can assume:
 3. Species responses $y_{ij}$ come from some distribution with mean given by $\mu_{ij} = g^{-1}(\eta_{ij})$ plus some species-specific dispersion/nuisance parameters as required
 
 \normalsize
-\pause
 
 Statistically, this results in a [finite mixture model](https://en.wikipedia.org/wiki/Mixture_model).
 
@@ -343,12 +336,20 @@ Things to think about:
 # Pattern detection models 
 Brief live demonstration using the \texttt{R} package [clustglm](https://github.com/vuw-clustering/clustglm) and the \texttt{aviurba} dataset in [ade4](https://cran.r-project.org/web/packages/ade4/index.html).
 
-\pause
+\center
+
+![](whatcouldpossiblygowrong.jpg){height="50%"}
+
+
+# Pattern detection models 
+Brief live demonstration using the \texttt{R} package [clustglm](https://github.com/vuw-clustering/clustglm) and the \texttt{aviurba} dataset in [ade4](https://cran.r-project.org/web/packages/ade4/index.html).
+
+\small
 
 - Can use AICs and BICs to choose the number of row/column clusters. Can also use it to decide what kind of PD model you want, but really that should be governed by the question of interest!
 - Model diagnostics are possible like with other models introduced previously;
 - Profile plots as a way of visualizing the uncovered cluster profiles i.e., species profiles, archetypes of guilds;
-- The more mathematically-curious can visit [Pledger and Arnold, 2014](https://doi.org/10.1016/j.csda.2013.05.013)
+- The more mathematically-curious can read [Pledger and Arnold, 2014](https://doi.org/10.1016/j.csda.2013.05.013)
 
 
 # The state of play with \texttt{clustglm}
@@ -357,7 +358,7 @@ Unfortunately, [clustglm](https://github.com/vuw-clustering/clustglm) is not act
 - Handles only a very limited number of response types;
 - Standard errors are not done properly;
 - Slow;
-- Was an attempt to, but at the moment does not really work with replace distance-based clustering
+- Was an attempt, but at the moment does not practically do enough, to replace aspects of distance-based clustering
 
 
 # The state of play with \texttt{clustglm}
@@ -366,5 +367,96 @@ Unfortunately, [clustglm](https://github.com/vuw-clustering/clustglm) is not act
 ![](gapseverywhere.jpg){height="60%"}
 
 
-# Clustering incorporating covariates
 
+# Clustering incorporating covariates
+There are two (main) ways we can think of involving measured covariates $\mathbf{x}_i$ in the clustering process:
+
+1. Cluster species that have the same/similar responses to environment/habitat factors;
+2. Use environment/habitat factors to drive the process of clustering sites with similar species profiles;
+
+\pause
+
+The former leads species guilds or **species archetype models**, the latter leads to **model-based bioregionalization**
+
+
+# Species archetype models
+Some starting papers in SAMs include [Dunstan et al., 2011](https://doi.org/10.1016/j.ecolmodel.2010.11.030), [Dunstan et al., 2013](https://doi.org/10.1007/s13253-013-0146-x), and [Hui et al., 2013](https://doi.org/10.1890/12-1322.1). 
+
+But intuitively, we want to cluster on the *shape* of the environmental response.
+
+\center 
+
+<!-- \begin{tcolorbox} -->
+![](samsillustration.png){height="50%"}
+<!-- \end{tcolorbox} -->
+
+
+
+# Species archetype models
+Statistically, and removing the optional row effects $\alpha_i$ as the mindset is now more about JSDMs than ordination, SAMs can be written as:
+\begin{equation*}
+\eta_{ij} = \beta_{0j} + \mathbf{x}_i^\top \mathbf{\beta}_c + \text{stuff}...
+\end{equation*}
+
+where species are clustered into $C < m$ archetypes, and the intercepts are specific to each species. We also assume the *prior* probability for species $j$ to belong to archetype $c$ is given by $\pi_c$ (to be estimated). Note the link to column pattern detection models!
+
+\pause 
+
+SAMs are again a type of [finite mixture model](https://en.wikipedia.org/wiki/Mixture_model), so you can also retrieve a *posterior probability* of a species belonging to an archetype.
+
+
+# Species archetype models
+Software-wise, [ecomix](https://github.com/skiptoniam/ecomix) can fit these models but is slow and has limitations. [assam](https://github.com/fhui28/assam), by yours truly, is a WIP that is meant to more approximate but computationally more scalable and flexible.
+
+Things to think about:
+
+- What distribution to assume for $y_{ij}$ e.g., presence-absence, counts, biomass, percent cover etc...
+- How many archetypes?
+- What to include in \text{stuff}?
+
+
+
+# Model-based bioregionalization
+Some starting papers in SAMs include [Foster et al., 2013](https://doi.org/10.1002/env.2245), [Hill et al., 2020](https://doi.org/10.1111/2041-210X.13447), and [Woolley et al., 2020](https://doi.org/10.1093/biosci/biz133). 
+
+But intuitively, sites with *similar environments/habitats should have similar species profiles*, even if they are far apart in space.
+
+\center 
+
+![](bioregionexample.png){height="50%"}
+
+
+
+# Model-based bioregionalization
+\center 
+
+![](bioregionschematic.png){height="75%"}
+
+
+# Model-based bioregionalization
+Statistically, and removing the optional row effects $\alpha_i$ as the mindset is now more about JSDMs than ordination, such bioregion models can be written as:
+\begin{equation*}
+\eta_{ij} = \beta_{0j} + \eta_{rj} + \text{stuff}; \quad \text{P}(\text{site} \; i \; \text{belongs to bioregion} \; r) = \pi_r(\mathbf{x}_i, \text{stuff2}),
+\end{equation*}
+where sites are clustered into $R < n$ bioregions. The *prior* probabilities $\pi_r(\mathbf{x}_i)$ can now vary with the measured covariates, and the parameters in this probability function are estimated. Note the similarity to row pattern detection models! 
+
+\pause 
+
+Bioregion models are a type of [finite mixture of experts model](https://en.wikipedia.org/wiki/Mixture_of_experts), so you can also retrieve a *posterior probability* of a site belonging to a bioregion.
+
+
+# Model-based bioregionalization
+Software-wise, [ecomix](https://github.com/skiptoniam/ecomix) can fit these models but is slow and has limitations. Otherwise, there exists some bespoke code here and there but research is needed here!
+
+Things to think about:
+
+- What distribution to assume for $y_{ij}$ e.g., presence-absence, counts, biomass, percent cover etc...
+- How many biogions?
+- What to include in \text{stuff} and \text{stuff2}?
+
+
+# Outgoing remarks
+- Model-based clustering ecology is much *less* developed than model-based ordination, both in terms of methods and software;
+- Why do ecologists want to cluster?
+- Model-based hierarchical clustering is a big gap!
+- Conversely, models open up interesting new flavors of clustering e.g., [Bystrova et al., 2021](https://doi.org/10.3389/fevo.2021.601384); [Hui et al., 2024](https://doi.org/10.1093/biomtc/ujad001). 
