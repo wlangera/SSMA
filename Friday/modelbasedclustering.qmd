@@ -62,7 +62,7 @@ knitr::opts_chunk$set(echo = TRUE)
 # Outline
 
 -   Clustering sites and/or species
--   Clustering incoporating covariates
+-   Clustering incorporating covariates
 
 
 # Questions so far?
@@ -249,7 +249,7 @@ The above motivates a way of simplifying the saturated model, namely by clusteri
 
 
 # Row pattern detection model
-Assume the patterns of site relative abundance can be in clustered into one of $R < n$ groups:
+Assume the patterns of site relative abundance can be clustered into one of $R < n$ groups:
 \begin{equation*}
 \eta_{ij} = \beta_{0j} + \alpha_{i} + \delta_{rj}.
 \end{equation*}
@@ -258,16 +258,16 @@ Assume the patterns of site relative abundance can be in clustered into one of $
 
 
 # Column pattern detection model
-Assume the species can be in clustered into one of $C < m$ gr
+Assume the species can be clustered into one of $C < m$ gr
 \begin{equation*}
 \eta_{ij} = \beta_{0j} + \alpha_{i} + \delta_{ic}.
 \end{equation*}
 
-\textcolor{blue}{Intuition}: The species in the assemblage can be classified into a small number of "archetypes" (or guilds?). Two species $j$ and $j'$ in the same guild have the same distribution across sites, and only differ in their $\beta_{0j}$'s e.g., overall prevalence. 
+\textcolor{blue}{Intuition}: The species in the assemblage can be classified into a small number of "archetypes" (or guilds?). Two species $j$ and $j'$ in the same guild have the same distribution across sites and only differ in their $\beta_{0j}$'s e.g., overall prevalence. 
 
 
 # Biclustering pattern detection model
-Assume the species can be in clustered into one of $C < m$ groups:
+Assume the species can be clustered into one of $C < m$ groups:
 \begin{equation*}
 \eta_{ij} = \beta_{0j} + \alpha_{i} + \delta_{ic}.
 \end{equation*}
@@ -278,12 +278,12 @@ We will talk briefly about the stats behind these models a bit later...
 
 
 # Pattern detection models
-Like model-based unconstrained ordination, clustering/pattern detection offer a parsimonious way of understanding the species community. But their goals are different:
+Like model-based unconstrained ordination, clustering/pattern detection offers a parsimonious way of understanding the species community. But their goals are different:
 
-- Is your goal a low-dimensional representation of how species composition varies over sites, or wanting to \textcolor{magenta}{find sites with the same/similar species composition}?
-- Is your goal a low-dimensional representation of which species primarily drive composition across sites, or wanting to \textcolor{magenta}{find species with the same/similar distributions}? 
+- Is your goal a low-dimensional representation of how species composition varies over sites, or do you want to \textcolor{magenta}{find sites with the same/similar species composition}?
+- Is your goal a low-dimensional representation of which species primarily drive composition across sites, or do you want to \textcolor{magenta}{find species with the same/similar distributions}? 
 
-Can read more a bit more about the differing characteristics of ordination versus clustering in Section 10.1 of [Legendre and Legendre, 2012](https://www.google.com.au/books/edition/Numerical_Ecology/DKlUIQcHhOsC?hl=en&gbpv=1&dq=ordination+versus+clustering+ecology&pg=PA523&printsec=frontcover) and Section 3.1 of [McGarigal et al., 2000](https://www.google.com.au/books/edition/Multivariate_Statistics_for_Wildlife_and/mXHrBwAAQBAJ?hl=en&gbpv=1&dq=ordination+versus+clustering+ecology&pg=PA122&printsec=frontcover).
+Can read a bit more about the differing characteristics of ordination versus clustering in Section 10.1 of [Legendre and Legendre, 2012](https://www.google.com.au/books/edition/Numerical_Ecology/DKlUIQcHhOsC?hl=en&gbpv=1&dq=ordination+versus+clustering+ecology&pg=PA523&printsec=frontcover), and Section 3.1 of [McGarigal et al., 2000](https://www.google.com.au/books/edition/Multivariate_Statistics_for_Wildlife_and/mXHrBwAAQBAJ?hl=en&gbpv=1&dq=ordination+versus+clustering+ecology&pg=PA122&printsec=frontcover).
 
 
 # Pattern detection models
@@ -315,7 +315,7 @@ we can assume:
 
 \small 
 1. The *prior* probability for site $i$ to belong to cluster $r$ is given by $\pi_r$ (to be estimated);
-2. The species are independent of each conditional on belong to the same cluster (big assumption!);
+2. The species are independent of each other, conditional on belong to the same cluster (big assumption!);
 3. Species responses $y_{ij}$ come from some distribution with mean given by $\mu_{ij} = g^{-1}(\eta_{ij})$ plus some species-specific dispersion/nuisance parameters as required
 
 \normalsize
@@ -349,7 +349,7 @@ Brief live demonstration using the \texttt{R} package [clustglm](https://github.
 - Can use AICs and BICs to choose the number of row/column clusters. Can also use it to decide what kind of PD model you want, but really that should be governed by the question of interest!
 - Model diagnostics are possible like with other models introduced previously;
 - Profile plots as a way of visualizing the uncovered cluster profiles i.e., species profiles, archetypes of guilds;
-- The more mathematically-curious can read [Pledger and Arnold, 2014](https://doi.org/10.1016/j.csda.2013.05.013)
+- The more mathematically curious can read [Pledger and Arnold, 2014](https://doi.org/10.1016/j.csda.2013.05.013)
 
 
 # The state of play with \texttt{clustglm}
@@ -376,7 +376,7 @@ There are two (main) ways we can think of involving measured covariates $\mathbf
 
 \pause
 
-The former leads species guilds or **species archetype models**, the latter leads to **model-based bioregionalization**
+The former leads to species guilds or **species archetype models**, and the latter leads to **model-based bioregionalization**
 
 
 # Species archetype models
@@ -395,7 +395,7 @@ But intuitively, we want to cluster on the *shape* of the environmental response
 # Species archetype models
 Statistically, and removing the optional row effects $\alpha_i$ as the mindset is now more about JSDMs than ordination, SAMs can be written as:
 \begin{equation*}
-\eta_{ij} = \beta_{0j} + \mathbf{x}_i^\top \mathbf{\beta}_c + \text{stuff}...
+\eta_{ij} = \beta_{0j} + \mathbf{x}_i^\top \mathbf{\beta}_c + \text{stuff}...,
 \end{equation*}
 
 where species are clustered into $C < m$ archetypes, and the intercepts are specific to each species. We also assume the *prior* probability for species $j$ to belong to archetype $c$ is given by $\pi_c$ (to be estimated). Note the link to column pattern detection models!
@@ -406,7 +406,7 @@ SAMs are again a type of [finite mixture model](https://en.wikipedia.org/wiki/Mi
 
 
 # Species archetype models
-Software-wise, [ecomix](https://github.com/skiptoniam/ecomix) can fit these models but is slow and has limitations. [assam](https://github.com/fhui28/assam), by yours truly, is a WIP that is meant to more approximate but computationally more scalable and flexible.
+Software-wise, [ecomix](https://github.com/skiptoniam/ecomix) can fit these models but is slow and has limitations. [assam](https://github.com/fhui28/assam), by yours truly, is WIP that is more approximate but computationally more scalable and flexible.
 
 Things to think about:
 
@@ -451,7 +451,7 @@ Software-wise, [ecomix](https://github.com/skiptoniam/ecomix) can fit these mode
 Things to think about:
 
 - What distribution to assume for $y_{ij}$ e.g., presence-absence, counts, biomass, percent cover etc...
-- How many biogions?
+- How many bioregions?
 - What to include in \text{stuff} and \text{stuff2}?
 
 
