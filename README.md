@@ -89,7 +89,7 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 |         |<sub>19:00 - 20:00</sub>| (Re)analysing article Part I                        |        |
 |---------|-------------|----------------------------------------------------------------|--------|
 |Friday   |<sub>08:45 - 09:00</sub>| Wrap-up                                             |Bert    |
-|         |<sub>09:00 - 09:45</sub>| Concepts in model-based clustering                  |Francis |
+|         |<sub>09:00 - 09:45</sub>| [Concepts in model-based clustering](https://github.com/BertvanderVeen/SSMA/blob/main/Friday/modelbasedclustering.pdf)                  |Francis |
 |         |<sub>09:45 - 10:30</sub>| Other packages for (model-based) multivariate analysis|        |
 |         |<sub>10:30 - 11:30</sub>| Practical 12: Comparing ordinations                 |        |
 |         |<sub>11:30 - 12:30</sub>| 🍽 Early lunch                                      |        |
