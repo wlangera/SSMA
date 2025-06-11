@@ -48,9 +48,9 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 |         |<sub>11:45 - 12:30</sub>| Basics of Generalised Linear Models (GLMs)          |        | <!-- distributions and such-->
 |         |<sub>12:30 - 13:30</sub>| 🍽 Lunch                                            |        |
 |         |<sub>13:30 - 14:15</sub>| Practical 2: Fitting GLMs                           |        |
-|         |<sub>14:15 - 15:00</sub>| Multispecies GLMs                                   |        |<!-- what it means to have multiple species -->
+|         |<sub>14:15 - 15:00</sub>| Finding a good multispecies GLM                     |        |<!-- what it means to have multiple species -->
 |         |<sub>15:00 - 15:30</sub>| ☕ Break                                             |        |
-|         |<sub>15:30 - 16:30</sub>| Practical 3: Fitting multispecies GLMs              |        | <!-- model selection, hypo testing ?-->
+|         |<sub>15:30 - 16:30</sub>| Practical 3: Comparing multispecies GLMs            |        | <!-- model selection, hypo testing ?-->
 |         |<sub>16:30 - 17:15</sub>| Introduction to the gllvm R-package                 |Pekka   |
 |         |             |          |                                                     |        |
 |         |<sub>19:00 - 20:00</sub>| Brainstorming properties of community data          |Bert    |
@@ -71,12 +71,12 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 |Wednesday|<sub>09:00 - 09:45</sub>| Model-based ordination                              |Bert    |
 |         |<sub>09:45 - 10:45</sub>| Practical 8: Model-based unconstrained              |        |
 |         |<sub>10:45 - 11:15</sub>| ☕ Break                                             |        |
-|         |<sub>11:15 - 12:00</sub>| Conditioning and nested designs                     |        |
+|         |<sub>11:15 - 12:00</sub>| Bringing covariates into the ordination             |        |
 |         |<sub>12:00 - 13:00</sub>| 🍽 Lunch                                            |        |
-|         |<sub>13:00 - 14:00</sub>| Practical 9: Conditioning                           |        |
-|         |<sub>14:00 - 14:45</sub>| Bringing covariates into the ordination             |        |
+|         |<sub>13:00 - 14:00</sub>| Practical 9: Ordination with predictors             |        |
+|         |<sub>14:00 - 14:45</sub>| Conditioning and nested designs                     |        |
 |         |<sub>14:45 - 15:15</sub>| ☕ Break                                             |        |
-|         |<sub>15:15 - 16:15</sub>| Practical 10: Ordination with predictors            |        |
+|         |<sub>15:15 - 16:15</sub>| Practical 10: Partial ordination                    |        | <!-- bringing together 3 formula interfaces, and the ideas of partial, residual ordination, and accommodating nested designs -->
 |         |<sub>16:15 - 17:00</sub>| Unimodal responses                                  |        |
 |         |             |          |                                                     |        |
 |         |<sub>19:00 - 20:00</sub>| Practical 11: Unimodal responses                    |        |
