@@ -45,15 +45,15 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 |         |<sub>09:30 - 10:15</sub>| Recap of basic statistical concepts                 |        |
 |         |<sub>10:15 - 10:45</sub>| ☕ Break                                             |        |
 |         |<sub>10:45 - 11:45</sub>| Practical 1: Sampling variation and simulation      |        |
-|         |<sub>11:45 - 12:30</sub>| Recap of Generalised Linear Models (GLMs)           |        |
+|         |<sub>11:45 - 12:30</sub>| Basics of Generalised Linear Models (GLMs)          |        | <!-- distributions and such-->
 |         |<sub>12:30 - 13:30</sub>| 🍽 Lunch                                            |        |
 |         |<sub>13:30 - 14:15</sub>| Practical 2: Fitting GLMs                           |        |
-|         |<sub>14:15 - 15:00</sub>| Multispecies GLMs                                   |        |
+|         |<sub>14:15 - 15:00</sub>| Multispecies GLMs                                   |        |<!-- what it means to have multiple species -->
 |         |<sub>15:00 - 15:30</sub>| ☕ Break                                             |        |
-|         |<sub>15:30 - 16:30</sub>| Practical 3: Fitting multispecies GLMs              |        |
+|         |<sub>15:30 - 16:30</sub>| Practical 3: Fitting multispecies GLMs              |        | <!-- model selection, hypo testing ?-->
 |         |<sub>16:30 - 17:15</sub>| Introduction to the gllvm R-package                 |Pekka   |
 |         |             |          |                                                     |        |
-|         |<sub>19:00 - 20:00</sub>| 🎉 Icebreaker                                       |        |
+|         |<sub>19:00 - 20:00</sub>| Brainstorming properties of community data          |Bert    |
 |---------|-------------|----------------------------------------------------------------|--------|
 |Tuesday  |<sub>09:00 - 09:45</sub>| Multispecies mixed effects models                   |Jenni   |
 |         |<sub>09:45 - 10:45</sub>| Practical 4: Fitting multispecies models            |        |
@@ -64,20 +64,20 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 |         |<sub>14:00 - 14:45</sub>| Accommodating spatial or temporal autocorrelation   |Francis/Pekka|
 |         |<sub>14:45 - 15:15</sub>| ☕ Break                                             |        |
 |         |<sub>15:15 - 16:15</sub>| Practical 6: Spatial or temporal JSDMs              |Pekka   |
-|         |<sub>16:15 - 17:00</sub>| Phylogenetic GLMM/JSDM                              |Bert    |
+|         |<sub>16:15 - 17:00</sub>| Hierarchical environmental responses                |Bert/Jenni|
 |         |             |          |                                                     |        |
-|         |<sub>19:00 - 20:00</sub>| Practical 7: Phylogenetic model                     |        |
+|         |<sub>19:00 - 20:00</sub>| Practical 7: Traits and the phylogenetic model      |Bert    |
 |---------|-------------|----------------------------------------------------------------|--------|
-|Wednesday|<sub>09:00 - 09:45</sub>| Background to ordination methods                    |Bert    |
-|         |<sub>09:45 - 10:45</sub>| Practical 8: Model-based unconstrained/residual ordination |        |
+|Wednesday|<sub>09:00 - 09:45</sub>| Model-based ordination                              |Bert    |
+|         |<sub>09:45 - 10:45</sub>| Practical 8: Model-based unconstrained              |        |
 |         |<sub>10:45 - 11:15</sub>| ☕ Break                                             |        |
-|         |<sub>11:15 - 12:00</sub>| Accounting for nested designs                       |        |
+|         |<sub>11:15 - 12:00</sub>| Conditioning and nested designs                     |        |
 |         |<sub>12:00 - 13:00</sub>| 🍽 Lunch                                            |        |
-|         |<sub>13:00 - 14:00</sub>| Practical 9: Ordination accounting for nesting      |        |
+|         |<sub>13:00 - 14:00</sub>| Practical 9: Conditioning                           |        |
 |         |<sub>14:00 - 14:45</sub>| Bringing covariates into the ordination             |        |
 |         |<sub>14:45 - 15:15</sub>| ☕ Break                                             |        |
-|         |<sub>15:15 - 16:15</sub>| Practical 10: Constrained/concurrent ordination     |        |
-|         |<sub>16:15 - 17:00</sub>| Unimodal/quadratic ordination                       |        |
+|         |<sub>15:15 - 16:15</sub>| Practical 10: Ordination with predictors            |        |
+|         |<sub>16:15 - 17:00</sub>| Unimodal responses                                  |        |
 |         |             |          |                                                     |        |
 |         |<sub>19:00 - 20:00</sub>| Practical 11: Unimodal responses                    |        |
 |---------|-------------|----------------------------------------------------------------|--------|
@@ -86,11 +86,11 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 |         |<sub>12:30 - 13:15</sub>| 🍽 Lunch                                            |        |
 |         |<sub>13:15 - 17:00</sub>| 🚶 Excursion                                        |        |
 |         |             |          |                                                     |        |
-|         |<sub>19:00 - 20:00</sub>| (Re)analysing article Part I                        |        |
+|         |<sub>19:00 - 20:00</sub>| (Re)analysing article Part I                        |Bert/Audun|
 |---------|-------------|----------------------------------------------------------------|--------|
 |Friday   |<sub>08:45 - 09:00</sub>| Wrap-up                                             |Bert    |
 |         |<sub>09:00 - 09:45</sub>| [Concepts in model-based clustering](https://github.com/BertvanderVeen/SSMA/blob/main/Friday/modelbasedclustering.pdf)                  |Francis |
-|         |<sub>09:45 - 10:30</sub>| Other packages for (model-based) multivariate analysis|        |
+|         |<sub>09:45 - 10:30</sub>| Other packages for (model-based) multivariate analysis|Bert  |
 |         |<sub>10:30 - 11:30</sub>| Practical 12: Comparing ordinations                 |        |
 |         |<sub>11:30 - 12:30</sub>| 🍽 Early lunch                                      |        |
 |         |<sub>12:30 - 14:00</sub>| (Re)analysing article Part II / Discussion          |        |
