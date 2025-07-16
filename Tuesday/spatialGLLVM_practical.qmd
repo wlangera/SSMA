@@ -1,0 +1,290 @@
+---
+title: "Practical: accommodating spatial and temporal correlations in GLLVMs"
+author: "Pekka Korhonen, Jenni Niku"
+format:
+  html:
+    code-overflow: wrap
+bibliography: ref.bib
+---
+
+::: hidden
+$$
+\newcommand\bm{{\mathcal{y}}}
+$$
+:::
+
+## Atlantic reef fish data
+
+In this practical, we'll be exploring using `gllvm` for modeling the spatiotemporal dynamics present in the Atlantic reef fish dataset of @cao2024reef. The data consist of encounter counts for $21$ reef fish species collected through video data from a total of $\sim 4300$ stations situated across the southeastern coast of the United States. The surveying period runs from 2011 to 2021.
+
+The computational complexity of estimating spatial models raises very rapidly with the number of locations (this explored a bit more in the bonus Section near the end of the document). To get the models to fit quicker, for this practical, we'll only use observations from a randomly sampled subset of $294$ stations.
+
+Load up the required packages and the dataset:
+
+```{r}
+#| warning: false
+
+library(gllvm)
+library(ggplot2)
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(sf)
+library(Matrix)
+
+set.seed(9725)
+load("../data/reeffish.Rdata")
+head(yreef, c(6,6))
+head(Xreef)
+head(dcoords)
+```
+
+Visualize the locations and timepoints on a map, using the `sf` and `rnaturalearth` packages:
+
+```{r, out.width="100%"}
+world <- ne_countries(scale = "medium", returnclass = "sf")
+# limits for plot
+lon_min <- min(dcoords[,"lon"])-3
+lon_max <- max(dcoords[,"lon"])+2
+lat_min <- min(dcoords[,"lat"])-3
+lat_max <- max(dcoords[,"lat"])+1
+
+map <- ggplot(data = world) +
+  geom_sf() +
+  coord_sf(xlim = c(lon_min, lon_max), ylim = c(lat_min, lat_max), expand = FALSE) +
+  theme_minimal()
+#map
+
+cxyt<-data.frame(lon=jitter(Xreef$Start_Longitude, amount = 0.1), 
+                 lat = jitter(Xreef$Start_Latitude, amount = 0.1), year=Xreef$Year)
+samples <- cxyt
+map +
+  geom_point(data = samples, aes(x = lon, y = lat), color = as.numeric(cxyt$year), size = 1) +
+  labs(title = "Southeastern U.S.", x = "Longitude", y = "Latitude")
+```
+
+See whether a negative binomial model is appropriate for the data, by first fitting a simple model containing no latent variables or community-level effects:
+
+```{r}
+#| warning: false
+#| cache: true
+#| fig-width: 10
+#| fig-height: 7
+
+Xform = ~ Start_Depth + C.Substrate
+fit0 <- gllvm(yreef, Xreef, formula = Xform, family = "negative.binomial", num.lv = 0)
+par(mfrow=c(2,3))
+plot(fit0)
+```
+
+### Accommodating temporal correlation
+
+::: {.callout-note icon="false"}
+Remove the option `eval: false` from the chunk, when ready to render the document.
+:::
+
+1)  Next, use the `row.eff` formula and the argument `studyDesign` to fit a model with AR(1) correlated random effect for sampling year.
+2)  How strong are the temporal correlations present in the data? Plot the variance partitionings.
+3)  Calculate and plot the predictions errors for the yearly effects using `getPredictErr()`.
+4)  What suitable structures are there for modeling temporal correlation in `gllvm`, and how do they differ?
+
+```{r}
+#| eval: false
+
+fit_ryear <- gllvm(yreef, Xreef, formula = Xform, family = "negative.binomial", num.lv = 0, row.eff = ??, studyDesign = ??)
+# Check for convergence by e.g., plotting gradient values:
+plot(c(fit_ryear$TMBfn$gr()))
+# Print the model summary
+summary(fit_ryear)
+# Coefficient plot
+coefplot(fit_ryear)
+```
+
+::: {.callout-caution collapse="true"}
+## Click here for answers
+
+```{r}
+#| warning: false
+#| cache: true
+
+# 1) First, fit the model, here using the AR(1) correlation structure:
+fit_rAR1 <- gllvm(yreef, Xreef, formula = Xform, family = "negative.binomial", num.lv = 0, row.eff = ~corAR1(1|Year), studyDesign = Xreef[,"Year",drop=FALSE])  # note, taht drop=FALSE is needed to ensure right form for studyDesign
+
+# 2) Print the AR1 parameters:
+fit_rAR1$params$sigma
+# Calculate the variance partitioning:
+VP_rAR1 <- varPartitioning(fit_rAR1)
+plotVP(VP_rAR1, col=hcl.colors(3, "viridis"), args.legend=list(cex=0.7))
+
+# 3) Next, calculate predictions errors:
+predErr <- getPredictErr(fit_rAR1)
+peYear <- predErr$row.effects[[1]]
+# Sampling years, and the predicted effects:
+years <- as.numeric(levels(factor(Xreef$Year)))
+r0 <- fit_rAR1$params$row.params.random
+# Plot first the point predictions:
+plot(years, r0, ylim= range(r0) + c(-1.96,1.96)*max(abs(peYear)), main="AR1 random effect: Year")
+# Add then the prediction errors:
+lines(years, r0 - 1.96*peYear, col=2)
+lines(years, r0 + 1.96*peYear, col=2)
+```
+:::
+
+### Adding spatially correlated latent variables
+
+5)  Use the `lvCor` to incorporate LVs to the model with an exponential covariance structure. Take note of the time required to fit such a model, e.g., with `system.time()`.
+6)  How is the strength of the spatial correlation in the given data? Draw also the variance partitioning plot.
+7)  Visualize the estimated spatial effects on the map (for a couple of species, say Grayspy vs. Hogfish)
+8)  Optional: repeat the above, but instead, use `lvCor` to specify a Matérn covariace stucture (with $\nu=3/2$ or $5/2$) for the LVs. Alternatively, continue with `corExp` but see if varying the argument `NN` affects the estimation (speed).
+
+```{r}
+#| eval: false
+
+t1 <- system.time(fit_statLV_ryear <- gllvm(yreef, Xreef, formula = Xform, family = "negative.binomial", studyDesign = ??, row.eff = ??, num.lv = ??, lvCor = ??, distLV = ??, Lambda.struc = ??, sd.errors=FALSE))
+t1
+```
+
+::: {.callout-caution collapse="true"}
+## Click here for answers
+
+```{r}
+#| warning: false
+#| cache: true
+
+# First, go from lat-lon to xy using a (too?) simple projection:
+coordxy <- data.frame(x=6371*dcoords[,1]*cos(32), y=6371*dcoords[,2])
+
+# 5) Fit the model:
+t1 <- system.time(fit_LVexp <- gllvm(yreef, Xreef, formula = Xform, family = "negative.binomial", studyDesign = Xreef[,c("Year", "Station_ID")], row.eff = ~corAR1(1|Year), num.lv = 2, lvCor = ~corExp(1|Station_ID), distLV = coordxy, Lambda.struc = "UNN", sd.errors=FALSE))
+t1
+# check convergence, e.g.:
+plot(c(fit_LVexp$TMBfn$gr()))
+
+# 6) Visualize the strength of correlation w.r.t. distance:
+rho1 <- fit_LVexp$params$rho.lv[1]
+rho2 <- fit_LVexp$params$rho.lv[2]
+fun1 <- function(d) exp(-d/rho1)
+fun2 <- function(d) exp(-d/rho2)
+curve(fun1, from=0, to=15000, xlab="distance", ylab="exp(-d/rho)", ylim=c(0,1), main="Spatial correlation")
+abline(v=rho1, lty=2)
+par(new=TRUE)
+curve(fun2, from=0, to=15000, xlab="distance", ylab="exp(-d/rho)", ylim=c(0,1), col="red")
+abline(v=rho2, lty=2, col="red")
+legend("topright", legend = c("LV1", "rho1", "LV2", "rho2"), col = c("black", "black", "red", "red"), lty=c(1,2,1,2))
+# As we see, the correlation extends much further for LV2
+```
+
+```{r}
+#| warning: false
+#| cache: true
+#| fig-width: 10
+#| fig-height: 7
+
+# The variance partitioning:
+VP_LVexp <- varPartitioning(fit_LVexp)
+plotVP(VP_LVexp, col=hcl.colors(5, "viridis"), args.legend=list(cex=0.7))
+```
+
+```{r}
+#| warning: false
+#| cache: true
+#| fig-width: 10
+#| fig-height: 7
+
+# 7) Compare spatial effects for two different species, here Graysby (Cephalopholis cruentata) and Hogfish (Lachnolaimus maximus)
+# First, extract LV*loadings from the model:
+LVgamma <- fit_LVexp$lvs %*% t(fit_LVexp$params$theta %*% diag(fit_LVexp$params$sigma.lv))
+# Graysby and hogfish are the third and the fifth species, respectively
+sp1 <- 3; sp2 <- 5
+# Graysby:
+map +
+  geom_point(data = dcoords, aes(x = lon, y = lat, colour=LVgamma[,sp1]), size = 3) +
+  labs(title = "Graysby (Cephalopholis cruentata)", x = "Longitude", y = "Latitude") + scale_colour_gradientn(colours = hcl.colors(5, palette = "inferno"), name = "LV*loadings")
+# Hogfish:
+map +
+  geom_point(data = dcoords, aes(x = lon, y = lat, colour=LVgamma[,sp2]), size = 3) +
+  labs(title = "Hogfish (Lachnolaimus maximus)", x = "Longitude", y = "Latitude") + scale_colour_gradientn(colours = hcl.colors(5, palette = "inferno"), name = "LV*loadings")
+
+# Spatial correlation stronger for hogfish, as it has bigger loading for the second LV:
+(fit_LVexp$params$theta %*% diag(fit_LVexp$params$sigma.lv))[c(sp1,sp2),]
+```
+
+```{r}
+#| warning: false
+#| cache: true
+
+# 8) corExp with smaller NN (default is 10):
+t2 <- system.time(fit_LVexp2 <- gllvm(yreef, Xreef, formula = Xform, family = "negative.binomial", studyDesign = Xreef[,c("Year", "Station_ID")], row.eff = ~corAR1(1|Year), num.lv = 2, lvCor = ~corExp(1|Station_ID), distLV = coordxy, Lambda.struc = "UNN", sd.errors=FALSE, NN=6))
+t2
+```
+:::
+
+## Bonus: why are spatial GLLVMs so slow to fit?
+
+The answer lies largely in the sizes of the respective covariance matrices. The objective function for fitting a standard GLLVM (i.e., $u\sim\mathcal{N}(0,I)$) via variational approximations is given by: \begin{equation}
+       \underline{\ell}(\Psi,\xi) = \sum_{i=1}^n\sum_{j=1}^m\bigg\{\frac{y_{ij}\tilde\eta_{ij} - \mathbb{E}_{q}\{b(\eta_{ij})\}}{\phi_j} + c(y_{ij},\phi_j)\bigg\} + \frac{1}{2} \left\{ \log\det(A) - \text{tr}(A)- a^\top a \right\},
+\end{equation} where $\{a, A\}$ are the mean and covariance parameters for the Gaussian variational distribution.
+
+When the assumption $u \sim \mathcal{N}(0,I)$ is replaced with a more general $u \sim \mathcal{N}(0,\Sigma)$, the latter term in the objective instead becomes: $$\frac{1}{2} \left\{ \log\det(A) - \text{tr}({\Sigma}^{-1}A)- a^\top \Sigma^{-1}a - \log\det(\Sigma) \right\}.$$ When $\Sigma$ relates to correlation in time, e.g., for AR(1): $$
+\Sigma = \begin{pmatrix}
+    1 & \rho & \rho^2 & \cdots & \rho^{10} \\
+    \rho & 1 & \rho & \cdots & \rho^{9} \\
+    \vdots & \vdots & \vdots & \ddots & \vdots \\
+    \rho^{1} & \rho^{9} & \rho^{8} & \cdots & 1
+\end{pmatrix}; \quad \rho \in (-1,1),
+$$ the number of distinct timepoints, and thus the size of $\Sigma$, might stay relatively limited in most repeated measures scenarios in ecology. However, when $\Sigma$ represents spatial correlations among a set of $S$ locations, i.e., $\Sigma = (\sigma_{ss'})_{1\leq s,s'\leq S}$, where the elements $\sigma_{ss'}$ are determined by some covariance kernel, e.g., Matérn: $$
+\sigma_{ss'} = \frac{2^{1-\nu}}{\Gamma(\nu)}(\kappa ||s-s'|| )^{\nu} K_{\nu}(\kappa ||s - s'||),
+$$ the computational cost of inverting $\Sigma$ becomes non-negligible quickly, as the number of distinct sampling locations can often be fairly large. Inverting a matrix of $S \times S$ generally takes roughly $S^3$ steps, and moreover, this needs to be performed multiple times during the model estimation process. Thus, when working in spatial statistics, the development of efficient approximation techniques relating to $\Sigma$ becomes crucial.
+
+1)  Simulate covariance matrices of increasing sizes and invert them naively (see the `solve()` function), monitoring the computation time. At what point does the operation grow noticeably slow?
+2)  As covariance matrices are a bit special vs. a general square matrix, i.e., they are both symmetric and positive definite, some of the typical matrix operations can usually be sped up by exploiting these properties. Compare the naive inversion to ones which are based on Cholesky decomposition. How drastic are the improvements, if any?
+
+```{r}
+#| eval: false
+#| cache: true
+
+S <- seq(400, 4000, by=400)
+Sigma <- rWishart(1, S[10], diag(S[10]))[,,1]
+system.time(solve(Sigma))
+system.time(chol2inv(chol(Sigma)))
+system.time(Matrix::chol2inv(Matrix::chol(Sigma)))
+```
+
+### Sparse matrices
+
+3)  Instead of correlation matrices, generate symmetric sparse matrices, with various degrees of sparseness, and see how dense `solve()` compares to specialized sparse matrix inversion algorithms.
+
+```{r}
+#| eval: false
+#| cache: true
+
+Mspar <- Matrix::rsparsematrix(4000, 4000, density=0.25, symmetric=TRUE)
+Mspar <- Mspar + diag(rep(1,4000))
+Mdens <- as.matrix(Mspar)  # store the same matrix as dense in order to compare
+system.time(solve(Mdens))
+system.time(solve(Mspar, diag(rep(1,4000)), sparse=TRUE))
+```
+
+Sparse matrix operations can be incredibly efficient (much moreso than demonstrated here), but often only if they are of a known pattern, such as band matrix:
+
+```{r}
+#| eval: false
+#| cache: true
+
+diags <- matrix(rnorm(4000*1000), 4000, 1000)
+Mband <- Matrix::bandSparse(4000, k=4*(0:999), diagonals=diags, symmetric=TRUE)
+Matrix::nnzero(Mband) # number of non-zero entries
+Mbdens <- as.matrix(Mband)
+system.time(solve(Mbdens))
+system.time(solve(Mband, diag(rep(1,4000)), sparse=TRUE))
+```
+
+Oftentimes the popular techniques in spatial statistics seek to replace $\Sigma$ by some sparse approximation $\hat{\Sigma}$, or rather, approximate the inverse $\Sigma^{-1}$ with a sparse matrix, as sparse covariance is often too strong of an assumption vs. the inverse. A zero element of $\Sigma^{-1}$ corresponds to a pair of variables that are *only* **conditionally** independent w.r.t. all the rest of the set of variables. Prime examples of these types of approximations include:
+
+-   The stochastic partial differential equation (SPDE) approach of @lindgren11
+    -   Uses a discretization of the study area to approximate the original Gaussian process with a sparse one.
+-   Nearest neighbour Gaussian process (NNGP), e.g., @datta16hierarchicalnngp
+    -   Builds a sparse approximation of $\Sigma^{-1}$ by considering for each variable only $\leq K$ nearest to it from the rest of the set.
+-   Gaussian process with inducing points [@titsias2009inducing]
+    -   Uses a small set of (possibly pseudo-)input points to approximate the spatial process, bypassing the need to invert the full data covariance matrix $\Sigma$.
+
+The SPDE approach is implemented in the `R-inla` library/framework, which can be used in conjunction with `TMB` (the software that `gllvm` is built on) in a fairly straightforward fashion. NNGP has been implemented for modeling spatial processes in the popular Bayesian JSDM package `Hmsc`. Currently, `gllvm` uses NNGP approximation in the context of modeling phylogenetic random effects, but will soon™ feature it also for modeling Matèrn correlations. Inducing point approaches can instead be found in many of the popular Gaussian process or machine learning centric packages, such as `GPflow` in `python`, for example.

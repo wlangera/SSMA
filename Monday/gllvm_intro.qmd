@@ -1,0 +1,411 @@
+---
+title: "gllvm 2.0: Fast fitting of advanced ordination methods and joint species distribution models"
+author: "Pekka Korhonen"
+date: 7/21/2025
+date-format: long
+format: revealjs
+editor: visual
+bibliography: ref.bib
+---
+
+# Brief intro to `gllvm`
+
+## 
+
+What?
+
+-   `R` package for joint species distribution modeling, employing generalized linear latent variable models (GLLVM)
+-   Emphasis on model-based ordination and co-occurence
+-   Fast estimation based on approximate marginal likelihood
+
+When?
+
+-   Initial version accompanied @Nikuetal:2017
+-   First article dedicated on the software in @Nikuetal:2019b
+-   Lots of functionalities added since then
+
+## Installing the `gllvm` package
+
+The CRAN version of the package can be installed using:
+
+```{r}
+#| echo: true
+#| eval: false
+
+install.packages("gllvm")
+```
+
+For the more up to date, developmental version, instead use:
+
+```{r}
+#| echo: true
+#| eval: false
+
+devtools::install_github("JenniNiku/gllvm")
+```
+
+## Abundance/community data
+
+Example datasets included in `gllvm`:
+
+```{r}
+library(gllvm)
+```
+
+```{r}
+#| echo: true
+
+data("beetle")
+head(beetle$Y, c(5,8))
+```
+
+```{r}
+#| echo: true
+
+data("kelpforest")
+head(kelpforest$Y, c(5,15))
+```
+
+## "Standard" GLLVM[^1]
+
+[^1]: @SkrondalRabe-Hesketh:2004
+
+Let $y_{ij}$ denote the record for response (species, OTUs, etc.) $j = 1, \dots, m$, recorded at sample $i = 1, \dots, n$, e.g., study sites. Additionally, we may have records for environmental variables $\boldsymbol{x}_i = (x_{i1},\dots, x_{ik})^\top$ for each sample.
+
+In a GLLVM, the mean $\mathbb{E}[y_{ij}] = \mu_{ij}$ is regressed against $\boldsymbol{x}_i$ and a set of $d$ **latent variables** $\boldsymbol{u}_i = (u_{i1},\dots,u_{id})^\top$ via:
+
+$$g(\mu_{ij}) = \eta_{ij} = \alpha_i + \beta_{0j} + \boldsymbol{x}_i^\top\boldsymbol\beta_j + \boldsymbol u^\top_i\boldsymbol\gamma_j,$$
+
+for each pair $i,j$.
+
+------------------------------------------------------------------------
+
+$$g(\mu_{ij}) = \eta_{ij} = \alpha_i + \beta_{0j} + \boldsymbol{x}_i^\top\boldsymbol\beta_j + \boldsymbol u^\top_i\boldsymbol\gamma_j$$
+
+-   $g(\cdot)$ is a link function, e.g., logit, probit
+-   $\alpha_i$ is a row/sample effect (fixed or random)
+-   $\beta_{0j}$, $\boldsymbol \beta_j$ are species-specific regression coefficients
+-   $\boldsymbol u_i \sim \mathcal{N}_d(\boldsymbol 0, \boldsymbol{\mathcal{I}})$ i.i.d.
+-   $\boldsymbol{\gamma}_j = (\gamma_{j1},\dots,\gamma_{jd})^\top$ are LV **loadings**
+
+Furthermore, in a fouth-corner GLLVM: $$\boldsymbol \beta_j = \boldsymbol \beta_e + \boldsymbol B_{et}\boldsymbol t_j + \boldsymbol b_j$$
+
+## Ordination and interspecies correlations
+
+-   With the choice $d=2$, GLLVMs can be used for unconstrained (or residual) ordination of observations/samples, by plotting the predicted LV scores $\boldsymbol u_i=(u_{i1}, u_{i2})^\top$. Additionally, biplots displaying also the effects of species can be constructed easily.
+-   Co-occurance patterns between species can be inspected via the residual correlation matrix $\boldsymbol \Sigma = \boldsymbol \Lambda \boldsymbol \Lambda^\top$, where $\boldsymbol \Lambda = [\boldsymbol \gamma_1 \dots \boldsymbol \gamma_m]^\top$ holds the species' loadings.
+
+------------------------------------------------------------------------
+
+```{r}
+#| echo: true
+#| cache: true
+
+
+m0 = gllvm(beetle$Y, num.lv=2, family="negative.binomial")
+ordiplot(m0, symbols = TRUE, s.colors=beetle$X$Area, pch=19, jitter=TRUE)
+```
+
+------------------------------------------------------------------------
+
+```{r}
+#| echo: true
+#| cache: true
+
+
+cr = getResidualCor(m0); library(corrplot)
+corrplot(cr, diag=FALSE, type="lower", tl.cex=0.4, order="AOE", tl.srt=45)
+```
+
+##  {.smaller}
+
++-----------------------+-------------------------------+-------------------------------+
+|                       |                               |                               |
++-----------------------+-------------------------------+-------------------------------+
+| ```                   | ```                           | ```                           |
+| Model type            |       Linear, i.i.d. LVs;     |         Correlated LVs;       |
+| ```                   |       Fourth-corner GLLVM     |         Quadratic LVs;        |
+|                       | ```                           |          Informed LVs;        |
+|                       |                               |       (Phylogenetic) REs;     |
+|                       |                               |     Reduced-rank regression   |
+|                       |                               | ```                           |
++-----------------------+-------------------------------+-------------------------------+
+| ```                   | ```                           | ```                           |
+| Response type         |        Presence-absence;      |      Zero-inflated counts;    |
+| ```                   |     (Overdispersed) counts;   |      Positive continuous;     |
+|                       |            Ordinal;           |      Percent cover (with      |
+|                       |     (Non-negative) continuous |      0% and 100% records)     |
+|                       | ```                           | ```                           |
++-----------------------+-------------------------------+-------------------------------+
+| ```                   | ```                           | ```                           |
+| Community-level       |       Single fixed/random     |     Multiple fixed/random;    |
+|  row effects          | ```                           | Correlated/structured effects |
+| ```                   |                               | ```                           |
++-----------------------+-------------------------------+-------------------------------+
+| ```                   | ```                           | ```                           |
+| Ordination analysis   |         Unconstrained;        |          Constrained;         |
+| ```                   |            Residual           |           Concurrent          |
+|                       | ```                           | ```                           |
++-----------------------+-------------------------------+-------------------------------+
+| ```                   | ```                           | ```                           |
+| Species association   |      Residual correlation     |    Environmental correlation  |
+| ```                   | ```                           | ```                           |
++-----------------------+-------------------------------+-------------------------------+
+| ```                   | ```                           | ```                           |
+| Inference             |      Analysis of deviance;    |   Fixed-effects covariances;  |
+| ```                   |       CIs for parameters      |      Prediction intervals;    |
+|                       | ```                           |       Missing data (MAR)      |
+|                       |                               | ```                           |
++-----------------------+-------------------------------+-------------------------------+
+| ```                   | ```                           | ```                           |
+| Visualization         |     Ordination (bi-)plots;    |   Uncertainty in ordination;  |
+| ```                   |     Estimated fixed effects   |    Predicted random effects;  |
+|                       | ```                           |   Variance partitioning plot  |
+|                       |                               | ```                           |
++-----------------------+-------------------------------+-------------------------------+
+| ```                   | ```                           | ```                           |
+| Model fitting methods |     Laplace approximation;    |          Extended VA;         |
+| ```                   |   Variational approximations  |      Parallel computation     |
+|                       | ```                           | ```                           |
++-----------------------+-------------------------------+-------------------------------+
+
+: `gllvm` 2.0: original featureset (left) vs. newer additions (right)
+
+# Examples
+
+## SBC LTER kelp forest data [^2]
+
+[^2]: @SBC_LTER
+
+-   Comprises of percent cover records of $m=130$ species of macroalgae and sessile invertebrates
+-   Collected between 2000--2020 along 44 permanent transects across 11 observational sites
+    -   Some of the sites were located on islands, others on coast
+-   Around 88% of the covers were recorded as zeros
+-   Seabed rockiness and giant kelp frond density were also considered as environmental covariates
+
+```{=html}
+<!--
+## Ordered beta GLLVM
+
+High % of zeros $\implies$ a simple beta GLLVM not best suited
+
+Consider instead the _ordered beta_ distribution [@kubinec_2023]:
+\begin{align}
+  & P(y_{ij}; \eta_{ij}, \phi_j) \\
+  &= \begin{cases}
+   \rho_{ij}^{(0)}, && \text{if $y_{ij}=0$}\\
+    \left(\rho_{ij}^{(1)} - \rho_{ij}^{(0)}\right) \cdot f_{\text{beta}}(y_{ij};\mu_{ij},\phi_j), && \text{if $y_{ij}\in (0,1)$} \\
+    1-\rho_{ij}^{(1)}, && \text{if $y_{ij}=1$}
+  \end{cases}
+\end{align}
+where $g\left(\rho_{ij}^{(k)}\right) = \zeta_{j}^{(k)} - \eta_{ij}$, with $\zeta_{j}^{(0)} < \zeta_{j}^{(1)}$.
+
+-->
+```
+````{=html}
+<!--
+## 
+
+Ordered beta (and hurdle beta) GLLVMs were made available in `gllvm` in @korhonen2024a, and are accessed via the `family` argument:
+```{r}
+#| eval: false
+#| echo: true
+
+gllvm(y=Y, X=X, num.lv=2, family="orderedBeta")
+gllvm(y=Y, X=X, num.lv=2, family="betaH")
+```
+
+Estimation of these models (and few others) relies on _extended variational approximations_ [EVA, @korhonen2023]: 
+
+- Proposed to complement the original options of Laplace's approximation (LA) and varitional approximations (VA)
+- Combines the speed of VA with the generality of LA
+- Closer to VA in terms of accuracy of parameter estimation
+
+-->
+````
+
+## Structured row effects and LVs
+
+To accommodate the hierarchical study design in the SBC LTER dataset, the `row.eff` argument now accepts formulas, e.g.:
+
+```{r}
+#| eval: false
+#| echo: true
+
+gllvm(y=Y, X=X, family="orderedBeta", row.eff=~(1|SITE/TRANSECT) + YEAR, 
+      studyDesign=Z[,c("SITE","TRANSECT","YEAR")])
+```
+
+which would fit a model with a fixed effect corresponding to sampling year, and a random effect for each transect nested within the observation sites. Similarly, for LVs, e.g.:
+
+```{r}
+#| eval: false
+#| echo: true
+
+gllvm(y=Y, X=X, family="orderedBeta", num.lv=2, row.eff=~(1|SITE/TRANSECT), 
+      lvCor=~(1|YEAR), studyDesign=Z[,c("SITE","TRANSECT","YEAR")])
+# or for autoregressive correlation:
+gllvm(y=Y, X=X, family="orderedBeta", num.lv=2, row.eff=~(1|SITE/TRANSECT), 
+      lvCor=~corAR1(1|YEAR), studyDesign=Z[,c("SITE","TRANSECT","YEAR")])
+```
+
+with other options including `corExp`, `corMatern`, and `corCS`.
+
+## 
+
+The functions `varPartitioning` and `plotVP` are useful for models with (nested) row effects, LVs, and covariate effects:
+
+![](plotVP_1.png){width="100%," fig-align="center"}
+
+## Phylogenetic random effect model
+
+If the data include functional traits for the species, a fourth-corner GLLVM $$
+\boldsymbol \beta_j = \boldsymbol \beta_e + \boldsymbol B_{et}\boldsymbol t_j + \boldsymbol b_j
+$$ can be fitted with
+
+```{r}
+#| echo: true
+#| eval: false
+
+gllvm(y=Y, X=X, TR=Traits, family="orderedBeta", num.lv=2, 
+      formula=~KELP_FRONDS + PERCENT_ROCKY 
+        + (KELP_FRONDS + PERCENT_ROCKY) : (GROUP),
+        randomX=~KELP_FRONDS + PERCENT_ROCKY, n.init=5)
+```
+
+In the standard case, $\boldsymbol b_j$ are independent for $j=1,\dots,m$. This can be relaxed if phylogenetic information is available.
+
+## 
+
+Assuming a phylogenetic covariance matrix $\boldsymbol C$, in a phylogenetic GLLVM[^3], for covariate $l=1,\dots,k$, we have $$
+  (b_{1l},\dots,b_{ml})^\top \sim \mathcal{N}_m\left(\boldsymbol 0, \sigma_l^2[\boldsymbol C\rho_l + (1-\rho_l)\boldsymbol{\mathcal{I}}]\right),
+$$ where $\rho_l \in [0,1]$ is the *phylogenetic signal parameter*, which can also be shared between the covariates in $\boldsymbol X$, i.e., $\rho_l = \rho$ for each $l=1,\dots,k$.
+
+[^3]: @vanderVeen2024
+
+As such a model can be very demanding computationally, w.r.t. $m$, in `gllvm` we have adopted the nearest neighbour Gaussian process appoximation of @datta16hierarchicalnngp.
+
+````{=html}
+<!--
+## Phylogenetic tree and covariance $\boldsymbol C$
+
+For generating the required objects, we use the `ape` package:
+
+```{r}
+#| echo: true
+#| eval: false
+
+library(ape)
+phylo = as.phylo(˜Kingdom/Phylum/Class/Order/Family/Genus/Species, data=taxa)
+tree = ape::compute.brlen(phylo)
+colMat = ape::vcv(tree)
+dist = ape::cophenetic.phylo(tree)
+```
+
+Additionally, one needs to consider the number of neighbours for the NNGP approximation (typically 10-15) as well as decide on the ordering for the species in the data.
+
+See the vignette on the phylogenetic model <https://jenniniku.github.io/gllvm> for more details
+-->
+````
+
+## Model fitting and visualization
+
+Phylogenetic random effect model can then be fitted with:
+
+```{r}
+#| echo: true
+#| eval: false
+
+ftPhylo = gllvm(y=Y[,order], X=X, TR=Traits[order,],
+            formula=˜(KELP_FRONDSsc + PERCENT_ROCKYsc) +
+              (KELP_FRONDSsc + PERCENT_ROCKYsc) : (GROUP),
+            randomX=~KELP_FRONDSsc + PERCENT_ROCKYsc,
+            colMat=list(colMat[order,order], dist=dist[order,order]),
+            colMat.rho.struct="term", nn.colMat=10, family="orderedBeta",
+            n.init=5, optim.method="L-BFGS-B", num.lv=2)
+```
+
+Signal parameter common to all covariates can be specified instead with the argument `colMat.rho.struct="single"`
+
+Results, together with the phylogenetic tree (constructed with the `ape` package), can be visualized with:
+
+```{r}
+#| echo: true
+#| eval: false
+
+phyloplot(ftPhylo, tree)
+```
+
+## `phyloplot`
+
+![](phyloPlot_1.png){width="100%," fig-align="center"}
+
+## Scottish ground beetle dataset[^4]
+
+[^4]: @Riberaetal:2001
+
+-   Counts from $m=68$ species of beetles, on $n=87$ sites
+-   Notably, the data include $k=17$ primary covariates
+    -   Among them, e.g.; organic content, soil pH, moisture, canopy height, stem density, biomass, elevation, etc.
+    -   In a typical GLM, $\eta_{ij} = \beta_{0j} + \boldsymbol{x}_i^\top \boldsymbol \beta_j$, this would mean $1224$ regression parameters
+-   Risks of overfitting can be alleviated via reduced-rank regression, or *constrained ordination*
+
+## Constrained ordination / RRR
+
+Let $\boldsymbol B$ denote a $k \times d$ matrix of *canonical coefficients*. Then, we impose the following structure for the coefficients $\boldsymbol \beta_j$: $$
+  \boldsymbol \beta_j = \boldsymbol B\boldsymbol \gamma_j \, \implies \, \eta_{ij} = \beta_{0j} + \boldsymbol x_i^\top \boldsymbol B \boldsymbol \gamma_j.
+$$ Alternatively, the resulting model can be seen as a GLLVM with latent variables in the from of $$
+  \boldsymbol u_i = \boldsymbol B^\top \boldsymbol x_i.
+$$ Note, that $\boldsymbol B$ can be formulated as either fixed or random.
+
+## 
+
+```{r}
+#| echo: true
+#| eval: false
+
+ftConstOrd = gllvm(y=beetle, X=X, family="negative.binomial", num.RR=2)
+# 'randomB' argument could be used here to specify B as random
+par(mfrow=c(1,2)) 
+ordiplot(ftConstOrd, symbols=TRUE)
+plot(summary(ftConstOrd), cex.axis=.75, main="Summary plot")
+```
+
+![](constord2.png){width="100%," fig-align="center"}
+
+## Concurrent ordination[^5]
+
+[^5]: @van2023concurrent
+
+When $\boldsymbol u_i = \boldsymbol B^\top \boldsymbol x_i$, the LVs are governed solely by the covariates observed---often unrealistic in practice. An unique advantage of the GLLVM framework is the capacity to incorporate "residual" LVs: $$
+  \eta_{ij} = \beta_{0j} + \boldsymbol x_i^\top \boldsymbol B \boldsymbol \gamma_j + \boldsymbol \epsilon_i^\top \boldsymbol \gamma_j,
+$$ where $\boldsymbol \epsilon_i \sim \mathcal{N}(\boldsymbol 0, \boldsymbol \Sigma)$ and $\boldsymbol \Sigma = \mathrm{diag}(\boldsymbol \sigma^2).$
+
+This specification allows for simultaneous unconstrained and constrained ordination, hence, *concurrent* ordination.
+
+## 
+
+```{r}
+#| echo: true
+#| eval: false
+
+ftConcOrd = gllvm(y=beetle, X=X, family="ZINB", num.lv.c=2, n.init=5)
+ordiplot(ftConcOrd, symbols=TRUE, biplot=TRUE)
+```
+
+![](concord.png){width="100%," fig-align="center"}
+
+## Future outlook
+
+-   Polya-Gamma augmentation for logistic models[^6]
+-   Faster estimation for spatially (and spatio-temporally) correlated LVs utilizing e.g., NNGPs, SPDEs, etc.
+-   More processes for trait evolution in the phylogenetic model
+-   Mixed response types, distributions for compositional data
+-   Further parallelization, e.g., GPU-based computing
+-   Regularization, stochastic/mini-batch gradient descent
+
+[^6]: @Polson01122013
+
+# Thank you!
+
+## References
