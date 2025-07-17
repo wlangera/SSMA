@@ -44,14 +44,14 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 |Monday   |<sub>09:00 - 09:30</sub>| Welcome, introduction, getting started              |Bert    |
 |         |<sub>09:30 - 10:15</sub>| Modeling data from ecological communities           |        |
 |         |<sub>10:15 - 10:45</sub>| ☕ Break                                             |        |
-|         |<sub>10:45 - 11:45</sub>| Discussion: properties of community data            |        |
-|         |<sub>11:45 - 12:30</sub>| Generalised Linear Models for multiple species      |        | <!-- distributions and such-->
-|         |<sub>12:30 - 13:30</sub>| 🍽 Lunch                                            |        |
-|         |<sub>13:30 - 14:15</sub>| Practical 2: Fitting GLMs                           |        |
-|         |<sub>14:15 - 15:00</sub>| Finding a good multispecies GLM                     |        |<!-- what it means to have multiple species -->
-|         |<sub>15:00 - 15:30</sub>| ☕ Break                                             |        |
-|         |<sub>15:30 - 16:30</sub>| Practical 3: Comparing multispecies GLMs            |        | <!-- model selection, hypo testing ?-->
-|         |<sub>16:30 - 17:15</sub>| Introduction to the gllvm R-package                 |Pekka   |
+|         |<sub>10:45 - 11:15</sub>| Discussion: properties of community data            |        | <!-- short group-based disucssion (getting to know each other), also what they expect to be an issue/should be addressed -->
+|         |<sub>11:15 - 12:00</sub>| Generalised Linear Models for multiple species      |        | <!-- distributions and such-->
+|         |<sub>12:00 - 13:00</sub>| 🍽 Lunch                                            |        |
+|         |<sub>13:00 - 14:00</sub>| Practical 2: Fitting GLMs                           |        | <!--add VGLM to this practical-->
+|         |<sub>14:00 - 14:45</sub>| Finding a good multispecies GLM                     |        |<!-- what it means to have multiple species -->
+|         |<sub>14:45 - 15:15</sub>| ☕ Break                                             |        |
+|         |<sub>15:15 - 16:15</sub>| Practical 3: Comparing multispecies GLMs            |        | <!-- model selection, hypo testing ?-->
+|         |<sub>16:15 - 17:00</sub>| Introduction to the gllvm R-package                 |Pekka   |
 |         |             |          |                                                     |        |
 |         |<sub>19:00 - 20:00</sub>| Brainstorming properties of community data          |Bert    |
 |---------|-------------|----------------------------------------------------------------|--------|
