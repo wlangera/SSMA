@@ -1,0 +1,820 @@
+---
+title: "Modeling data on ecological communities"
+institute: "Department of Mathematical Sciences, NTNU"
+author: "Bert van der Veen"
+output: 
+  beamer_presentation:
+    toc: false
+    slide_level: 2
+    latex_engine: lualatex
+    includes:
+      in_header: ../header.tex
+urlcolor: orange
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+
+default_source_hook <- knit_hooks$get('source')
+default_output_hook <- knit_hooks$get('output')
+
+knit_hooks$set(
+  source = function(x, options) {
+    paste0(
+      "\n::: {.codebox data-latex=\"\"}\n\n",
+      default_source_hook(x, options),
+      "\n\n:::\n\n")
+  }
+)
+
+knit_hooks$set(
+  output = function(x, options) {
+    paste0(
+      "\n::: {.codebox data-latex=\"\"}\n\n",
+      default_output_hook(x, options),
+      "\n\n:::\n\n")
+  }
+)
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Sampling data
+
+## The goal of this presentation
+
+Instill basic thinking about study design and data properties \newline
+
+1) Study design and sampling matter a lot
+2) Adjust the model, not the data
+3) Consider the "true" model: what is your ecological process?
+4) Garbage in, garbage out
+
+Leading example: picking orchids
+
+## Sampling data
+
+![www.ugent.be](grassland.jpeg){width=60%}
+
+A nice field with orchids.
+
+How do we find the proportion of orchids?
+
+## What is the proportion of orchids?
+
+\columnsbegin
+\column{0.6\textwidth}
+![www.ugent.be](grassland.jpeg)
+\column{0.4\textwidth}
+We decide to walk through the field and at 10 places record when we find an orchid (1) or not (0)
+\columnsend
+\columnsbegin
+\column{0.2\textwidth}
+![wikimedia](gevlekte_orchis.jpg)
+\column{0.8\textwidth}
+\begin{enumerate}
+\item First time: 5 orchids from 10 picks (5/10 = 0.5)
+\end{enumerate}
+\columnsend
+
+## What is the proportion of orchids?
+
+\columnsbegin
+\column{0.6\textwidth}
+![www.ugent.be](grassland.jpeg)
+\column{0.4\textwidth}
+We decide to walk through the field and at 10 places record when we find an orchid (1) or not (0)
+\columnsend
+\columnsbegin
+\column{0.2\textwidth}
+![wikimedia](gevlekte_orchis.jpg)
+\column{0.8\textwidth}
+\begin{enumerate}
+\item First time: 5 orchids from 10 picks (5/10 = 0.5)
+\item Second time: 2 orchids from 10 picks (2/10 = 0.2)
+\item Third time: 8 orchids from 10 picks (8/10 = 0.8)
+\end{enumerate}
+\columnsend
+
+So, the same data can give different estimates. Why is that?
+
+## What is the proportion of orchids?
+
+We conclude, half of the flowers are orchids (15/30 = 0.5). But encounter this guy:
+
+\columnsbegin
+\column{0.4\textwidth}
+![](ecologist.jpg)
+
+He tells us that the true proportion of orchids is 0.4.
+\column{0.6\textwidth}
+\begin{itemize}
+\item What caused our estimate of the proportion of orchids to be inaccurate?
+\item And why did we not get the same proportion of orchids every time?
+\end{itemize}
+\columnsend
+
+## Aspects of sampling
+
+There are loads of things that affect our sampling
+
+\columnsbegin
+\column{0.5\textwidth}
+
+- Where we look
+- When we look
+- How often we look
+- The resources we have
+- Who looks
+- Things that walk away
+- Things that get eaten
+
+\column{0.5\textwidth}
+\includegraphics[width=0.6\linewidth]{sample.jpg}
+\columnsend
+
+Can mess that up (and often do), consequence: we need to adjust our analysis
+
+
+## Preferential sampling
+
+"I want to survey community A"
+
+or
+
+"I sample on an elevation gradient"
+
+a) You have predefined your community; the predefinition affects your results
+b) You have predefined your environment; the predefinition affects your results
+
+\pause
+
+You self-limited the scope of your study, self-selected results for diversity, composition, environment, and so on.
+
+## Preferential sampling
+
+![Thanks chatGPT](preferential.png){width=70%}
+
+## Consequences: few observations
+
+\vspace*{-\baselineskip}
+
+```{r, fig.align="center", echo = FALSE, fig.height = 6}
+par(mar=c(5,4,1,2))
+# Set seed for reproducibility
+set.seed(42)
+
+# Matrix dimensions
+n_species <- 30
+n_sites <- 25
+
+# Create a sparse presence/absence matrix (mostly zeros)
+community_matrix <- matrix(0, nrow = n_species, ncol = n_sites)
+
+# Fill in some presences to simulate high turnover
+for (i in 1:n_species) {
+  # Each species occurs in 1-3 random sites
+  sites_present <- sample(n_sites, sample(1:3, 1))
+  community_matrix[i, sites_present] <- 1
+}
+
+# Plot using image (rotate to match axis orientation)
+image(t(apply(community_matrix, 2, rev)), col = c("white", "black"),
+      axes = FALSE, xlab = "Species", ylab = "Site", main = "Sparse community ecological data")
+
+# Add axis labels
+axis(1, at = seq(0, 1, length.out = n_sites), labels = 1:n_sites, cex.axis = 0.7)
+axis(2, at = seq(0, 1, length.out = n_species), labels = rev(1:n_species), las = 1, cex.axis = 0.7)
+
+```
+
+## "Rare" species
+
+```{r, fig.align="center", echo = FALSE, fig.height = 6, results = FALSE, warning=FALSE, message=FALSE}
+par(mfrow=c(2,3))
+unimodal <-function(x, maximum, opt, tol)exp(maximum-0.5*(x-opt)^2/tol^2)
+
+plot(NA, type="n", ylim=c(0, exp(1)),yaxs="i",yaxt="n",xaxt="n",xlab=NA,ylab="Frequency", cex.lab=1.8,cex.axis=1.8, xlim = c(-2,2), main = "Frequent specialist \nsufficiently sampled", cex.main = 2.5)
+lines(seq(-2,2,length.out=1000), unimodal(seq(-2,2,length.out=1000), 1, 0, 0.1))
+rug(seq(-0.5,0.5,length.out=20), ticksize = 0.05, lwd = 2)
+
+plot(NA, type="n", ylim=c(0, exp(1)),yaxs="i",yaxt="n",xaxt="n",xlab=NA, ylab=NA, cex.lab=1.8,cex.axis=1.8, xlim = c(-2,2), main = "Infrequent specialist \nsufficiently sampled", cex.main = 2.5)
+lines(seq(-2,2,length.out=1000), unimodal(seq(-2,2,length.out=1000), 0, 0,0.1))
+rug(seq(-0.5,0.5,length.out=20), ticksize = 0.05, lwd = 2)
+
+plot(NA, type="n", ylim=c(0, exp(1)),yaxs="i",yaxt="n",xaxt="n", cex.lab=1.8,cex.axis=1.8, xlim = c(-2,2), main = "Infrequent specialist \ninsufficiently sampled", cex.lab=1.8,cex.axis=1.8, xlab = NA, ylab = NA,cex.main=2.5)
+lines(seq(-2,2,length.out=1000), unimodal(seq(-2,2,length.out=1000), 0,0, 0.1))
+rug(c(seq(-2,-0.5,length.out=10),-0.3,-0.2,-0.1,0.5,0.9,0.9), ticksize = 0.05, lwd = 2)
+
+plot(NA, type="n", ylim=c(0, exp(1)),yaxs="i",yaxt="n",xaxt="n",ylab="Frequency", cex.lab=1.8,cex.axis=1.8, xlim = c(-2,2), main = "Frequent generalist \nsufficiently sampled", cex.main = 2.5,xlab="Dimension 1")
+lines(seq(-2,2,length.out=1000), unimodal(seq(-2,2,length.out=1000), 1,0, 0.8))
+rug(seq(-2.5,2.5,length.out=50), ticksize = 0.05, lwd = 2)
+
+plot(NA, type="n", ylim=c(0, exp(1)),yaxs="i",yaxt="n",xaxt="n",xlab="Dimension 1", cex.lab=1.8,cex.axis=1.8, xlim = c(-2,2), main = "Infrequent generalist \nsufficiently sampled", cex.lab=1.8,cex.axis=1.8, ylab=NA, cex.main=2.5)
+lines(seq(-2,2,length.out=1000), unimodal(seq(-2,2,length.out=1000), 0,0, 0.8))
+rug(seq(-2.5,2.2,length.out=50), ticksize = 0.05, lwd = 2)
+
+plot(NA, type="n", ylim=c(0, exp(1)),yaxs="i",yaxt="n",xaxt="n",xlab="Dimension 1", cex.lab=1.8,cex.axis=1.8, xlim = c(-2,2), main = "Infrequent generalist \ninsufficiently sampled", cex.lab=1.8,cex.axis=1.8, ylab=NA, cex.main = 2.5)
+lines(seq(-2,2,length.out=1000), unimodal(seq(-2,2,length.out=1000), 0,0, 0.8))
+rug(c(seq(-2,-0.5,length.out=20),0,0.5,0.9,0.9), ticksize = 0.05, lwd = 2)
+```
+
+## Sample size
+
+Field work is hard, takes time, costs money.
+
+\footnotesize
+
+\columnsbegin
+\column{0.5\textwidth}
+
+- Community ecological studies often have low samples
+- And are noisy
+- Combined with strong mean-variance relations this causes issues
+- Studies are underpowered and lack information
+- Many species have few observations
+- Drawing conclusions is sometimes not possible
+- Can largely be avoided with power analysis
+
+\column{0.5\textwidth}
+\includegraphics{fieldwork.png}
+\columnsend
+
+## Minimizing impact of the sampling process
+
+We can minimize the effects of sampling by considering its effects \textit{a-priori}
+
+\columnsbegin
+\column{0.5\textwidth}
+
+There are many sampling designs in community ecology
+
+- Opportunistic (eek)
+- Random sampling
+- Systematic sampling
+- Stratified sampling
+- Stratified-random sampling
+- Adaptive sampling
+- Cluster sampling
+- Paired sampling
+
+\column{0.5\textwidth}
+\includegraphics{sampling.png}
+\columnsend
+
+\pause
+
+Sampling design affects our sample size, and the ecological results. It needs to be taken into account during analysis.
+
+\tikzset{
+  mybox/.style={
+    draw=red,
+    very thick,
+    rectangle,
+    rounded corners,
+    inner sep=10pt,
+    fill = white,
+    text width = 0.8\paperwidth,
+    align = center
+  }
+}
+    
+\pause
+    
+\begin{tikzpicture}[remember picture, overlay]
+\node[mybox] at (current page.center){Does it give data that you can do the ecology with?};
+\end{tikzpicture}
+
+## Detection bias
+
+This one is not often covered, but certain species are harder to sample (identify or find) than others. \newline
+
+- Not considering it: you assume perfect detection
+- Plants are easier than moving things
+- Plants or flower are seasonal
+- Pollinators fly at particular conditions
+- Insects have different life stages (some easier to detect)
+- Some people are better at finding things
+- We should consider where species \textbf{can occur}
+
+\hfill ![](detection.jpg){width=30%}
+
+## Classification error
+
+\columnsbegin
+\column{0.5\textwidth}
+Classification mistakes introduce error: we confuse a species with another.
+\column{0.5\textwidth}
+\includegraphics{classification.png}
+\columnsend
+
+Exacerbated if you have multiple observers.
+
+# Data properties
+
+## Getting results
+
+You have got your data, and are ready to do some ecology! \newline
+
+\vspace*{-\baselineskip}
+
+\columnsbegin
+\column{0.5\textwidth}
+Data of ecological communities has various common properties that tend to get in the way.
+
+\column{0.5\textwidth}
+\includegraphics{dataproperties.jpg}
+\columnsend
+
+
+## The data
+
+The properties of data depend on the type. We characterize these by a distribution. \newline
+
+For (binary) orchid data: $y_i \sim Binom(p, n_{picks})$, with $p(orchid) = p$
+
+\pause
+
+The distribution informs us what the probability is to observe a data point as a function of some model \newline
+This type of probabilistic framework facilitates us in getting an estimate for $p(orchid)$ \newline
+
+## The binomial distribution
+
+\begin{equation}
+f(y_i;n_{picks},p) = constant \times p^{y_i}(1-p)^{n_{picks}-y_i}
+\end{equation}
+
+### Moments
+
+- mean: $\mathams{E}(y_i) = n_{picks} \times p(orchid)$
+- variance: $\text{var}(y_i) = n_{picks} \times p(orchid)(1-p(orchid))$
+
+### R-functions 
+
+- Density: `dbinom`
+- Number generator: `rbinom`
+
+<!-- ## The strategy -->
+
+<!-- - Collect data -->
+<!-- - Characterize its properties by a distribution -->
+<!-- - Learn about variation in that data -->
+<!--   - We need a model for that -->
+<!-- - Define the underlaying sampling and ecologucal process -->
+<!-- - Do inference -->
+<!-- - Determine if our answer is robust -->
+ 
+
+## Mean-variance relationships
+
+Unless your data come from a normal distribution, the variance depends on the mean
+
+- Ecological data often have strong mean-variance relationships
+- This will muck up your results if not accommodated
+
+\centering
+
+![](meanvariance.jpg){width=60%}
+ 
+## Simulation: counting orchids once
+
+```{r, cache=TRUE, echo = -1}
+set.seed(12345) # For reproducibility
+p.orchid = 0.4 # The true proportion of orchids
+n.picks = 10 # The number of picks in the field
+n.times = 1 # number of fields
+# Collect data
+y <- rbinom(n.times, size = n.picks, prob = p.orchid) 
+y/n.picks # Proportion of orchids
+```
+
+## Simulation: counting orchids once
+
+What if we sample the whole field once?
+
+```{r, cache=TRUE, echo = -1}
+set.seed(12345) # For reproducibility
+n.times = 1e5 # The number of picks in the field
+n.picks <- 1 # number of fields
+ # Collect data
+y <- rbinom(n.times, size = n.picks, prob = p.orchid)
+mean(y/n.picks) # Proportion of orchids
+```
+
+## Rare species
+
+Shelford's law of tolerance (1931) tells us:
+
+- There are specialist and generalist species
+- Many species naturally occur only at a few places
+
+```{r, fig.align="center", fig.width=13, echo = FALSE, fig.height = 6}
+makeTransparent<-function(someColor, alpha=100)
+{
+  newColor<-col2rgb(someColor)
+  apply(newColor, 2, function(curcoldata){rgb(red=curcoldata[1], green=curcoldata[2],
+    blue=curcoldata[3],alpha=alpha, maxColorValue=255)})
+}
+
+# https://stats.stackexchange.com/questions/12209/percentage-of-overlapping-regions-of-two-normal-distributions
+min.f1f2 <- function(x, mu1, mu2, sd1, sd2) {
+    f1 <- dnorm(x, mean=mu1, sd=sd1)
+    f2 <- dnorm(x, mean=mu2, sd=sd2)
+    pmin(f1, f2)
+}
+
+mu1 <- -2;    sd1 <- 2
+mu2 <- 1;    sd2 <- 1
+
+xs <- seq(min(mu1 - 4*sd1), max(mu1 + 4*sd1), .001)
+f1 <- dnorm(xs, mean=mu1, sd=sd1)
+
+par(mar=c(5, 5, 4, 2) + 0.1)
+plot(xs, f1, type="n", ylim=c(0, max(f1)+0.01), col="blue",yaxs="i",yaxt="n",xaxt="n",xlab="Latent dimension", ylab="Abundance", cex.lab=1.8,cex.axis=1.8)
+
+# abline(v=mu1-4*sd1, col="red", lty="dashed")
+# abline(v=mu1+4*sd1, col="red", lty="dashed")
+# 
+# abline(v=mu1-3*sd1, col="orange", lty="dashed", )
+# abline(v=mu1+3*sd1, col="orange", lty="dashed")
+# 
+# abline(v=mu1-2*sd1, col="green", lty="dashed")
+# abline(v=mu1+2*sd1, col="green", lty="dashed")
+text("Good",cex=1.8, x=mu1,y=0.1)
+text("Worse",cex=1.8, x=mean(c(mu1-3*sd1,mu1-2*sd1)),y=0.1)
+text("Bad",cex=1.8, x=mean(c(mu1-3.7*sd1,mu1-3.7*sd1)),y=0.1)
+
+rect(1e-3,0.3-0.001, xleft=mu1-2*sd1,xright=mu1+2*sd1,col=makeTransparent("green",40),border=makeTransparent("green",40))
+rect(1e-3,0.3-0.001, xleft=mu1-3*sd1,xright=mu1-2*sd1,col=makeTransparent("orange",40),border=makeTransparent("orange",40))
+rect(1e-3,0.3-0.001, xleft=mu1+3*sd1,xright=mu1+2*sd1,col=makeTransparent("orange",40),border=makeTransparent("orange",40))
+rect(1e-3,0.3-0.001, xleft=mu1-4*sd1-1,xright=mu1-3*sd1,col=makeTransparent("red",40),border=makeTransparent("red",40))
+rect(1e-3,0.3-0.001, xleft=mu1+4*sd1+1,xright=mu1+3*sd1,col=makeTransparent("red",40),border=makeTransparent("red",40))
+lines(xs,f1,col="blue",lwd=2)
+
+arrows(y0=0.12,x0=mu1,x1=mu1-sd1,code = 3,col="black",length=0.2)
+text(mu1-sd1/2,0.13,expression("t"[1]),cex=1.8,col="black")
+segments(x0=mu1,x1=mu1,y0 = 0,y1=0.2,lty="dashed",col="black")
+
+invisible(Map(axis, side=1,at=mu1, col.axis="black", labels=expression("u"[1]), lwd=0, cex.axis=1.8))
+
+```
+
+## Dimensionality
+
+There are often many species in the data; sieving through results is difficult, and analysis can be computationally intensive. \newline
+\vspace*{\baselineskip}
+
+At the same time, data are sparse.
+
+\centering
+
+![](bigdata.jpeg){width=65%}
+
+## Other things
+
+- Non-linearity
+- Compositionality
+- Ordering
+
+\columnsbegin
+\column{0.5\textwidth}
+
+![](arch.jpeg)
+
+\column{0.5\textwidth}
+
+![](compositional.png)
+
+\columnsend
+
+# Models
+
+Traditional methods of analysis in community ecology are not good at dealing with data properties.
+
+![](WartonHui2017.png)
+
+## Models to the rescue
+
+![](Warton_et_al_2015.png)
+
+## General attitude
+
+Repeat after me:
+\centering
+
+\textbf{We adjust the model, not the data} \tiny \textcolor{red}{adjusting the data is bad}
+
+## Process-based thinking
+
+1. There is a sampling process
+2. There is an ecological process
+
+Our data is the result of both, our primary interest is the latter.
+
+\pause
+
+Our goal is to disentangle 1. from 2.
+
+## Orchids
+
+In case of the orchids, what affects where we see orchids?
+  
+  1. Where we look (sampling/observation)
+  2. Where they are (ecology)
+
+In both cases, if we look in the wrong place, at the wrong time, or in the wrong way, we may not see orchids (even if they are there).
+
+\footnotesize
+
+- It is not interesting if you observed more orchids because you are better at finding them
+- It is interesting if you observed more orchids because the places you went provided more suitable growing conditions
+
+## To do ecology
+
+We need to carefully consider properties of our data, how it is sampled, and thus what our analysis needs to accommodate.
+
+\columnsbegin
+\column{0.5\textwidth}
+
+\begin{itemize}
+\item Strong mean-variance
+\item Repeated designs (e.g., multiple observers)
+\item What am I trying to answer ecologically?
+\end{itemize}
+
+\column{0.5\textwidth}
+
+\hfill ![](careful.png)
+
+\columnsend
+
+## Garbage in, garbage out (GIGO)
+
+![](GIGO.png){height=60%}
+
+In absence of a good study design, models can help. However, a fancy hammer is not a panacea.
+
+# Uncertainty
+
+## Estimating parameters and quatifying uncertainty
+
+\columnsbegin
+\column{0.5\textwidth}
+\begin{itemize}
+\item We do not usually have infinite amounts of data
+\item So how can we quantify variability?
+\item The model allow us to do that!
+\end{itemize}
+\column{0.5\textwidth}
+![](datameme.jpg)
+\columnsend
+
+## Simulation: counting orchids 50x10 times
+
+```{r, fig.height = 2.8, cache=TRUE, echo = -1}
+set.seed(12345) # For reproducibility
+n.times <- 50 # The number of picks in the field
+n.picks = 10 # number of fields
+# Collect data
+y <- rbinom(n.times, size = n.picks, prob = p.orchid) 
+hist(y, xlab = "Proportion of orchids", 
+     ylab = "Number of samplings")
+```
+
+## Simulation: counting orchids 50x10 times
+
+```{r, echo = FALSE, fig.height = 4}
+plot(table(y/n.picks), xlab = "Proportion of orchids", ylab = "Number of samplings")
+abline(v= 0.4, col = "red", lty = "dashed")
+```
+
+As you see, we have variability in our estimate of the proportion of orchids.
+
+- Can we summarize this variation?
+- Preferably without collecting data many times
+ 
+  
+## Q: Are more than half of the flowers in this field orchids?
+
+- Exclude rare events, and decide on an acceptable margin of error (5%)
+- What is the range our parameter is estimated to be 95% of the time?
+
+```{r}
+quantile(y/n.picks,c(0.025,.975))
+```
+
+So 50 times 10 picks tell us little.
+
+## Q: Are more than half of the flowers in this field orchids?
+
+\small
+
+```{r, cache=TRUE}
+set.seed(12345)
+n.picks = 100
+n.times <- 50
+# Collecting data
+y <- rbinom(n.times, size = n.picks, prob = p.orchid) 
+quantile(y/n.picks,c(0.025,.975))
+```
+
+50 times 100 picks reduces the variability in the proportion of observed orchids. 
+Most of the time we will not find orchids on all our picks.
+
+## The likelihood: single data point
+
+\begin{equation}
+\mathcal{L}(y_i;\Theta) = f(y_i;\Theta)
+\end{equation}
+
+The probability of obtaining our data assuming $\Theta$ is the true parameter(s).
+
+## The likelihood: multiple data points (2)
+
+\begin{equation}
+\mathcal{L}(\textbf{y};\Theta) = \prod \limits^n_i f(y_i;\Theta)
+\end{equation}
+
+We just multiply! (assumes independence)
+
+## The likelihood (3)
+
+
+```{r, echo = FALSE, fig.height = 4.5}
+plot(dnorm, from = -1, to = 1, xlab = "Some parameter", ylab = "Likelihood")
+```
+
+\vspace*{-\baselineskip}
+
+Likelihood tells us about:
+
+- The (set of) parameter estimates that most likely generated the data
+- The information contained in our data
+
+## The log-likelihood
+
+\begin{equation}
+\log\{\mathcal{L}(\textbf{y};\Theta)\} = \sum \limits^n_i \log\{f(y_i;\Theta)\}
+\end{equation}
+
+\vspace*{-\baselineskip}
+
+```{r, echo = FALSE, fig.height=4}
+ll <- function(x)dnorm(x, log = TRUE)
+plot(ll, from = -1, to = 1, xlab = "Some parameter", ylab = "log-Likelihood")
+```
+
+Usually, we work with the log-likelihood. The maximum is the same and it is easier. So we just add things together.
+
+## Finding the proportion of orchids
+```{r, cache=TRUE, echo = FALSE}
+set.seed(12345)
+n.picks = 100
+n.times <- 50
+y <- rbinom(n.times, size = n.picks, prob = p.orchid) # Collecting data
+```
+
+```{r, cache = TRUE, fig.height = 4}
+ll <- function(p, n.picks, y)prod(dbinom(y, n.picks,p))
+phat <- seq(0.35,0.45,length.out=3)
+plot(sapply(phat, ll, n.picks = n.picks, y = y), 
+     x = phat, type = "l", xlab=expression(hat(p)), ylab="Likelihood")
+```
+
+## Finding the proportion of orchids (2)
+```{r, cache=TRUE, echo = FALSE}
+set.seed(12345)
+n.picks = 100
+n.times <- 50
+y <- rbinom(n.times, size = n.picks, prob = p.orchid) # Collecting data
+```
+
+```{r, cache = TRUE, fig.height = 4}
+ll <- function(p, n.picks, y)prod(dbinom(y, n.picks,p))
+phat <- seq(0.35,0.45,length.out=1000)
+plot(sapply(phat, ll, n.picks = n.picks, y = y),
+     x = phat, type = "l", xlab=expression(hat(p)), ylab="Likelihood")
+```
+
+## Uncertainty
+
+(an estimate of) Width of the likelihood:
+\begin{equation}
+\frac{\partial^2\log\{\mathcal{L}(\textbf{y};n_{picks})\}}{\partial p^2} = -\sum \limits^{n_{times}}_{i=1} \frac{y_i}{p^2}+\frac{n_{picks}-y_i}{(1-p)^2} 
+\end{equation}
+
+\vspace*{-\baselineskip}
+
+```{r, cache = TRUE, echo = FALSE, fig.height = 5}
+ll <- function(p, n.picks, y)prod(dbinom(y, n.picks,p))
+phat <- seq(0.35,0.45,length.out=1000)
+plot(sapply(phat, ll, n.picks = n.picks, y = y), x = phat, type = "l", xlab=expression(hat(p)), ylab="Likelihood", lty = "dashed")
+p = optimize(ll, n.picks = n.picks, y=y,
+         lower = 0, upper = 1, maximum = TRUE)
+se = sqrt(1/(sum(y/p$maximum^2+(n.picks-y)/(1-p$maximum)^2)))
+
+points(x=p$maximum, y=p$objective,col="red")
+abline(v=p$maximum+1.96*se, col="red")
+abline(v=p$maximum-1.96*se, col="red")
+```
+
+
+## Putting it all together
+
+\columnsbegin
+\column{0.7\textwidth}
+\begin{itemize}
+\item We collect data
+\item We estimate a parameter of interest
+\item If we collected data again, we get many different estimates
+\begin{itemize}
+  \item This forms a \textit{sampling} distribution
+\end{itemize}
+\item We summarize this variability
+\item The width of this sampling distribution tells us the variability
+\item Instead of collecting data many times, we estimate parameters with MLE
+\begin{itemize}
+  \item This also allows us to quantify the variability
+\end{itemize}
+\end{itemize}
+\column{0.3\textwidth}
+![](likelihood_boromir.jpg)
+\columnsend
+
+## Why is uncertainty so important
+
+- We are not interested in an answer for \textbf{this} dataset
+- But for an answer for \textbf{all} datasets
+- If we have new data, our answer might change a little
+- Uncertainty tells us if our answer is robust to sampling new  data
+- I.e., not so important for the *dataset* but important for *multiple datasets*
+
+Afterall, we are looking for a robust recommendation.
+
+## Confidence intervals
+
+*An interval that contains the true value in 95% of repeated samples*\newline
+(in large samples)
+
+\columnsbegin
+\column{0.6\textwidth}
+Be careful with interpretation, and with assumptions.
+\begin{itemize}
+\item Any computed interval either contains the truth, or it does not
+\item Not the range that the true parameter falls in with 95% probability
+\item Other misinterpretations
+\end{itemize}
+
+\textbf{Assumes:}
+\begin{itemize}
+\item Asymptotic normality
+\item inverse Hessian gives covariance of estimators
+\end{itemize}
+
+\column{0.5\textwidth}
+- Can be interpreted as a kind of statistical test
+- Or generally as "evidence"
+
+\textbf{Gets smaller with:}
+\begin{itemize}
+\item More information
+\item Less variability
+\item The confidence level
+\end{itemize}
+\columnsend
+
+## Repetition
+
+```{r, echo = FALSE, fig.height = 7}
+p.orchid = 0.4
+n.times <- 10
+n.picks = 10
+CI <- NULL
+for(i in 1:20){
+y <- rbinom(n.times, size = n.picks, prob = p.orchid) 
+CI <- rbind(CI,quantile(y/n.picks,c(0.025,.975)))
+}
+
+plot(1,1, type="n", xlim=range(CI), ylim=range(1:20), xlab=expression(hat(p)), ylab="Replicate")
+arrows(x0=CI[,1], y0=1:20, x1=CI[,2], y1=1:20, lwd=1.2, angle = 90, code=3, length=0.05)
+abline(v=0.4, col="red")
+```
+
+
+# Summary
+
+## Summary
+
+- Most data properties can be accommodated with models
+- It requires consideration of sampling and ecological processes
+- Choose the appropriate model, not the software you like
+- Some properties are more difficult to accommodate
+- Sparsity, sample size issues, and misclassification are tough
+- Many issues do not show in traditional methods
+- Models will be more honest to you
+
+\centering
+
+![](honesty.jpeg){width=40%}
