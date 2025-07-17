@@ -42,10 +42,10 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 |   Day   |Time         |Subject                                                         |Lecturer|
 |---------|-------------|:---------------------------------------------------------------|:-------|
 |Monday   |<sub>09:00 - 09:30</sub>| Welcome, introduction, getting started              |Bert    |
-|         |<sub>09:30 - 10:15</sub>| Recap of basic statistical concepts                 |        |
+|         |<sub>09:30 - 10:15</sub>| Modeling data from ecological communities           |        |
 |         |<sub>10:15 - 10:45</sub>| ☕ Break                                             |        |
-|         |<sub>10:45 - 11:45</sub>| Practical 1: Sampling variation and simulation      |        |
-|         |<sub>11:45 - 12:30</sub>| Basics of Generalised Linear Models (GLMs)          |        | <!-- distributions and such-->
+|         |<sub>10:45 - 11:45</sub>| Discussion: properties of community data            |        |
+|         |<sub>11:45 - 12:30</sub>| Generalised Linear Models for multiple species      |        | <!-- distributions and such-->
 |         |<sub>12:30 - 13:30</sub>| 🍽 Lunch                                            |        |
 |         |<sub>13:30 - 14:15</sub>| Practical 2: Fitting GLMs                           |        |
 |         |<sub>14:15 - 15:00</sub>| Finding a good multispecies GLM                     |        |<!-- what it means to have multiple species -->
