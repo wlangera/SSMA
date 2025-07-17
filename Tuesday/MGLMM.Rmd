@@ -1,0 +1,707 @@
+---
+title: "Multispecies mixed effects models"
+institute: "University of Jyväskylä"
+author: "Jenni Niku"
+output: html_document
+# output:
+#   beamer_presentation:
+#     toc: false
+#     slide_level: 2
+#     latex_engine: xelatex
+#     includes:
+#       in_header: header.tex
+urlcolor: orange
+editor_options: 
+  chunk_output_type: console
+header-includes:
+  - \usepackage{booktabs}
+  - \usepackage{longtable}
+  - \usepackage{multicol}
+  - \usepackage{hyperref}
+  - \newcommand{\highlight}[2]{\colorbox{#1!17}{$\vphantom{(^\top}#2$}}
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+
+default_source_hook <- knit_hooks$get('source')
+default_output_hook <- knit_hooks$get('output')
+
+# knit_hooks$set(
+#   source = function(x, options) {
+#     paste0(
+#       "\n::: {.codebox data-latex=\"\"}\n\n",
+#       default_source_hook(x, options),
+#       "\n\n:::\n\n")
+#   }
+# )
+
+knit_hooks$set(
+  output = function(x, options) {
+    paste0(
+      "\n::: {.codebox data-latex=\"\"}\n\n",
+      default_output_hook(x, options),
+      "\n\n:::\n\n")
+  }
+)
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Outline
+
+
+# Mixed effects models
+
+\columnsbegin
+\column{0.5\textwidth}
+
+Mixed effects model = Consists of both fixed and random effects.
+
+\column{0.5\textwidth}
+ 
+Fixed effects are common across observational units or species.
+ 
+\column{0.5\textwidth}
+ 
+Random effects account variability between species, sites, units or any groups or clusters relevant to specific data.
+
+- Parameters come from a distribution.
+
+\columnsend
+
+
+# Random effects
+
+\columnsbegin
+\column{0.5\textwidth}
+When to include a random effect:
+
+\column{0.5\textwidth}
+
+- Unobserved effect
+
+- To account for pseudo replication
+
+- Nuisance
+
+- To induce correlation
+
+- Shrinkage
+
+\columnsend
+
+
+# Mixed effects models
+
+\columnsbegin
+\column{0.5\textwidth}
+
+GLMs assume independency, the mixed effect models can account dependent observations.
+\column{0.5\textwidth}
+ 
+For instance dependency due:
+
+- Hierarchical/nested sampling designs.
+
+- Correlated/repeated measurements.
+
+- Correlation between species.
+
+\columnsend
+
+
+
+
+
+# The mixed effects model: simplified form
+
+\begin{equation}
+g\{E(\bf{y}|\bf{u})\} = \bf{X}\bf{\beta} + \bf{Z}\textbf{u}
+\end{equation}
+
+- $g$ link function
+- $E(\bf{y}|\bf{u})$ conditional mean
+- $\bf{X}$ Fixed effects design matrix
+- $\bf{\beta}$ Fixed effects parameter vector
+- $\bf{Z}$ Random effects design matrix
+- $\textbf{u}$ Random effects parameter vector
+
+
+# Likelihood function
+
+\begin{equation}
+L(\bf{y},\bf{\Sigma})\} = \int \prod_{i} f(y_i|\textbf{u})f(\textbf{u};\bf{\Sigma})
+\end{equation}
+
+- $f(y_i|\textbf{u})$ responses distribution conditional to random effects $\textbf{u}$
+- $f(\textbf{u};\bf{\Sigma})$ distribution of random effects
+
+# Estimation
+
+\columnsbegin
+\column{0.5\textwidth}
+
+For non-normal data, integral has not closed form solution, so approximations provide solutions.
+
+\column{0.5\textwidth}
+
+Possible approximate methods can be:
+
+- Penalized quasi-likelihood methods 
+- Adaptive GH quadrature
+- Laplace approximation (gllvm)
+- Variational approximations (gllvm) 
+
+\column{0.5\textwidth}
+
+Or Bayesian MCMC as alternative to frequentist methods.
+
+\columnsend
+
+
+# R packages
+
+```{r packs, echo=FALSE, out.width = '70%'}
+knitr::include_graphics("C:/Users/jemaelni/OneDrive - Jyväskylän yliopisto/TestsForgllvm/gllvmCourse/packages.png")
+```
+
+\columnsbegin
+\column{0.5\textwidth}
+
+There are several R-packaces available. lme4 and glmmTMB are among most well known.
+
+\column{0.5\textwidth}
+
+Here we focus on gllvm.
+
+\columnsend
+
+
+# Mixed effects models in gllvm
+
+- Package is designed (but not restricted to) for multivariate ecological data
+
+- Allows random effects for responses/species or observational units/clusters of units
+
+- Correlation between random effects and (some) within
+(spatial, temporal)
+
+- Many supported distributions
+
+- Estimation with ML approximation methods: Variational (VA), Laplace (LA) or Extended variational approximation (EVA)
+
+- Utilize automatic differentiation & C++ to enhance computation (TMB, Kristensen et al. 2015)
+
+# Random effects in gllvm
+
+In the gllvm R-package there are three formula interfaces:
+
+- formula: for species-specific fixed/random effects
+
+- row.eff: for species community level fixed/random effects
+
+- lv.formula: for effects in the ordination (this will be considerd later)
+
+# Species specific random effects in gllvm: formula
+
+Model:
+
+\begin{equation}
+\eta_{ij} = \bf{x}_i^\top\bf{\beta_j}
+\end{equation}
+
+Now, $\bf{\beta_j}$ is a random effect (intercept or slope). Specifically, 
+$\bf{\beta_j} \sim N(\bf{\mu}, \bf{\Sigma})$
+
+- $\bf{\mu}$ the community level effect, mean for the random effects
+
+- $\bf{\Sigma}$ variation in species specific random effects
+
+# Species specific random effects in gllvm: formula
+
+Examples of how formula works in R. Generally: 
+```{r, eval=FALSE}
+formula = ~ (0 + continuous | categorical)
+```
+(the 0 omits an intercept term)
+
+“Nested”:
+```{r, eval=FALSE}
+formula = ~ (1|a/b) is the same as formula = ~ (1|a:b +
+b)
+```
+
+“Crossed”:
+```{r, eval=FALSE}
+y ~ (1|a) + (1|b)
+```
+Effects within the same brackets are assumed to be correlated
+
+# formula: species specific mean abundance random
+
+\begin{equation}
+\eta_{ij} = \beta_{0j}, \text{ with } \beta_{0j} ∼ N(\mu_0, \sigma_{0}^2)
+\end{equation}
+
+```{r, eval=FALSE}
+formula = ~ (1|1), beta0com = TRUE
+```
+
+```{r, eval=TRUE, echo=FALSE, warning=FALSE}
+library(mvtnorm)
+p=5
+n=20
+sig1 = 0.5
+sig2 = 2
+sige =1
+set.seed(111)
+b01 <- (rnorm(p, 0, sig1))
+b01 <- b01 - mean(b01)
+# b02 <- rnorm(p, 0, sig2)
+b02 <- scale(b01)*sqrt(1.5)
+par(mfrow=c(1,2))
+plot(rep(1:p, each=n),rmvnorm(n,b01, diag(5)*0.5), ylim = c(-3.5,3.5), xlab="species", ylab = "response", main = "var(beta_0) = 0.5")
+points(b01, pch=16, col=1:5, cex=1.3)
+abline(0,0,lty=2)
+plot(rep(1:p, each=n),rmvnorm(n,b02, diag(5)*0.5), ylim = c(-3.5,3.5), xlab="species", ylab = "response", main = "var(beta_0) = 1.5")
+points(b02, pch=16, col=1:5, cex=1.3)
+abline(0,0,lty=2)
+```
+
+
+# formula: environmental responses random
+
+\begin{equation}
+\eta_{ij} = \beta_0 + x_i^\top\beta_{1j}, \text{ with } \beta_{1j} ∼ N(\mu_1, \sigma_{1}^2)
+\end{equation}
+
+```{r, eval=FALSE}
+formula= ~ (0+covariate|1), beta0com = TRUE
+```
+
+```{r, eval=TRUE, echo=FALSE, warning=FALSE}
+n=20
+x<-(runif(n,-2,2))
+set.seed(1)
+bx <- (rnorm(p, 0, sig1))
+# b02 <- rnorm(p, 0, sig2)
+bx2 <- scale(bx)*sqrt(1.5)
+par(mfrow=c(1,2))
+plot(rep(x, p),rnorm(n*p,matrix(x)%*%t(bx), 0.5), col=rep(1:p,each=n), ylim = c(-3.5,3.5), xlab="covariate", ylab = "response", main = "var(beta_1) = 0.5")
+for (i in 1:p) {
+  abline(0,bx[i], col=i)
+}
+abline(0,mean(bx),lty=2)
+plot(rep(x, p),rnorm(n*p,matrix(x)%*%t(bx2), 0.5), col=rep(1:p,each=n), ylim = c(-3.5,3.5), xlab="covariate", ylab = "response", main = "var(beta_1) = 1.5")
+for (i in 1:p) {
+  abline(0,bx2[i], col=i)
+}
+abline(0,mean(bx2),lty=2)
+```
+
+# formula: mean abundance and environmental responses random
+
+\begin{equation}
+\eta_{ij} = \beta_{0j} + x_i^\top\beta_{1j},
+\end{equation}
+
+\begin{equation}
+\text{ with } 
+\begin{bmatrix} 
+\beta_{0j} \\ \beta_{1j}
+\end{bmatrix} \sim
+N(\begin{bmatrix} 
+\mu_{0} \\ \mu_{1}
+\end{bmatrix},
+\begin{bmatrix} 
+\sigma_{0}^2 & 0 \\ 0 & \sigma_{1}^2
+\end{bmatrix})
+\end{equation}
+
+```{r, eval=FALSE}
+formula= ~ (1|1)+(0+covariate|1), beta0com = TRUE
+```
+
+```{r, eval=TRUE, echo=FALSE, warning=FALSE}
+n=20
+x<-(runif(n,-2,2))
+set.seed(1)
+bx <- (rnorm(p, 0, sig1))
+# b02 <- rnorm(p, 0, sig2)
+bx2 <- scale(bx)*sqrt(1.5)
+b02 <- scale(b01)*sqrt(1.5)
+
+par(mfrow=c(1,2))
+plot(rep(x, p),rnorm(n*p,cbind(1,x)%*%t(cbind(b01,bx)), 0.5), col=rep(1:p,each=n),xlim = c(-2.2,2.2), ylim = c(-3.5,3.5), xlab="covariate", ylab = "response", main = "var(beta_0) = var(beta_1) = 0.5")
+for (i in 1:p) {
+  abline(b01[i],bx[i], col=i)
+}
+abline(0,mean(bx),lty=2)
+plot(rep(x, p),rnorm(n*p,cbind(1,x)%*%t(cbind(b02,bx2)), 0.5), col=rep(1:p,each=n),xlim = c(-2.2,2.2), ylim = c(-3.5,3.5), xlab="covariate", ylab = "response", main = "var(beta_0) = var(beta_1) = 1.5")
+for (i in 1:p) {
+  abline(b02[i],bx2[i], col=i)
+}
+abline(0,mean(bx2),lty=2)
+```
+
+# formula: mean abundance and environmental responses random and correlated
+
+\begin{equation}
+\eta_{ij} = \beta_{0j} + x_i^\top\beta_{1j},
+\end{equation}
+
+\begin{equation}
+\text{ with } 
+\begin{bmatrix} 
+\beta_{0j} \\ \beta_{1j}
+\end{bmatrix} \sim
+N(\begin{bmatrix} 
+\mu_{0} \\ \mu_{1}
+\end{bmatrix},
+\begin{bmatrix} 
+\sigma_{0}^2 & \sigma_{0}\sigma_{1}\rho \\ \sigma_{0}\sigma_{1}\rho & \sigma_{1}^2
+\end{bmatrix})
+\end{equation}
+
+```{r, eval=FALSE}
+formula= ~ (covariate|1), beta0com = TRUE
+```
+
+```{r, eval=TRUE, echo=FALSE, warning=FALSE}
+
+n=20
+set.seed(1)
+bx01 <- scale(cbind(b01,bx))
+# b02 <- rnorm(p, 0, sig2)
+bx02 <- rmvnorm(p, c(0,0), (diag(2)*(0.1)+0.9))
+bx02 <- scale(bx02)
+
+par(mfrow=c(1,2))
+plot(rep(x, p),rnorm(n*p,cbind(1,x)%*%t(bx01), 0.5), col=rep(1:p,each=n),xlim = c(-2,2.2), ylim = c(-3.5,3.5), xlab="covariate", ylab = "response", main = "cor(beta_0, beta_1) = 0")
+for (i in 1:p) {
+  abline(bx01[i,1],bx01[i,2], col=i)
+}
+abline(0,mean(bx),lty=2)
+plot(rep(x, p),rnorm(n*p,cbind(1,x)%*%t(bx02), 0.5), col=rep(1:p,each=n),xlim = c(-2,2.2), ylim = c(-3.5,3.5), xlab="covariate", ylab = "response", main = "cor(beta_0, beta_1) = 0.8")
+for (i in 1:p) {
+  abline(bx02[i,1],bx02[i,2], col=i)
+}
+abline(0,mean(bx2),lty=2)
+```
+
+
+# Number of levels
+
+\columnsbegin
+\column{0.5\textwidth}
+
+In typical mixed-effects models, grouping variable should have at least 5 levels to 
+estimate a variance. (enough information to deviate the group level effect from the population level mean)
+
+\column{0.5\textwidth}
+ 
+In multivariate mixed effects model with `gllvm` and `formula`
+
+- The species are the “levels” 
+
+- More species >> better variance estimate for random effects
+
+\column{0.5\textwidth}
+ 
+In multivariate mixed effects model with `gllvm` and `row.eff``
+
+- The groups are the “levels” 
+
+\columnsend
+
+# Example 1
+
+Consider as an example ant data with 41 ant species from 30 sites.
+
+Data has some species that are observed only a few times, thus some 'extreme' effects for environmental covariates can came up with fixed effects model.
+
+Let's demonstrate the shrinking effect of the model with covariate canopy cover.
+
+# Example 1: code for a model fit
+
+```{r, eval=TRUE, echo=FALSE, warning=FALSE}
+library(gllvm)
+```
+
+```{r, eval=TRUE}
+data(antTraits, package = "mvabund")
+y = antTraits$abund
+X = scale(antTraits$env)
+```
+
+```{r, eval=TRUE, warning=FALSE}
+model_fixed <- gllvm(y, X, formula = ~Canopy.cover, family = "negative.binomial", num.lv = 0)
+model_random <- gllvm(y, X, formula = ~(0 + Canopy.cover|1), family = "negative.binomial", num.lv = 0)
+```
+
+# Example 1: summary
+```{r, eval=TRUE}
+summary(model_random)
+```
+
+
+# Example 1: Coefficients
+```{r, eval=TRUE, echo=TRUE}
+coefplot(model_random, order=FALSE)
+randomCoefplot(model_random, which.Xcoef = "Canopy.cover")
+```
+
+
+# Example 1: Coefficient comparison
+
+```{r, eval=FALSE, echo=TRUE}
+coefplot(model_fixed, order=FALSE)
+randomCoefplot(model_random, which.Xcoef = "Canopy.cover")
+```
+
+
+```{r, eval=TRUE, echo=FALSE}
+par(mfrow=c(1,2), oma=c(0,1,0,0))
+coefplot(model_fixed, xlim.list = list(c(-150,5)), order=FALSE)
+randomCoefplot(model_random, which.Xcoef = "Canopy.cover")
+```
+
+Extreme values shrinked towards zero.
+
+
+# Example 1: Two covariates
+
+```{r, eval=TRUE, warning=FALSE}
+model_fixed <- gllvm(y, X, formula = ~Canopy.cover+Shrub.cover, family = "negative.binomial", num.lv = 0)
+model_random <- gllvm(y, X, formula = ~(1|1) + (0 + Canopy.cover|1)+(0 + Shrub.cover|1), beta0com = TRUE, family = "negative.binomial", num.lv = 0)
+```
+
+# Example 1: Coefficients
+
+```{r, eval=TRUE, echo=TRUE}
+coefplot(model_fixed, order=FALSE)
+```
+
+```{r, eval=TRUE, echo=TRUE}
+randomCoefplot(model_random)
+coefplot(model_random)
+```
+
+One shrinked towards zero, other almost exactly zero as variable is not so "relevant".
+
+# Example 1: Model comparison
+
+Potentially in shrinkage can improve model's predictive performance in situation like this.
+
+```{r, eval=TRUE}
+goodnessOfFit(object = model_fixed, measure = c("cor", "RMSE"))
+goodnessOfFit(object = model_random, measure = c("cor", "RMSE"))
+```
+
+
+# Community level random effects in gllvm: row.eff
+
+Model:
+
+\begin{equation}
+\eta_{ij} = \textbf{x}_i^\top\bf{\beta_j} + \textbf{Z}_i\bf{\alpha}
+\end{equation}
+
+now, $\bf{\alpha}$ is a vector of community level random effects. $\textbf{Z}$ is a design matrix for random effects and $\textbf{Z}_i$ is i:th row of it. Specifically, 
+$\bf{\alpha} \sim N(0, \bf{\sigma}^2)$
+
+- $\bf{\mu}$ the community level effect, mean for the random effects
+
+- $\bf{\Sigma}$ variation in species specific random effects
+
+
+# Community level random effects in gllvm: row.eff
+
+Controlled with argument `row.eff`
+
+- `row.eff` is a mixed-effects formula
+
+- `row.eff = (1|group) + X1` is a random effect and a fixed effect
+
+- `row.eff = "random"` quick call for incorporating row-specific random intercepts 
+
+- Can also incorporate spatial or temporal random effects, (we will get back to that later)
+
+# row.eff: community level random intercept
+
+\begin{equation}
+\eta_{ij} = \beta_{0j} + \alpha_i, \text{ with } \alpha_i ∼ N(0, \sigma_{\alpha}^2),
+\end{equation}
+
+where $\alpha_i$ is a row-specific community level random intercept.
+
+```{r, eval=FALSE}
+row.eff= "random"
+```
+
+
+# row.eff: multiple community level random intercepts
+
+Row effect allows multiple structured community level random effects.
+This is useful for hierarchical sampling designs, for instance. 
+Example: Hierarchical sampling design with sites and multiple plots within site.
+
+\begin{equation}
+\eta_{ij} = \beta_{0j} + \alpha_{s(i)} + \alpha_{p(i)}, \\
+\text{ with } \alpha_{s(i)} ∼ N(0, \sigma_{s}^2), \\
+\text{ and } \alpha_{p(i)} ∼ N(0, \sigma_{p}^2)
+\end{equation}
+
+- Variation between sites: $\sigma_{s}^2$
+
+- Variation between plots within site: $\sigma_{p}^2$
+
+- $s(i) = s(i')$, if samples $i$ and $i'$ from same site
+
+```{r, eval=FALSE}
+row.eff = ~ (1|site) + (1|plot), studyDesign = studyDesign,
+```
+
+`studyDesign` is a data frame with variables defining site and plot.
+
+This creates correlation structure within sites
+$\frac{\sigma_{s}^2}{\sigma_{s}^2 + \sigma_{p}^2 + \text{error term by distribution}}$
+
+
+# Example 2
+
+Consider microbial community data consisting of abundances of bacteria species. Data was collected from a total of 8 sites from three regions: Kilpisjärvi, Mayrhofen and Ny-Ålesund. From each site data has 4 to 8 soil samples (Total of samples is 56). In addition, three continuous environmental variables (pH, available phosphorous and soil organic matter) were measured from each sample.
+
+Community level random effects can be used to account hierarchical sampling design (Site - Sample).
+
+
+```{r pressure, echo=FALSE, out.width = '70%'}
+knitr::include_graphics("C:/Users/jemaelni/OneDrive - Jyväskylän yliopisto/TestsForgllvm/gllvmCourse/SamplingDesign.png")
+```
+
+```{r, eval=TRUE, echo=FALSE}
+data("microbialdata")
+boxplot(microbialdata$Y)
+```
+
+\footnotesize Figure: Kumar, M., Brader, G., Sessitsch, A., Mäki, A., van Elsas, J.D., and Nissinen, R. (2017). Plants Assemble Species Specific Bacterial Communities from Common Core Taxa in Three Arcto-Alpine Climate Zones. Frontiers in Microbiology, 8:12.
+
+# Example 2: code for a model fit
+
+Model 
+```{r, eval=TRUE}
+data("microbialdata")
+y = microbialdata$Y[, colSums(microbialdata$Y>0)>20]
+X <- scale(microbialdata$Xenv[, 1:3])
+studyDesign <- data.frame(Sample = factor(rownames(microbialdata$Xenv)), 
+                          Site = microbialdata$Xenv$Site,
+                          Region = microbialdata$Xenv$Region)
+```
+
+```{r, eval=FALSE, warning=FALSE}
+modelX <- gllvm(y, X, formula = ~SOM + pH + Phosp, 
+                row.eff = ~(1|Site)+(1|Sample), studyDesign = studyDesign,
+                family = "negative.binomial", num.lv = 0)
+```
+
+```{r, eval=TRUE, warning=FALSE, echo=FALSE}
+load(file = "C:/Users/jemaelni/OneDrive - Jyväskylän yliopisto/TestsForgllvm/gllvmCourse/modelX.RData")
+```
+
+# Example 2: Variance partitioning
+
+The proportional variance explained by the community level effects for sampling design and species specific effects of the continuous covariates is calculated using function `VP`
+
+```{r, eval=FALSE, echo=FALSE, echo=FALSE}
+vp<- VP(modelX)
+vp$PropExplainedVarSp<-vp$PropExplainedVarSp[1:100,]
+vp$LVpartit<-vp$LVpartit[1:100,]
+plot(vp, col=hcl.colors(7, "Roma"))
+```
+
+```{r, eval=FALSE}
+plot(VP(modelX))
+```
+
+```{r VPplot, echo=FALSE, out.width = '90%'}
+knitr::include_graphics("C:/Users/jemaelni/OneDrive - Jyväskylän yliopisto/TestsForgllvm/gllvmCourse/VPplot.png")
+```
+
+
+# Example 2: Variation between Sites and Samples
+
+Standard deviations of the random effects for Site and Sample:
+
+```{r, eval=FALSE, echo=TRUE}
+modelX$params$sigma
+```
+
+Correlation of same species between samples within sites on a linear predictor scale:
+
+```{r, eval=TRUE, echo=TRUE}
+modelX$params$sigma[1]^2/sum(modelX$params$sigma^2)
+```
+
+
+# Connection to ecological diversity measures
+
+We usually assume that an effect with higher variance, has a larger 
+impact on the composition of a community.
+
+We can connect these statistical concepts to more familiar 
+ecological concepts (pub. in prep.)
+
+- Alpha diversity: (average) within-site variation 
+
+- Beta diversity: between-site variation
+
+- Gamma diversity: total variation
+
+And formulate our model accordingly.
+
+# Alpha diversity
+
+\begin{equation}
+y_{ij} = \beta_{0j} + x_i\beta_{1j}
+\end{equation}
+
+\begin{equation}
+var(\beta_{0j} + x_i\beta_{1j}) = \mathbb{E}(\beta_{0j}^2) + x_i^2\mathbb{E}(\beta_{1j}^2)\\
+= \sigma_0^2 + x_i^2\sigma_1^2
+\end{equation}
+
+# Gamma diversity: across sites
+
+
+\begin{equation}
+y_{ij} = \beta_{0j} + x_i\beta_{1j}
+\end{equation}
+
+\begin{equation}
+var_{ij}(\beta_{0j} + x_i\beta_{1j}) = \mathbb{E}_j\{var_i(\eta_{ij})\} + var_j\{\mathbb{E}_i(\eta_{ij})\}\\
+= \sigma_0^2 + \sigma_1^2\{ \bar x + var(x_i)\}
+\end{equation}
+
+
+# Beta diversity: between sites
+
+
+\begin{equation}
+y_{ij} = \beta_{0j} + x_i\beta_{1j}
+\end{equation}
+
+\begin{equation}
+cov(\beta_{0j} + x_i\beta_{1j}, \beta_{0j} + x_k\beta_{1j}) \\
+= \sigma_0^2 + x_k x_i\sigma_1^2
+\end{equation}
+
+So, the change in beta diversity is:
+
+\begin{equation}
+cov(\beta_{0j} + x_i\beta_{1j}, \beta_{0j} + x_k\beta_{1j}) - cov(\beta_{0j} + x_i\beta_{1j}, \beta_{0j} + x_l\beta_{1j}) \\
+= x_i(x_k - x_l) \sigma_1^2
+\end{equation}
+
+
+# End

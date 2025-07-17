@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="spatialGLLVM_files/libs/clipboard/clipboard.min.js"></script>
+<script src="spatialGLLVM_files/libs/quarto-html/tabby.min.js"></script>
+<script src="spatialGLLVM_files/libs/quarto-html/popper.min.js"></script>
+<script src="spatialGLLVM_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="spatialGLLVM_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="spatialGLLVM_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="spatialGLLVM_files/libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.6.40">
+
+  <meta name="author" content="Pekka Korhonen">
+  <title>Accommodating spatial or temporal autocorrelation</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="spatialGLLVM_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="spatialGLLVM_files/libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+      margin-bottom: 0em;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <link rel="stylesheet" href="spatialGLLVM_files/libs/revealjs/dist/theme/quarto-bbe7401fe57d4b791b917637bb662036.css">
+  <link href="spatialGLLVM_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="spatialGLLVM_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="spatialGLLVM_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="spatialGLLVM_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Accommodating spatial or temporal autocorrelation</h1>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Pekka Korhonen 
+</div>
+</div>
+</div>
+
+</section>
+<section id="residual-covariance-matrix" class="slide level2">
+<h2>Residual covariance matrix</h2>
+<p>A really important part of working with JSDMs, including GLMMs and GLLVMs alike, is the residual covariance matrix <span class="math display">\[
+  \Sigma \approx \Gamma \Gamma^\top,
+\]</span> which can be used to examine correlations, i.e., strength and direction of co-occurence patterns among the species studied.</p>
+<p>As a reminder, in <code>gllvm</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a><span class="fu">library</span>(corrplot)</span>
+<span id="cb1-2"><a href=""></a>Sigma <span class="ot">&lt;-</span> <span class="fu">getResidualCor</span>(fit)</span>
+<span id="cb1-3"><a href=""></a><span class="fu">corrplot</span>(Sigma, <span class="at">type=</span><span class="st">"lower"</span>, <span class="at">diag=</span><span class="cn">FALSE</span>, <span class="at">order=</span><span class="st">"AOE"</span>, <span class="at">tl.srt=</span><span class="dv">45</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="section" class="slide level2">
+<h2></h2>
+
+<img data-src="figs/corrplot_rev_1.png" class="r-stretch quarto-figure-center"><p class="caption">Output of <code>corrplot()</code></p></section>
+<section id="other-types-of-correlation" class="slide level2">
+<h2>Other types of correlation</h2>
+<p>What if, instead of remaining static these co-occurence patterns are in fact:</p>
+<ul>
+<li>subject to changes in time, e.g., seasons or some long-term trend</li>
+<li>stronger/weaker/different altogether depending on the geographical region</li>
+<li>affected by some nested/hierarchical aspect of the study design, e.g., transects belonging to the same observational site</li>
+</ul>
+<!-- ## Why incorporate spatial and/or temporal effects in JSDMs? -->
+<!-- For two fairly obvious and simple reasons: -->
+<!-- -   Observations closer to each other geographically are likely more similar, than ones farther apart -->
+<!-- -   Observations closer to each other in time are likely more similar, i.e., autoregressive, or some other kind of trend -->
+</section>
+<section id="spatialtemporal-structures-in-jsdms" class="slide level2">
+<h2>Spatial/temporal structures in JSDMs</h2>
+<ul>
+<li>let us take into account e.g., yearly sampling variation across all species abundances</li>
+<li>allow us to examine patterns in species composition in space and/or time, instead of a fixed setting</li>
+<li>allow us to study the underlying ecological processes in a more complete sense</li>
+<li>offer us the capacities to make precitions and infer long-term trends for how communities evolve in time and space</li>
+</ul>
+</section>
+<section id="where-do-these-effects-fit-in-the-gllvm-framework" class="slide level2">
+<h2>Where do these effects fit in the GLLVM framework?</h2>
+<p>Currently in <code>gllvm</code>, two main options exist:</p>
+<ul>
+<li>As row/community-level effect(s), e.g., <span class="math inline">\(\alpha_{i} \implies \alpha_{\text{year}(i)}\)</span>
+<ul>
+<li>This serves for explaining sampling variations in the overall species abundances</li>
+</ul></li>
+<li>As correlated latent variables, e.g., <span class="math inline">\(u_i \implies u_{\text{loc}(i)}\)</span>
+<ul>
+<li>Allows species’ correlations to vary spatially or in time</li>
+<li>Env. gradients similar for nearby observations</li>
+</ul></li>
+</ul>
+</section>
+<section id="reminder-baseline-gllvm" class="slide level2">
+<h2>Reminder: baseline GLLVM</h2>
+<p>Let the response <span class="math inline">\(y_{ij}, i=1,\dots,n,\, j=1,\dots,m\)</span> be distributed according to some distribution <span class="math inline">\(F(\mu_{ij}, \phi_j)\)</span>, with mean <span class="math inline">\(\mu_{ij}\)</span> (and dispersion <span class="math inline">\(\phi_j\)</span>). Then, let <span class="math display">\[
+  g(\mu_{ij}) = \eta_{ij} = \alpha_i + \beta_{0j} + x_i^\top \beta_j + u_i^\top \gamma_j,
+\]</span> where</p>
+<ul>
+<li><span class="math inline">\(g(\cdot)\)</span> is a link function</li>
+<li><span class="math inline">\(\alpha_i\)</span> are the row effects</li>
+<li><span class="math inline">\(u_i\)</span>, <span class="math inline">\(\gamma_j\)</span> are the LV scores and loadings, respectively</li>
+</ul>
+</section>
+<section id="changing-assumptions" class="slide level2">
+<h2>Changing assumptions</h2>
+<p>Under the basic model, we assume that the row effects and LV scores are independent draws from standard Gaussians, i.e., <span class="math inline">\(\alpha \sim \mathcal{N}(0, \sigma^2I_n)\)</span> and <span class="math inline">\(u_i \overset{\text{iid}}{\sim} \mathcal{N}(0, I_d)\)</span>. For correlated effects, instead:</p>
+<ul>
+<li><span class="math inline">\(\alpha \sim \mathcal{N}(0,\Sigma_{\alpha})\)</span></li>
+<li><span class="math inline">\(u_{.q}\sim \mathcal{N}(0,\Sigma_q)\)</span>, for <span class="math inline">\(q=1,\dots,d\)</span>.</li>
+</ul>
+<p>Here, <span class="math inline">\(u_{.q}\)</span> denotes a vector of all scores for the <span class="math inline">\(q\)</span>th LV, indicative of the need to change the perspective from rows to columns.</p>
+</section>
+<section id="structures-for-sigma_alpha-and-sigma_q" class="slide level2">
+<h2>Structures for <span class="math inline">\(\Sigma_{\alpha}\)</span> and <span class="math inline">\(\Sigma_q\)</span></h2>
+<p>Depending on the application, a plethora of valid covariance structures exist. In <code>gllvm</code>, arguments <code>row.eff</code> and <code>lvCor</code> have the following options:</p>
+<ul>
+<li><code>corAR1</code> for AR(1)</li>
+<li><code>corExp</code> for the exponential correlation function</li>
+<li><code>corMatern</code> for the Matérn correlation function</li>
+<li><code>corSym</code> for compound symmetry</li>
+</ul>
+<p>Additionally, the option <code>corWithin</code> can be used to specify whether correlations are assumed between, or within groups.</p>
+</section>
+<section id="compound-symmetry" class="slide level2">
+<h2>Compound symmetry</h2>
+<p>The compound symmetry assumes equal variances among the variables, as well as equal covariances between any two variables, i.e.,</p>
+<p><span class="math display">\[
+  \Sigma = \begin{bmatrix}
+  \sigma^2 &amp; \sigma_{cs} &amp; \sigma_{cs} &amp; \cdots &amp; \sigma_{cs} \\
+  \sigma_{cs} &amp; \sigma^2 &amp; \sigma_{cs} &amp; \cdots &amp; \sigma_{cs} \\
+  \sigma_{cs} &amp; \sigma_{cs} &amp; \sigma^2 &amp; \cdots &amp; \sigma_{cs} \\
+  \vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+  \sigma_{cs} &amp; \sigma_{cs} &amp; \sigma_{cs} &amp; \cdots &amp; \sigma^2
+  \end{bmatrix}
+\]</span> Perhaps useful within some nested sampling designs</p>
+</section>
+<section id="order-one-autoregressive" class="slide level2">
+<h2>Order one autoregressive</h2>
+<p>Autoregressive means dependence on previous values; in case of AR(1) specifically, dependence on the one immediate previous value, indicating the following form:</p>
+<p><span class="math display">\[
+  \Sigma = \sigma^2 \begin{bmatrix}
+  1 &amp; \rho &amp; \rho^2 &amp; \cdots &amp; \rho^{T-1} \\
+  \rho &amp; 1 &amp; \rho &amp; \cdots &amp; \rho^{T-2} \\
+  \rho^2 &amp; \rho &amp; 1 &amp; \cdots &amp; \rho^{T-3} \\
+  \vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+  \rho^{T-1} &amp; \rho^{T-2} &amp; \rho^{T-3} &amp; \cdots &amp; 1
+  \end{bmatrix}, \rho\in(-1,1)
+\]</span></p>
+</section>
+<section id="fitting-a-gllvm-with-ar1-lvs" class="slide level2">
+<h2>Fitting a GLLVM with AR(1) LVs</h2>
+<p>We will use <code>corAR1</code> to accommodate temporal dependencies in a subset of the kelpforest data of <span class="citation" data-cites="SBC_LTER">Reed and Miller (<a href="#/references" role="doc-biblioref" onclick="">2023</a>)</span>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href=""></a>fit_AR1lv2 <span class="ot">&lt;-</span> <span class="fu">gllvm</span>(<span class="at">y =</span> Y01, Xenv, <span class="at">family=</span><span class="st">"binomial"</span>, <span class="at">num.lv=</span><span class="dv">2</span>,</span>
+<span id="cb2-2"><a href=""></a>                    <span class="at">formula =</span> <span class="sc">~</span>logKELP_FRONDSsc <span class="sc">+</span> PERCENT_ROCKYsc,</span>
+<span id="cb2-3"><a href=""></a>                    <span class="at">studyDesign =</span> Xenv[,<span class="fu">c</span>(<span class="st">"SITE"</span>, <span class="st">"TRANSECT"</span>, <span class="st">"YEAR"</span>)],</span>
+<span id="cb2-4"><a href=""></a>                    <span class="at">row.eff =</span> <span class="sc">~</span> (<span class="dv">1</span><span class="sc">|</span>SITE<span class="sc">/</span>TRANSECT), <span class="at">lvCor =</span> <span class="sc">~</span><span class="fu">corAR1</span>(<span class="dv">1</span><span class="sc">|</span>YEAR))</span>
+<span id="cb2-5"><a href=""></a><span class="co"># afterwards, check the estimates for the parameters of the AR(1)-process</span></span>
+<span id="cb2-6"><a href=""></a>fit_AR1lv2<span class="sc">$</span>params<span class="sc">$</span>rho.lv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>  rho.lv1   rho.lv2 
+0.9133615 0.9350670 </code></pre>
+</div>
+</div>
+<p>The above value indicate a very strong correlation in the responses between consequent years.</p>
+</section>
+<section id="ar1-residual-covariance" class="slide level2">
+<h2>AR(1) residual covariance</h2>
+<p>Classically, the residual covariance between species <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> is: <span class="math display">\[
+  \text{Cov}[i,j] = \gamma_i^\top \gamma_j = \sum_{q=1}^d \gamma_{iq}\gamma_{jq}
+\]</span> Now, the AR(1) LVs allow us to consider both between and within species covariances at different timepoints/lags <span class="math display">\[
+  \text{Cov}[i(t),j(t')] = \sum_{q=1}^d \gamma_{iq}\gamma_{jq}\text{Cov}[u_{.q}(t), u_{.q}(t')]
+\]</span></p>
+</section>
+<section id="section-1" class="slide level2">
+<h2></h2>
+
+<img data-src="figs/AR1_LV2.png" class="quarto-figure quarto-figure-center r-stretch"></section>
+<section id="yearly-trends-in-gamma_jtop-u_textyeari" class="slide level2">
+<h2>Yearly trends in <span class="math inline">\(\gamma_j^\top u_{\text{year}(i)}\)</span>?</h2>
+
+<img data-src="figs/AR1lv_loadings_1.png" class="quarto-figure quarto-figure-center r-stretch"></section>
+<section id="correlation-functions" class="slide level2">
+<h2>Correlation functions</h2>
+<p>Often it makes sense to define the variance-covariance matrix via some parameterized covariance function or <em>kernel</em>:</p>
+<p><span class="math display">\[
+  \Sigma[s,s'] = K(s,s'),
+\]</span> Two conditions that need to be met in order to ensure that the resulting <span class="math inline">\(\Sigma\)</span> is a proper covariance matrix:</p>
+<ul>
+<li><span class="math inline">\(K(s,s') = K(s',s)\)</span> for any pair <span class="math inline">\(s,s'\)</span>.</li>
+<li><span class="math inline">\(\sum_{i=1}^S \sum_{j=1}^S c_i c_{j} K(i,j) \geq 0\)</span> for all <span class="math inline">\(c_1,\dots,c_S \in \mathbb{R}\)</span>.</li>
+</ul>
+</section>
+<section id="exponential-covariance-kernel" class="slide level2">
+<h2>Exponential covariance kernel</h2>
+<p>When, instead of the locations, the value of <span class="math inline">\(K(s,s')\)</span> depends only on distance <span class="math inline">\(d=\text{dist}(s,s')\)</span>, it is called <em>stationary</em>.</p>
+<p>A prime example of a stationary covariance function is given by the exponential covariance function: <span class="math display">\[
+  K(d) = \sigma^2\exp\left(- \frac{d}{\rho}\right),
+\]</span> where <span class="math inline">\(\rho &gt; 0\)</span> is a parameter controlling the spatial range, i.e., the rate at which the covariances diminish as distance <span class="math inline">\(d\)</span> increases.</p>
+</section>
+<section id="fitting-a-model-with-spatial-corexp" class="slide level2">
+<h2>Fitting a model with spatial <code>corExp</code></h2>
+<p>Application goes similar to the case of <code>corAR1</code>, but now we also have to supply the coordinates using <code>distLV</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a>fit_cExpLV2 <span class="ot">&lt;-</span> <span class="fu">gllvm</span>(Yvasc, Xenv, <span class="at">formula=</span><span class="sc">~</span> treatment <span class="sc">+</span> productivity <span class="sc">+</span> type, </span>
+<span id="cb4-2"><a href=""></a>                     <span class="at">num.lv =</span> <span class="dv">2</span>, <span class="at">studyDesign =</span> Xenv[,<span class="fu">c</span>(<span class="st">"site"</span>, <span class="st">"year"</span>)], </span>
+<span id="cb4-3"><a href=""></a>                     <span class="at">lvCor=</span><span class="sc">~</span><span class="fu">corExp</span>(<span class="dv">1</span><span class="sc">|</span>site), <span class="at">family=</span><span class="st">"betaH"</span>, <span class="at">distLV =</span> sitexy,</span>
+<span id="cb4-4"><a href=""></a>                     <span class="at">Lambda.struc=</span><span class="st">"UNN"</span>, <span class="at">NN=</span><span class="dv">10</span>, <span class="at">row.eff =</span><span class="sc">~</span><span class="fu">corAR1</span>(<span class="dv">1</span><span class="sc">|</span>year))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>For a model with lots of effects on different levels, it may be useful to compute the variance partitioning, to see the explanatory power of each component:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a>VP <span class="ot">&lt;-</span> <span class="fu">varPartitioning</span>(fit_cExpLV2)</span>
+<span id="cb5-2"><a href=""></a><span class="fu">plotVP</span>(VP, <span class="at">args.legend=</span><span class="fu">list</span>(<span class="at">cex=</span><span class="fl">0.7</span>), <span class="at">col=</span><span class="fu">hcl.colors</span>(<span class="dv">6</span>, <span class="st">"viridis"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="variance-partitioning" class="slide level2">
+<h2>Variance partitioning</h2>
+
+<img data-src="figs/varPart.png" class="quarto-figure quarto-figure-center r-stretch"></section>
+<section id="section-2" class="slide level2">
+<h2></h2>
+<p>Similar to earlier, we may want to visualize the strength of the implied correlation, now w.r.t. distance:</p>
+
+<img data-src="figs/corExp_dist.png" class="quarto-figure quarto-figure-center r-stretch"></section>
+<section id="section-3" class="slide level2">
+<h2></h2>
+<p>We can now also examine spatial trends per species:</p>
+
+<img data-src="figs/spatial_effects.png" class="quarto-figure quarto-figure-center r-stretch"></section>
+<section id="corexp-paths-are-not-smooth" class="slide level2">
+<h2><code>corExp</code> paths are not “smooth”</h2>
+
+<img data-src="figs/corExpGP.png" class="quarto-figure quarto-figure-center r-stretch"></section>
+<section id="bonus-squared-exponential-kernel" class="slide level2">
+<h2>Bonus: squared exponential kernel</h2>
+<p>With a slight modification of <code>corExp</code>, we can define the famous—and as smooth as it gets—squared exponential kernel:</p>
+<p><span class="math display">\[
+  K(d) = \sigma^2\exp\left(-\frac{d^2}{2\rho^2} \right)
+\]</span></p>
+<ul>
+<li>The degree of smoothness needed might vary greatly in different applications and scenarios</li>
+<li>As an example, consider stratiform vs.&nbsp;orographic rainfall<sup>1</sup></li>
+</ul>
+<aside><ol class="aside-footnotes"><li id="fn1"><p><span class="citation" data-cites="de2022information">De Oliveira and Han (<a href="#/references" role="doc-biblioref" onclick="">2022</a>)</span></p></li></ol></aside></section>
+<section id="the-matérn-family" class="slide level2">
+<h2>The Matérn family</h2>
+<p>strikes a balance between the previous two kernel functions: <span class="math display">\[
+  K(d) = \sigma^2 \frac{2^{1-\nu}}{\Gamma(\nu)}\left(\frac{\sqrt{2\nu} d}{\rho} \right)^\nu \mathcal{K}_\nu\left(\frac{\sqrt{2\nu} d}{\rho}\right),
+\]</span> where <span class="math inline">\(\Gamma(\cdot)\)</span> is the gamma function, <span class="math inline">\(\mathcal{K}_\nu(\cdot)\)</span> is the modified Bessel function, and <span class="math inline">\(\nu&gt;0\)</span> controls the smoothness.</p>
+<ul>
+<li>If (squared) <code>corExp</code> has smoothness of (<span class="math inline">\(\infty\)</span>) <span class="math inline">\(0\)</span>, Matérn has that of <span class="math inline">\(\lceil\nu\rceil-1\)</span>; e.g., <span class="math inline">\(\nu=5/2\)</span> implies degree of <span class="math inline">\(2\)</span>.</li>
+<li><span class="math inline">\(\nu\)</span> is notoriously difficult to estimate, and thus often fixed</li>
+</ul>
+</section>
+<section id="some-facts-regarding-matérn-kernels" class="slide level2">
+<h2>Some facts regarding Matérn kernels</h2>
+<ul>
+<li>For half-integer <span class="math inline">\(\nu\)</span>, <span class="math inline">\(K(d)\)</span> simplifies into a product of the exponential kernel and a polynomial, e.g.:
+<ul>
+<li><span class="math inline">\(\nu=1/2: K(d) = \sigma^2\exp(-d/\rho)\)</span></li>
+<li><span class="math inline">\(\nu=3/2: K(d) = \sigma^2(1+\sqrt{3}d/\rho)\exp(-\sqrt{3}d/\rho)\)</span></li>
+</ul></li>
+<li>Dubbed the “most natural” covariance function for 2D
+<ul>
+<li>Similar to how <code>corExp</code> is for 1D (the Markov property)</li>
+</ul></li>
+<li>For fixed <span class="math inline">\(\nu\)</span> and upto 3D, only the <em>microergodic</em> parameter <span class="math inline">\(\sigma^2/\rho^{2\nu}\)</span> can be consistently estimated from data</li>
+</ul>
+</section>
+<section id="matérn-paths" class="slide level2">
+<h2>Matérn paths</h2>
+
+<img data-src="figs/GPmatern.png" class="quarto-figure quarto-figure-center r-stretch"></section>
+<section id="estimation-of-dynamic-gllvms" class="slide level2">
+<h2>Estimation of dynamic GLLVMs</h2>
+<p>On top of obviously having to deal with the various newly added parameters like <span class="math inline">\(\sigma^2, \rho, \nu\)</span>, etc., how much does the model estimation actually change?</p>
+<p>Sadly, quite a bit. Regarding variational approximations:</p>
+<ul>
+<li>The variational log-likelihood now involves terms with <span class="math inline">\(\Sigma_q\)</span>, or rather, their inverses, which are costly to compute</li>
+<li>The number of variational parameters also increases, to accommodate the covariances between LVs or rows
+<ul>
+<li>increases both computation time and memory requirements</li>
+</ul></li>
+</ul>
+</section>
+<section id="sparse-approximations" class="slide level2">
+<h2>Sparse approximations</h2>
+<p>are required to facilitate efficient estimation of dynamic GLLVMs, ideally for both <span class="math inline">\(\Sigma^{-1}\)</span> and <span class="math inline">\(A\)</span>, i.e., we seek some <span class="math inline">\(\hat{\Sigma}^{-1}, \hat{A}\)</span> such that most of the elements in the matrices are <span class="math inline">\(0\)</span>.</p>
+<ul>
+<li>Popular approaches for <span class="math inline">\(\Sigma^{-1}\)</span> get discussed in the practicals</li>
+<li>For <span class="math inline">\(A=LL^\top\)</span>, a couple of alternatives exist in <code>gllvm</code>:
+<ul>
+<li>block-diagonal nearest neighbour sparse Cholesky factorization (<code>Lambda.struc="bdNN"</code>)</li>
+<li>Kronecker product of unstructured with NN sparse Cholesky factorization (<code>Lambda.struc="UNN"</code>)</li>
+</ul></li>
+</ul>
+</section>
+<section id="nearest-neighbour-approximation" class="slide level2">
+<h2>Nearest neighbour approximation</h2>
+<p>Let <span class="math inline">\(A=L L^\top\)</span> be a <span class="math inline">\(n \times n\)</span> variational (spatial) covariance matrix, with lower diagonal matrix <span class="math inline">\(L\)</span> as its Cholesky factor.</p>
+<p>Assume that the locations <span class="math inline">\(i=1,\dots,n\)</span> have been arranged according to a particular ordering (can be random). For each <span class="math inline">\(i\)</span>, determine then its <em>neighbours</em> <span class="math inline">\(N(i)\)</span> by choosing <span class="math inline">\(k\)</span> sites among <span class="math inline">\(l=1,\dots,i-1\)</span>, which are closest to site <span class="math inline">\(i\)</span>, geographically.</p>
+<p>Then, a sparsity pattern can be imposed by requiring <span class="math inline">\(\hat{L}[l,i]\)</span> to be zero, whenever <span class="math inline">\(l \notin N(i)\)</span>, i.e., <span class="math inline">\(l\)</span> is not a neighbour of <span class="math inline">\(i\)</span>.</p>
+<p>The quality of the approximation depends on both the number of neighbours <span class="math inline">\(k\)</span> and the ordering of the sites.</p>
+</section>
+<section id="section-4" class="slide level2">
+<h2></h2>
+<p>Work in progress for <code>gllvm</code></p>
+<ul>
+<li>NNGP for spatial models</li>
+<li>Gaussian process with inducing points</li>
+</ul>
+<p>State of spatial JSDM packages in general</p>
+<ul>
+<li>HMSC</li>
+<li>Community-level basis functions</li>
+<li>sdmTMB</li>
+</ul>
+</section>
+<section id="references" class="slide level2 smaller scrollable">
+<h2>References</h2>
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-de2022information" class="csl-entry" role="listitem">
+De Oliveira, Victor, and Zifei Han. 2022. <span>“On Information about Covariance Parameters in Gaussian Mat<span>é</span>rn Random Fields.”</span> <em>Journal of Agricultural, Biological and Environmental Statistics</em> 27 (4): 690–712.
+</div>
+<div id="ref-SBC_LTER" class="csl-entry" role="listitem">
+Reed, Daniel C., and Robert J. Miller. 2023. <span>“<span>SBC LTER</span>: Reef: Kelp Forest Community Dynamics: Cover of Sessile Organisms, Uniform Point Contact. <span>LTER</span> Network Member Node.”</span> https://doi.org/10.6073/pasta/0af1a5b0d9dde5b4e5915c0012ccf99c.
+</div>
+</div>
+</section>
+
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="spatialGLLVM_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="spatialGLLVM_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="spatialGLLVM_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="spatialGLLVM_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="spatialGLLVM_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="spatialGLLVM_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="spatialGLLVM_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="spatialGLLVM_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="spatialGLLVM_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="spatialGLLVM_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+
+    <script>
+
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+
+      // slide changes (different for each slide format).
+
+      (function () {
+
+        // dispatch for htmlwidgets
+
+        function fireSlideEnter() {
+
+          const event = window.document.createEvent("Event");
+
+          event.initEvent("slideenter", true, true);
+
+          window.document.dispatchEvent(event);
+
+        }
+
+    
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+
+          fireSlideEnter();
+
+    
+
+          // dispatch for shiny
+
+          if (window.jQuery) {
+
+            if (previousSlide) {
+
+              window.jQuery(previousSlide).trigger("hidden");
+
+            }
+
+            if (currentSlide) {
+
+              window.jQuery(currentSlide).trigger("shown");
+
+            }
+
+          }
+
+        }
+
+    
+
+        // hookup for slidy
+
+        if (window.w3c_slidy) {
+
+          window.w3c_slidy.add_observer(function (slide_num) {
+
+            // slide_num starts at position 1
+
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+
+          });
+
+        }
+
+    
+
+      })();
+
+    </script>
+
+    
+
+    <script id="quarto-html-after-body" type="application/javascript">
+    window.document.addEventListener("DOMContentLoaded", function (event) {
+      const toggleBodyColorMode = (bsSheetEl) => {
+        const mode = bsSheetEl.getAttribute("data-mode");
+        const bodyEl = window.document.querySelector("body");
+        if (mode === "dark") {
+          bodyEl.classList.add("quarto-dark");
+          bodyEl.classList.remove("quarto-light");
+        } else {
+          bodyEl.classList.add("quarto-light");
+          bodyEl.classList.remove("quarto-dark");
+        }
+      }
+      const toggleBodyColorPrimary = () => {
+        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+        if (bsSheetEl) {
+          toggleBodyColorMode(bsSheetEl);
+        }
+      }
+      toggleBodyColorPrimary();  
+      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+      tabsets.forEach(function(tabset) {
+        const tabby = new Tabby('#' + tabset.id);
+      });
+      const isCodeAnnotation = (el) => {
+        for (const clz of el.classList) {
+          if (clz.startsWith('code-annotation-')) {                     
+            return true;
+          }
+        }
+        return false;
+      }
+      const onCopySuccess = function(e) {
+        // button target
+        const button = e.trigger;
+        // don't keep focus
+        button.blur();
+        // flash "checked"
+        button.classList.add('code-copy-button-checked');
+        var currentTitle = button.getAttribute("title");
+        button.setAttribute("title", "Copied!");
+        let tooltip;
+        if (window.bootstrap) {
+          button.setAttribute("data-bs-toggle", "tooltip");
+          button.setAttribute("data-bs-placement", "left");
+          button.setAttribute("data-bs-title", "Copied!");
+          tooltip = new bootstrap.Tooltip(button, 
+            { trigger: "manual", 
+              customClass: "code-copy-button-tooltip",
+              offset: [0, -8]});
+          tooltip.show();    
+        }
+        setTimeout(function() {
+          if (tooltip) {
+            tooltip.hide();
+            button.removeAttribute("data-bs-title");
+            button.removeAttribute("data-bs-toggle");
+            button.removeAttribute("data-bs-placement");
+          }
+          button.setAttribute("title", currentTitle);
+          button.classList.remove('code-copy-button-checked');
+        }, 1000);
+        // clear code selection
+        e.clearSelection();
+      }
+      const getTextToCopy = function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+      }
+      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+        text: getTextToCopy
+      });
+      clipboard.on('success', onCopySuccess);
+      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+          text: getTextToCopy,
+          container: window.document.getElementById('quarto-embedded-source-code-modal')
+        });
+        clipboardModal.on('success', onCopySuccess);
+      }
+        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+        var mailtoRegex = new RegExp(/^mailto:/);
+          var filterRegex = new RegExp('/' + window.location.host + '/');
+        var isInternal = (href) => {
+            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+        }
+        // Inspect non-navigation links and adorn them if external
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+        for (var i=0; i<links.length; i++) {
+          const link = links[i];
+          if (!isInternal(link.href)) {
+            // undo the damage that might have been done by quarto-nav.js in the case of
+            // links that we want to consider external
+            if (link.dataset.originalHref !== undefined) {
+              link.href = link.dataset.originalHref;
+            }
+          }
+        }
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+        const config = {
+          allowHTML: true,
+          maxWidth: 500,
+          delay: 100,
+          arrow: false,
+          appendTo: function(el) {
+              return el.closest('section.slide') || el.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'light-border',
+          placement: 'bottom-start',
+        };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
+          config['offset'] = [0,0];
+          config['maxWidth'] = 700;
+        window.tippy(el, config); 
+      }
+      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+      for (var i=0; i<noterefs.length; i++) {
+        const ref = noterefs[i];
+        tippyHover(ref, function() {
+          // use id or data attribute instead here
+          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+          try { href = new URL(href).hash; } catch {}
+          const id = href.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note) {
+            return note.innerHTML;
+          } else {
+            return "";
+          }
+        });
+      }
+      const findCites = (el) => {
+        const parentEl = el.parentElement;
+        if (parentEl) {
+          const cites = parentEl.dataset.cites;
+          if (cites) {
+            return {
+              el,
+              cites: cites.split(' ')
+            };
+          } else {
+            return findCites(el.parentElement)
+          }
+        } else {
+          return undefined;
+        }
+      };
+      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+      for (var i=0; i<bibliorefs.length; i++) {
+        const ref = bibliorefs[i];
+        const citeInfo = findCites(ref);
+        if (citeInfo) {
+          tippyHover(citeInfo.el, function() {
+            var popup = window.document.createElement('div');
+            citeInfo.cites.forEach(function(cite) {
+              var citeDiv = window.document.createElement('div');
+              citeDiv.classList.add('hanging-indent');
+              citeDiv.classList.add('csl-entry');
+              var biblioDiv = window.document.getElementById('ref-' + cite);
+              if (biblioDiv) {
+                citeDiv.innerHTML = biblioDiv.innerHTML;
+              }
+              popup.appendChild(citeDiv);
+            });
+            return popup.innerHTML;
+          });
+        }
+      }
+    });
+    </script>
+    
+
+</body></html>
