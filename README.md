@@ -58,13 +58,13 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 |Tuesday  |<sub>09:00 - 09:45</sub>| Multispecies mixed effects models                   |Jenni   |
 |         |<sub>09:45 - 10:45</sub>| Practical 4: Fitting multispecies models            |        |
 |         |<sub>10:45 - 11:15</sub>| ☕ Break                                             |        |
-|         |<sub>11:15 - 12:00</sub>| Joint Species Distribution Models (JSDMs)           |Jenni/Pekka|
+|         |<sub>11:15 - 12:00</sub>| Joint Species Distribution Models (JSDMs)           |Pekka   |
 |         |<sub>12:00 - 13:00</sub>| 🍽 Lunch                                            |        |
 |         |<sub>13:00 - 14:00</sub>| Practical 5: Fitting JSDMs                          |        |
-|         |<sub>14:00 - 14:45</sub>| Accommodating spatial or temporal autocorrelation   |Francis/Pekka|
+|         |<sub>14:00 - 14:45</sub>| Accommodating spatial or temporal autocorrelation   |        |
 |         |<sub>14:45 - 15:15</sub>| ☕ Break                                             |        |
-|         |<sub>15:15 - 16:15</sub>| Practical 6: Spatial or temporal JSDMs              |Pekka   |
-|         |<sub>16:15 - 17:00</sub>| Hierarchical environmental responses                |Bert/Jenni|
+|         |<sub>15:15 - 16:15</sub>| Practical 6: Spatial or temporal JSDMs              |        |
+|         |<sub>16:15 - 17:00</sub>| Hierarchical environmental responses                |Bert    |
 |         |             |          |                                                     |        |
 |         |<sub>19:00 - 20:00</sub>| Practical 7: Traits and the phylogenetic model      |Bert    |
 |---------|-------------|----------------------------------------------------------------|--------|
