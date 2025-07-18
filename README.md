@@ -104,6 +104,10 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 - DHARMa
 - vegan
 - labdsv
+- ggplot2
+- rnaturalearth
+- rnaturalearthdata
+- sf
 
 <!-- auxiliary topics 
 a) How to choose an ordination
