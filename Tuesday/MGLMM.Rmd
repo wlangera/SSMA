@@ -53,31 +53,20 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Mixed effects models
 
-\columnsbegin
-\column{0.5\textwidth}
-
 Mixed effects model = Consists of both fixed and random effects.
 
-\column{0.5\textwidth}
- 
 Fixed effects are common across observational units or species.
- 
-\column{0.5\textwidth}
  
 Random effects account variability between species, sites, units or any groups or clusters relevant to specific data.
 
 - Parameters come from a distribution.
 
-\columnsend
 
 
 # Random effects
 
-\columnsbegin
-\column{0.5\textwidth}
 When to include a random effect:
 
-\column{0.5\textwidth}
 
 - Unobserved effect
 
@@ -89,17 +78,13 @@ When to include a random effect:
 
 - Shrinkage
 
-\columnsend
 
 
 # Mixed effects models
 
-\columnsbegin
-\column{0.5\textwidth}
 
 GLMs assume independency, the mixed effect models can account dependent observations.
-\column{0.5\textwidth}
- 
+
 For instance dependency due:
 
 - Hierarchical/nested sampling designs.
@@ -107,11 +92,6 @@ For instance dependency due:
 - Correlated/repeated measurements.
 
 - Correlation between species.
-
-\columnsend
-
-
-
 
 
 # The mixed effects model: simplified form
@@ -139,12 +119,9 @@ L(\bf{y},\bf{\Sigma})\} = \int \prod_{i} f(y_i|\textbf{u})f(\textbf{u};\bf{\Sigm
 
 # Estimation
 
-\columnsbegin
-\column{0.5\textwidth}
 
 For non-normal data, integral has not closed form solution, so approximations provide solutions.
 
-\column{0.5\textwidth}
 
 Possible approximate methods can be:
 
@@ -153,29 +130,22 @@ Possible approximate methods can be:
 - Laplace approximation (gllvm)
 - Variational approximations (gllvm) 
 
-\column{0.5\textwidth}
-
 Or Bayesian MCMC as alternative to frequentist methods.
 
-\columnsend
 
 
 # R packages
 
 ```{r packs, echo=FALSE, out.width = '70%'}
-knitr::include_graphics("C:/Users/jemaelni/OneDrive - Jyväskylän yliopisto/TestsForgllvm/gllvmCourse/packages.png")
+knitr::include_graphics("packages.png")
 ```
 
-\columnsbegin
-\column{0.5\textwidth}
 
 There are several R-packaces available. lme4 and glmmTMB are among most well known.
 
-\column{0.5\textwidth}
 
 Here we focus on gllvm.
 
-\columnsend
 
 
 # Mixed effects models in gllvm
@@ -393,27 +363,22 @@ abline(0,mean(bx2),lty=2)
 
 # Number of levels
 
-\columnsbegin
-\column{0.5\textwidth}
 
 In typical mixed-effects models, grouping variable should have at least 5 levels to 
 estimate a variance. (enough information to deviate the group level effect from the population level mean)
 
-\column{0.5\textwidth}
- 
+
 In multivariate mixed effects model with `gllvm` and `formula`
 
 - The species are the “levels” 
 
 - More species >> better variance estimate for random effects
 
-\column{0.5\textwidth}
- 
+
 In multivariate mixed effects model with `gllvm` and `row.eff``
 
 - The groups are the “levels” 
 
-\columnsend
 
 # Example 1
 
@@ -447,10 +412,17 @@ summary(model_random)
 
 
 # Example 1: Coefficients
+
+\columnsbegin
+\column{0.5\textwidth}
 ```{r, eval=TRUE, echo=TRUE}
 coefplot(model_random, order=FALSE)
+```
+\column{0.5\textwidth}
+```{r, eval=TRUE, echo=TRUE}
 randomCoefplot(model_random, which.Xcoef = "Canopy.cover")
 ```
+\columnsend
 
 
 # Example 1: Coefficient comparison
@@ -477,16 +449,20 @@ model_fixed <- gllvm(y, X, formula = ~Canopy.cover+Shrub.cover, family = "negati
 model_random <- gllvm(y, X, formula = ~(1|1) + (0 + Canopy.cover|1)+(0 + Shrub.cover|1), beta0com = TRUE, family = "negative.binomial", num.lv = 0)
 ```
 
-# Example 1: Coefficients
+# Example 1: Coefficients comparison
 
+\columnsbegin
+\column{0.5\textwidth}
 ```{r, eval=TRUE, echo=TRUE}
 coefplot(model_fixed, order=FALSE)
 ```
 
+\column{0.5\textwidth}
 ```{r, eval=TRUE, echo=TRUE}
-randomCoefplot(model_random)
-coefplot(model_random)
+randomCoefplot(model_random, 
+  which.Xcoef = c("Canopy.cover", "Shrub.cover"))
 ```
+\columnsend
 
 One shrinked towards zero, other almost exactly zero as variable is not so "relevant".
 
@@ -577,7 +553,7 @@ Community level random effects can be used to account hierarchical sampling desi
 
 
 ```{r pressure, echo=FALSE, out.width = '70%'}
-knitr::include_graphics("C:/Users/jemaelni/OneDrive - Jyväskylän yliopisto/TestsForgllvm/gllvmCourse/SamplingDesign.png")
+knitr::include_graphics("SamplingDesign.png")
 ```
 
 ```{r, eval=TRUE, echo=FALSE}
@@ -606,7 +582,7 @@ modelX <- gllvm(y, X, formula = ~SOM + pH + Phosp,
 ```
 
 ```{r, eval=TRUE, warning=FALSE, echo=FALSE}
-load(file = "C:/Users/jemaelni/OneDrive - Jyväskylän yliopisto/TestsForgllvm/gllvmCourse/modelX.RData")
+load(file = "modelX.RData")
 ```
 
 # Example 2: Variance partitioning
@@ -625,7 +601,7 @@ plot(VP(modelX))
 ```
 
 ```{r VPplot, echo=FALSE, out.width = '90%'}
-knitr::include_graphics("C:/Users/jemaelni/OneDrive - Jyväskylän yliopisto/TestsForgllvm/gllvmCourse/VPplot.png")
+knitr::include_graphics("VPplot.png")
 ```
 
 
