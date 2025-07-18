@@ -56,7 +56,7 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 |         |<sub>19:00 - 20:00</sub>| Recap of the day                                    |Bert    |
 |---------|-------------|----------------------------------------------------------------|--------|
 |Tuesday  |<sub>09:00 - 09:45</sub>| Multispecies mixed effects models                   |Jenni   |
-|         |<sub>09:45 - 10:45</sub>| Practical 4: Fitting multispecies models            |        |
+|         |<sub>09:45 - 10:45</sub>| Practical 4: Fitting mixed-effects models           |        |
 |         |<sub>10:45 - 11:15</sub>| ☕ Break                                             |        |
 |         |<sub>11:15 - 12:00</sub>| Joint Species Distribution Models (JSDMs)           |Pekka   |
 |         |<sub>12:00 - 13:00</sub>| 🍽 Lunch                                            |        |
