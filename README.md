@@ -53,7 +53,7 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 |         |<sub>15:15 - 16:15</sub>| Practical 3: Comparing multispecies GLMs            |        | <!-- model selection, hypo testing ?-->
 |         |<sub>16:15 - 17:00</sub>| Introduction to the gllvm R-package                 |Pekka   |
 |         |             |          |                                                     |        |
-|         |<sub>19:00 - 20:00</sub>| Brainstorming properties of community data          |Bert    |
+|         |<sub>19:00 - 20:00</sub>| Recap of the day                                    |Bert    |
 |---------|-------------|----------------------------------------------------------------|--------|
 |Tuesday  |<sub>09:00 - 09:45</sub>| Multispecies mixed effects models                   |Jenni   |
 |         |<sub>09:45 - 10:45</sub>| Practical 4: Fitting multispecies models            |        |
@@ -97,6 +97,13 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 |         |<sub>14:00 - 16:00</sub>| Analysis of own data                                |        |
 
 
+# Packages to install
+
+- gllvm
+- mvabund
+- DHARMa
+- vegan
+- labdsv
 
 <!-- auxiliary topics 
 a) How to choose an ordination
