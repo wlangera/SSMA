@@ -1,0 +1,1039 @@
+---
+title: "GLLVMs from A-Å"
+#subtitle: "Using the models in a complete study context"
+institute: "Summer School on model-based multivariate analysis for ecologists"
+author: "Audun Rugstad, Ph.D. candidate"
+date: "April 2025"
+bibliography: references.bib
+format: 
+  beamer:
+    slide_level: 2
+    section-titles: true
+    navigation: frame
+    theme: Dresden
+    colortheme: spruce
+    fontfamily: opensans
+header-includes:
+  - \usepackage[dvipsnames]{xcolor}
+  - \setbeamercolor{itemize item}{fg=ForestGreen}
+  - \setbeamercolor{itemize items}{fg=ForestGreen}
+  - \setbeamercolor{itemize subitem}{fg=ForestGreen}
+  - \setbeamercolor{itemize subsubitem}{fg=ForestGreen}
+---
+
+# Intro
+
+## Outline of the session
+
+Five-step approach:
+
+1.  Formulate your question in terms of a statistical model
+
+2.  Data exploration and preparation
+
+3.  Model fitting
+
+4.  Model checking
+
+5.  Making inferences
+
+## Outline of the session
+
+We'll go through the full analysis of two ecological datasets (if time permits)
+
+**Example 1:** @dou2022: *Influence of environmental variables on macroinvertebrate community structure in Lianhuan Lake*
+
+**Example 2:** @fernandez2021: *Changes in community functional structure and ecosystem properties along an invasion gradient of Ligustrum lucidum*
+
+# Formulating the question
+
+## Formulating the question
+
+Formulate your research question in terms of a statistical analysis
+
+First question: **What is the goal of the analysis?**
+
+-   **Prediction:** Find the model that best predict future observations
+
+-   **Explanation:** Investigate relationships between explanatory variables and response(s)
+
+## Prediction
+
+::: {.callout-tip icon="false"}
+## Prediction
+
+-   Find the model that best predict future values of one/more response variables (i.e. species distribution)
+
+-   Variable selection based on optimizing for prediction
+
+-   I.e. forward/backward selection using AIC, Root mean square error etc.
+:::
+
+**Example:** A model that predicts future distributions of wood beetles under different climate change scenarios
+
+## Explanation
+
+Two types:
+
+\small
+
+::: {.callout-tip icon="false"}
+## Confirmatory
+
+-   Test a **specific, clear hypothesis** with one/a few models
+
+-   Predictor variables selected based on *a priori* knowledge
+
+-   Ideally **no variable selection** and pre-registration
+:::
+
+. . .
+
+::: {.callout-tip icon="false"}
+## Exploratory
+
+-   Use model(s) to **explore possible** causal relationships
+
+-   Should only be used to generate hypotheses
+
+-   Avoid automatic model selection
+:::
+
+\normalsize
+
+## Flowchart
+
+```{r fig.width=4, fig.height=2.5}
+#| echo: false
+library(ggflowchart)
+data <- tibble::tibble(from = c("Model", "Model", "Explanatory", "Explanatory"), to = c("Predictive", "Explanatory", "Confirmatory", "Exploratory"))
+ggflowchart(data)
+```
+
+## How does this apply to community ecology
+
+Exploratory "throwing everything at the wall" approaches perhaps most common
+
+JSDMs more associated with prediction than other methods?
+
+"True" confirmatory analyses are rare
+
+-   The line between the three can often be blurry
+
+## How does this apply to community ecology
+
+::: {.callout-tip icon="false"}
+## How can GLLVMs help?
+
+-   More streamlined and focused analysis
+
+-   Ideally, a single model of the community that is as complete as possible
+
+-   Can then be used to make inferences about different causal relationships etc.
+:::
+
+## How does this apply to community ecology
+
+**Q:** What type of analysis does a GLLVM with only **unconstrained** latent variables fit into?
+
+. . .
+
+**A:** Primarily exploratory, generating hypothesis about factors that structure the community.
+
+*But:* if the goal is to test specific hypothesis about species co-occurrences, could potentially be used more confirmatory
+
+## How does this apply to community ecology
+
+**Q:** What type of analysis does a GLLVM with **constrained** latent variables fit into?
+
+. . .
+
+**A:** All three, depending on approach?
+
+# Example 1
+
+## Example 1: Invertebrates in Lihuan
+
+@dou2022: Macroinvertebrates in 13 lakes in Lihuan, CN:
+
+From the intro: *The community composition of macro-invertebrate assemblages and their relationships with environmental variables were investigated*
+
+**Data:** Counts of 74 aquatic invertebrates from 44 lake samples in northern China, with simultaneous measures of 13 physical-chemical properties of the water.
+
+## Example 1: Invertebrates in Lihuan
+
+What type of modeling approach makes sense here?
+
+. . .
+
+**A:** Seems very clearly **exploratory** (which variables are potential drivers of community change?)
+
+## Example 1: Invertebrates in Lihuan
+
+What should the model look like?
+
+. . .
+
+A **concurrent ordination** might be a good fit
+
+-   Allows for assessing the relative effect of many predictor variables at once, on a small number of latent variables
+
+-   Also allows us to account for potential residual variation in the L.V.s (i.e. variation not explained by the predictors)
+
+## Data exploration and preparation
+
+Important to always **visually inspect** key properties of the data before modeling
+
+-   Ensure the data meets the assumptions of the model
+
+-   Act as a "sanity check" for modeling output
+
+Standardize and scale variables as needed
+
+As with most other models, we recommend "common sense" practices and guidelines such as @zuur2010
+
+## Data exploration and preparation
+
+Some factors that can mess up a GLLVM:
+
+-   Predictor variables that are too co-linear
+
+-   Several species with very little information on abundances (e.g. zero-inflation)
+
+-   Sites with very little information on abundances
+
+-   Highly unbalanced sampling
+
+## Model philosophy
+
+The underlying philosophy of GLLVMs is:
+
+-   Data is ideally gathered with a spesific model or analysis in mind
+
+-   If not the case: tailor a model to the data properties
+
+-   The model should account for different properties of the data, as far as possible
+
+T**he model should suit the data**, not the other way around.
+
+## Example: Lake invertebrates
+
+```{r}
+#| include: false
+library(ggplot2)
+library(mefa)
+library(ggalluvial)
+library(dplyr)
+library(tidyr)
+library(magrittr)
+library(tibble)
+library(stringr)
+library(GGally)
+library(gllvm)
+#library(hellinger)
+library(ggpubr)
+set.seed(1)
+```
+
+\footnotesize
+
+```{r}
+#| eval: true
+#| echo: true
+
+# load data
+lake_sp <- read.csv("../../data/lake_inverts_sp.csv", sep = "\t")
+lake_env <- read.csv("../../data/lake_inverts_env.csv", sep = "\t")
+
+# clean (according to paper)
+lake_sp <- lake_sp |> select(-Site, -Group, -Season, -Lakes)
+# reduce to actual counts!
+lake_sp <- lake_sp / 16
+```
+
+## Example: Species
+
+We can use a (Log-)abundance occupancy plot:
+
+```{r}
+#| fig-height: 4
+# plot abundance-occupancey (function from package mefa)
+mefa::aoplot(lake_sp)
+```
+
+**X** = Number of plots a species occupies, **Y** = average log-abundance
+
+Can help identify outlier species + get a sense of the commonness of species in the dataset
+
+## Species data
+
+Table of total species abundances:
+
+\footnotesize
+
+```{r}
+#| code-overflow: wrap
+table(colSums(lake_sp))
+```
+
+\normalsize
+
+9 species with 1-2 occurrences in the dataset, and three species with very high abundances
+
+## Filtering data
+
+**Suggestion:** remove species occurring in only one plot, and plots containing only one species (remove 8 species and 9 plots).
+
+\footnotesize
+
+```{r}
+#| echo: true
+
+# remove rare species
+lake_sp_filt <- lake_sp |> 
+  select_if(colSums(lake_sp !=0)>1) 
+
+# remove rare sites
+lake_sp_filt <- lake_sp_filt[rowSums(lake_sp_filt != 0)>1,]
+
+# remove same sites in env. dataframe
+lake_env_filt <- lake_env[row.names(lake_sp_filt),]
+
+```
+
+\normalsize
+
+## Environmental variables
+
+Correlation of all predictors (lake chemical attributes):
+
+:::: columns
+::: {.column width="100%"}
+\tiny
+
+```{r}
+#| echo: false 
+#| fig-height: 2
+corrplot::corrplot(cor(lake_env_filt |> select(-Site, -Group, -Season, -Lakes)),
+                   type="lower", method="pie", order = "AOE", diag = FALSE, tl.pos = "l", tl.cex = 0.2, addgrid.col = NA)
+```
+:::
+::::
+
+\normalsize
+
+## Environmental variables
+
+Why is this important?
+
+-   High co-linearity makes it hard for the model to converge (find estimates)
+
+-   Also makes the parameter uncertainties larger
+
+## Environmental variables
+
+What can be done?
+
+-   Omit predictors
+
+    -   Need to consider properties of the system and analysis
+
+-   "Model tricks"
+
+    -   Regularization ("reigning in" wild estimates)
+
+    -   Shrinkage (finding ways to make unimportant parameters -\> 0)
+
+    -   Ex: Switching to random effects or putting constraints on the response distribution
+
+## How high is too high?
+
+Rule of thumb: no more than 0.8
+
+Our max cor = 0.69
+
+So we "just" standardize and scale to mean = 0 and variance = 1:
+
+```{r}
+#| echo: true
+lake_env[,5:17] <- scale(lake_env[,5:17])
+```
+
+-   So all coefficient estimates are on the same magnitude
+
+# Model setup
+
+## Model setup
+
+**Our suggestion:** Concurrent ordination
+
+What to include in the model?
+
+-   Our goal is to explore the impact of **environmental variables**
+
+-   As such, we can maybe argue for ignoring the study design here (differences between season/lake assumed to be manifested through the water properties)
+
+## Model setup
+
+**Initial model setup:**
+
+-   Two concurrent latent variables informed by the chemical properties of the water
+
+-   Random row effects (to account for site variation in overall abundance)
+
+-   Poisson distribution
+
+-   *Could* include quadratic effects, but might be overloading the model
+
+## Model setup
+
+\footnotesize
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-overflow: wrap
+
+mod_lakes <- gllvm(lake_sp_filt, # species dataframe
+                   X = lake_env_filt, #envrionemtnal dataframe
+                   lv.formula = ~ WT + DO + PH + CON + CODMn + 
+                         TP + TN + NH3.N + NO3.N + NO2.N + Chla + 
+                         SS + WD,
+                   row.eff = "random", # random row effect
+                   family = "poisson", # poisson distribution
+                   num.lv.c = 2, #number of concurrent LVs
+                   n.init = 20) # run the model a few times 
+                                # to ensure convergence
+```
+
+```{r}
+# load the actual model
+load("data/mod_pois_1.Rdata")
+```
+
+## Model setup
+
+A few (personal) tips for the `gllvm()` function:
+
+-   `n.init`: How many starting iterations you run
+
+    -   Depending on how long one run takes, maybe 5-50. Tells you when it has converged.
+
+-   `trace = TRUE`: tells you when each model run specified in `n.init` is complete (makes it less frustrating to fit)
+
+-   `sd.errors = FALSE/TRUE`: when diagnosing/comparing models, you can turn off estimation of standard errors to make each model fitting faster (and fit them retroactively using the `se.gllvm()` function)
+
+\normalsize
+
+# Model checking
+
+## Model checking with GLLVMs
+
+What to look at to determine whether the model is "good"?
+
+-   **Diagnostic plots** (`plot()` function) for model assumptions
+
+    -   Most important!
+
+-   AIC/BIC to compare model fit (e.g. number of LVs needed)
+
+-   Goodness of fit-tests (g`llvm.goodnessOfFit()`)
+
+-   Very small/large parameter estimates (particularly sp. coefficients) for convergence
+
+## Model checking with GLLVMs
+
+What to do to improve the fit?
+
+-   Change response distribution
+
+-   Run more iterations
+
+-   Change starting values
+
+-   Reorder the data(!)
+
+-   Change from fixed to random effects
+
+-   Change number of LVs
+
+## Model checking: Example
+
+We can look at diagnostic plots:
+
+```{r}
+#| layout-ncol: 3
+plot(mod_lakes_pois)
+```
+
+We see some **fanning** and potential **overdispersion** in the residual and QQ plots.
+
+## Model checking: Example
+
+After re-running the model with `family = "negative.binomial"`:
+
+```{r}
+#| layout-ncol: 3
+
+load("data/mod_nb_1.Rdata")
+
+plot(mod_lakes_nb)
+```
+
+\footnotesize
+
+The residual plots indicate that the NB model meets the assumptions of the model better.
+
+## Model checking: Example
+
+The difference in **AICc** values between model 1 and 2 also indicates that the negative binomial model is better.
+
+```{r}
+#| echo: true
+AICc(mod_lakes_pois, mod_lakes_nb)
+```
+
+## Model checking: Example
+
+Looking at some **goodness-of-fit** measures to the original data, however...
+
+```{r}
+gof_pois <- goodnessOfFit(y=lake_sp_filt, object = mod_lakes_pois)
+gof_nb <- goodnessOfFit(y=lake_sp_filt, object = mod_lakes_nb)
+data.frame(Measure=c("cor", "RMSE", "MAE", "MARNE"),
+           Poisson=as.numeric(gof_pois),
+           NB=as.numeric(gof_nb))
+```
+
+. . .
+
+**Conclusion:** Our N.B. model, while meeting the model assumptions (a valid model), is a pretty bad fit to our data
+
+## What has happened?
+
+If we look at the plots of the standard errors for the species loadings, we also see that some are very large, indicating a poor convergence of the model:
+
+\footnotesize
+
+```{r}
+#| echo: true
+#| fig-height: 4
+
+plot(mod_lakes_nb$sd$theta) # theta = species coefficients
+```
+
+\normalsize
+
+## Improving the NB model
+
+We try two things:
+
+-   Specify the LV-coefficients as **random effects**, drawn from a distribution unique for each coefficient
+
+-   Tell the model to estimate a common *dispersion* parameter for the negative binomial distribution for each species
+
+Both could help in steering the model away from "extreme" estimates and lessen overfitting (=regularizing)
+
+## Improving the NB model
+
+\footnotesize
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-overflow: wrap
+
+mod_lakes_nb_2 <- gllvm(lake_sp_filt, X = lake_env_filt,
+                   lv.formula = ~ WT + DO + PH + CON + CODMn + 
+                         TP + TN + NH3.N + NO3.N + NO2.N + Chla + 
+                         SS + WD,
+                   row.eff = "random",
+                   family = "negative.binomial",
+                   ## LV coefficients are random effects:
+                   randomB = "P", 
+                   ## Only one dispersion parameter estimated:
+                   disp.formula = rep(1, ncol(lake_sp_filt)),
+                   num.lv.c = 2,
+                   n.init = 20)
+```
+
+```{r}
+load("data/mod_nb_2.Rdata")
+```
+
+## Checking the new model
+
+```{r}
+#| layout-ncol: 3
+
+plot(mod_lakes_nb_2)
+```
+
+## Checking the new model
+
+::::: columns
+::: {.column width="50%"}
+```{r}
+plot(mod_lakes_nb_2$sd$theta)
+```
+:::
+
+::: {.column width="50%"}
+\tiny
+
+```{r}
+data.frame(Measure=c("cor", "RMSE", "MAE", "MARNE"),
+           #Poisson=as.numeric(gof_pois),
+           NB1=as.numeric(gof_nb),
+           NB2= as.numeric(goodnessOfFit(y=lake_sp_filt, object = mod_lakes_nb_2)))
+```
+:::
+:::::
+
+# Making inferences
+
+## Making inferences with GLLVMs
+
+What you look at depends on your question.
+
+Typical visualizations:
+
+-   Model summary
+
+-   Biplots and triplots
+
+-   Variance explained
+
+-   Coefficient plots (caterpillar plots)
+
+## Model summary
+
+```{r}
+sum_mod <- summary(mod_lakes_nb_2)
+```
+
+Two most important parts for us:
+
+**`Residual standard deviation of LVs`**:
+
+\tiny
+
+```{r}
+sum_mod$sigma.lv
+```
+
+\normalsize
+
+Very low, implies our predictors explain ≈ all the variance in the latent variables
+
+We *could* go back and fit the model again without residual LV variation (as a "classic" constrained ordination)
+
+## Model summary
+
+**`Coefficients LV predictors:`**
+
+\tiny
+
+```{r}
+sum_mod$REbcovs
+```
+
+## Model summary
+
+The most importation predictors seem to be `WT` (water temperature), `PH` (water PH), and `Chla` (chlorophyll A content)
+
+Relatively similar to the conclusion in @dou2022.
+
+## Model summary
+
+We can also look at the estimates for the random row effects:
+
+```{r}
+plot(sum_mod$`Row intercepts`)
+```
+
+They are very small, and could potentially also be excluded to refine the model.
+
+## Biplot and triplot
+
+```{r}
+ordiplot(mod_lakes_nb_2)
+```
+
+## Biplot and triplot
+
+```{r}
+ordiplot(mod_lakes_nb_2, biplot=T)
+```
+
+## Variance explained
+
+\tiny
+
+```{r}
+#| echo: true
+
+varPartitioning(mod_lakes_nb_2)
+
+```
+
+\normalsize
+
+## Coefficient plots
+
+```{r}
+#| layout-ncol: 2
+randomCoefplot(mod_lakes_nb_2, which.Xcoef = c("Chla"))
+randomCoefplot(mod_lakes_nb_2, which.Xcoef = c("NH3.N"))
+```
+
+## Coefficient plots
+
+```{r}
+#| layout-ncol: 2
+randomCoefplot(mod_lakes_nb_2, which.Xcoef = c("WT"))
+randomCoefplot(mod_lakes_nb_2, which.Xcoef = c("PH"))
+```
+
+## Takeaway so far?
+
+. . .
+
+-   While the model seems well behaved and reasonably fit to the data, uncertainties for the effect of predictors on the species are **very** high
+
+-   Suggests it it not very useful for explanatory purpose (only very weak evidence)
+
+## Comparison to fully constrained model
+
+To get a sense of the problem, we could compare it to the slightly more "shaved" model that the parameter estimates seem to suggest:
+
+\tiny
+
+```{r}
+#| echo: true
+#| eval: false
+mod_lakes_nb_3 <- gllvm(lake_sp_filt, X = lake_env_filt,
+                   lv.formula = ~ WT + DO + PH + CON + CODMn + 
+                         TP + TN + NH3.N + NO3.N + NO2.N + Chla + 
+                         SS + WD,
+                   ## Remove random row effects:
+                   #row.eff = "random", 
+                   family = "negative.binomial",
+                   ## LV coefficients are random effects:
+                   randomB = "P", 
+                   ## Only one dispersion parameter estimated:
+                   disp.formula = rep(1, ncol(lake_sp_filt)),
+                   ## Fully constrained (reduced rank) coefs:
+                   num.RR = 2,
+                   n.init = 20)
+```
+
+```{r}
+load("data/mod_nb_3.Rdata")
+```
+
+\normalsize
+
+## Model checking
+
+```{r}
+#| layout-ncol: 3
+plot(mod_lakes_nb_3)
+```
+
+## Biplot (model 2)
+
+```{r}
+ordiplot(mod_lakes_nb_3)
+```
+
+## Variance explained (model 2)
+
+\tiny
+
+```{r}
+#| echo: true
+
+varPartitioning(mod_lakes_nb_3)
+
+```
+
+\normalsize
+
+## What has changed?
+
+. . .
+
+The effect of Chlorophyll and NH3 content has **disappeared**!
+
+## Coefficient plots (model 2)
+
+```{r}
+#| layout-ncol: 2
+randomCoefplot(mod_lakes_nb_2, which.Xcoef = c("WT"))
+randomCoefplot(mod_lakes_nb_2, which.Xcoef = c("PH"))
+```
+
+Still extremely high uncertainty
+
+## Conclusion
+
+. . .
+
+Both models can be argued to be a reasonable fit to the data, but suggest different drivers of species diversity.
+
+-   Still, some indication from both that PH and water temperature are important factors to look into
+
+-   Large uncertainties like this often a feature of negative binomial models
+
+If the goal was prediction, we could have done automatic model selection or similar to (probably) get a simpler model with clearer estimates
+
+## Conclusion
+
+**Highlights** the need to not trust model outputs blindly
+
+The tools showed here can be useful in figuring out what is going on.
+
+Next time: Try to collect more data in a way that could fit a Poisson model?
+
+-   Some unclearness about the actual sampling effort and pooling of samples in this study
+
+-   Unbalanced study design can have had an influence (more sampling in alkaline lakes than others?)
+
+## Conclusion
+
+In other words:
+
+-   We can say both **that** more data is needed, and something about **why** more data is needed:)
+
+# (Bonus): Example 2
+
+## Example 2: Invasive trees in Argentina
+
+From @fernandez2021: Measures of 20 common tree species in rainforest plots in Argentina, where the one of most interest is the invasive broad-leaf privet *Ligustrum Lucidum.*
+
+![Ligustrum lucidum (source: Encyclopedia of life)](graphics/lluc.jpg){width="190"}
+
+## Example 2: Invasive trees in Argentina
+
+Recorded data:
+
+-   basal area of 20 common tree species (including *L. lucidum*) in 164 forest monitoring plots.
+
+-   Samples of soil carbon, nitrogen, C:N ratio, and soil humidity recorded in a subset of 44 plots.
+
+Two main research questions:
+
+1.  How is the abundance of *L. lucidum* in an area associated with the composition of other (native) tree species in the ecosystem? (i.e. coexistence or displacement?)
+2.  Are some soil properties associated with increased abundance of *L. lucidum* spesifically, compared to the native species?
+
+## Example 2: Invasive trees in Argentina
+
+What type of modeling approach makes sense here?
+
+. . .
+
+A: the study is primarily **exploratory**. We don't want to investigate **which** species L. lucidum coexist (or don't) with, and which environmental predictors might explain this, rather than test hypotheses about specific species or predictors.
+
+## Example 2: Invasive trees in Argentina
+
+What should the model look like?
+
+. . .
+
+Here, we have **two** nested datasets, one *with* environmental predictors and one (larger) with only the species.
+
+As such, in order to make the most of our data, and because our research questions concern different aspects of the data, we decide to fit **two** models to our data
+
+. . .
+
+-   An **unconstrained** ordination of all the sites in order investigate L. lucidums co-occurnce with the other species
+
+. . .
+
+-   A **concurrent** ordination of the subset with environmental data, in order to investigate potential drivers of L. lucidums distribution relative to other speices
+
+## Data exploration and preparation
+
+Abundance-occupancy plot of the data:
+
+![](graphics/fernandez_ao.png){width="193"}
+
+All in all, looks very log-linear
+
+## Data exploration and preparation
+
+Co-linearity of the environmental variables
+
+![](graphics/fernandez_colin.png){width="194"}
+
+Pretty neat!
+
+## Data exploration and preparation
+
+What kind of data is this anyway
+
+```{r}
+#| eval: false
+#| echo: true
+
+
+hist(species$L.luc)
+```
+
+![](graphics/lluchist.png){width="196"}
+
+. . .
+
+Positive, continuos, with a lot of zeros -\> The **tweedie** distribution might be a good choice
+
+## Model setup
+
+\footnotesize
+
+```{r}
+#| eval: false
+#| echo: true
+# model 1
+gllvm_t_2 <- gllvm(y=species, 
+                 family="tweedie", 
+                 row.eff = "random",
+                 num.lv = 2,
+                 n.init=5,
+                 trace=T,
+                 Power = NULL) # freely estimates tweedie power param
+```
+
+## Model setup
+
+\footnotesize
+
+```{r}
+#| eval: false
+#| echo: true
+# model 2
+gllvm_tc_2 <- gllvm(y=species_sub, 
+                    X = env_sub,
+                   family="tweedie", 
+                   #row.eff = "random",
+                   lv.formula = ~ Soil.organic.C + Soil.N + 
+                       Soil.C.N + soil.moisture,
+                   n.init=10,
+                   num.lv.c = 2,
+                   trace=T,
+                   Power = NULL)
+```
+
+\normalsize
+
+## Model checking 1
+
+![](graphics/fernandesdiag.png){width="215"}
+
+. . .
+
+Pretty good, I would say!
+
+## Model checking 2
+
+![](graphics/fernandes_diag2.png){width="207"}
+
+. . .
+
+Maybe a little less good(?)
+
+## Making inferences
+
+```{r fig.width=4, fig.height=2.5}
+
+load("data/fernandes_uc.Rdata")
+```
+
+**Model 1**
+
+```{r fig.width=4, fig.height=2.5}
+#| echo: true
+#| eval: false
+gllvm::ordiplot(gllvm_t_2, biplot=T, symbols=T, predict.region = "species")
+```
+
+![](graphics/fernandesordiplot.png){width="228"}
+
+## Making inferences
+
+Seems like L. lucidum is associated with the opposite end of latent variable 1 than most other species
+
+## Making inferences
+
+We can also look directly at the estimated correlation between L. lucidum and the other species that the species loadings produce:
+
+```{r fig.width=4, fig.height=2.5}
+#| echo: true
+#| eval: false
+cr0 <- getResidualCor(gllvm_t_2)
+corrplot::corrplot(cr0[order.single(cr0), order.single(cr0)], diag = TRUE, type = "lower", 
+         method = "square", tl.cex = 0.8, tl.srt = 45, tl.col = c("red", rep("darkgrey", 19)))
+```
+
+![](graphics/fernandescorr.png){width="162"}
+
+## Making inferences
+
+What does this tell us?
+
+. . .
+
+Apart from two other species, *L. lucidum* is clearly **negatively associated** with the other species
+
+## Making inferences
+
+Looking at the results of the second model:
+
+![](graphics/fernandesconcurrent.png){width="211"}
+
+## Making inferences
+
+*L. lucidum* on its own here too.
+
+Seems to be mainly due to different response to Soil C:N and moisture than the other species
+
+## Coefficient plots
+
+Looking at the coefplots, this seems especially true for soil moisture:
+
+![](graphics/fernandescoef.png){width="214"}
+
+## Coefficient plots
+
+Interpretation?
+
+. . .
+
+1.  L. lucidum prefers dryer, more nutrient poor soils, while the other species don't
+
+. . .
+
+2.  L. lucidum *outcompetes* other species in dryer, more nutrient poor soils
+
+. . .
+
+3.  L. lucidum invasion *facilitates* dry and nutrient poor soils, causing other species to do less well (Fernandes et al. 2021's conclusion)
+
+. . .
+
+Many possible ecological interpretations of an exploratory model like this!
+
+## Conclusion / caveats
+
+-   This model seems to be more useful in interpreting the data than in the invertebrate example
+-   Still, the diagnostic plots could be better
+
+. . .
+
+-   Also, if you look deep into the model, there seems to be some minor convergence issues with the second model :(
+
+    -   (negative values in the Hessian (second derivative) matrix for the model parameters).
+
+## References
+
+\footnotesize
