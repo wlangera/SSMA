@@ -556,16 +556,17 @@ Community level random effects can be used to account hierarchical sampling desi
 knitr::include_graphics("SamplingDesign.png")
 ```
 
+\footnotesize Figure: Kumar, M., Brader, G., Sessitsch, A., Mäki, A., van Elsas, J.D., and Nissinen, R. (2017). Plants Assemble Species Specific Bacterial Communities from Common Core Taxa in Three Arcto-Alpine Climate Zones. Frontiers in Microbiology, 8:12.
+
+# Example 2: Data
+
 ```{r, eval=TRUE, echo=FALSE}
 data("microbialdata")
 boxplot(microbialdata$Y)
 ```
 
-\footnotesize Figure: Kumar, M., Brader, G., Sessitsch, A., Mäki, A., van Elsas, J.D., and Nissinen, R. (2017). Plants Assemble Species Specific Bacterial Communities from Common Core Taxa in Three Arcto-Alpine Climate Zones. Frontiers in Microbiology, 8:12.
+# Example 2: Model fit
 
-# Example 2: code for a model fit
-
-Model 
 ```{r, eval=TRUE}
 data("microbialdata")
 y = microbialdata$Y[, colSums(microbialdata$Y>0)>20]
@@ -581,20 +582,10 @@ modelX <- gllvm(y, X, formula = ~SOM + pH + Phosp,
                 family = "negative.binomial", num.lv = 0)
 ```
 
-```{r, eval=TRUE, warning=FALSE, echo=FALSE}
-load(file = "modelX.RData")
-```
 
 # Example 2: Variance partitioning
 
 The proportional variance explained by the community level effects for sampling design and species specific effects of the continuous covariates is calculated using function `VP`
-
-```{r, eval=FALSE, echo=FALSE, echo=FALSE}
-vp<- VP(modelX)
-vp$PropExplainedVarSp<-vp$PropExplainedVarSp[1:100,]
-vp$LVpartit<-vp$LVpartit[1:100,]
-plot(vp, col=hcl.colors(7, "Roma"))
-```
 
 ```{r, eval=FALSE}
 plot(VP(modelX))
@@ -613,10 +604,30 @@ Standard deviations of the random effects for Site and Sample:
 modelX$params$sigma
 ```
 
+```
+##    Site|Site Sample|Sample 
+##    0.1791506     0.2472085
+```
+
+```{r, eval=FALSE, echo=TRUE}
+confint(modelX, parm = "sigma")
+```
+
+```
+##                         cilow      ciup
+## sigma.Site|Site     0.02096308 0.3373382
+## sigma.Sample|Sample 0.19060109 0.3038158
+```
+
 Correlation of same species between samples within sites on a linear predictor scale:
 
-```{r, eval=TRUE, echo=TRUE}
+```{r, eval=FALSE, echo=TRUE}
 modelX$params$sigma[1]^2/sum(modelX$params$sigma^2)
+```
+
+```
+## Site|Site 
+## 0.3443407 
 ```
 
 
