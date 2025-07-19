@@ -52,8 +52,9 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 |         |<sub>14:45 - 15:15</sub>| ☕ Break                                             |        |
 |         |<sub>15:15 - 16:15</sub>| Practical 3: Comparing multispecies GLMs            |        | <!-- model selection, hypo testing ?-->
 |         |<sub>16:15 - 17:00</sub>| Introduction to the gllvm R-package                 |Pekka   |
-|         |             |          |                                                     |        |
-|         |<sub>19:00 - 20:00</sub>| Recap of the day                                    |Bert    |
+|         |<sub>17:00 - 18:00</sub>| Free time                                           |        |
+|         |<sub>18:00 - 19:30</sub>| Dinner                                              |        |
+|         |<sub>19:30 - 20:30</sub>| Recap of the day                                    |Bert    |
 |---------|-------------|----------------------------------------------------------------|--------|
 |Tuesday  |<sub>09:00 - 09:45</sub>| Multispecies mixed effects models                   |Jenni   |
 |         |<sub>09:45 - 10:45</sub>| Practical 4: Fitting mixed-effects models           |        |
@@ -65,8 +66,9 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 |         |<sub>14:45 - 15:15</sub>| ☕ Break                                             |        |
 |         |<sub>15:15 - 16:15</sub>| Practical 6: Spatial or temporal JSDMs              |        |
 |         |<sub>16:15 - 17:00</sub>| Hierarchical environmental responses                |Bert    |
-|         |             |          |                                                     |        |
-|         |<sub>19:00 - 20:00</sub>| Practical 7: Traits and the phylogenetic model      |Bert    |
+|         |<sub>17:00 - 18:00</sub>| Free time                                           |        |
+|         |<sub>18:00 - 19:30</sub>| Dinner                                              |        |
+|         |<sub>19:30 - 20:30</sub>| Practical 7: Traits and the phylogenetic model      |Bert    |
 |---------|-------------|----------------------------------------------------------------|--------|
 |Wednesday|<sub>09:00 - 09:45</sub>| Model-based ordination                              |Bert    |
 |         |<sub>09:45 - 10:45</sub>| Practical 8: Model-based unconstrained              |        |
@@ -78,15 +80,17 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 |         |<sub>14:45 - 15:15</sub>| ☕ Break                                             |        |
 |         |<sub>15:15 - 16:15</sub>| Practical 10: Partial ordination                    |        | <!-- bringing together 3 formula interfaces, and the ideas of partial, residual ordination, and accommodating nested designs -->
 |         |<sub>16:15 - 17:00</sub>| Unimodal responses                                  |        |
-|         |             |          |                                                     |        |
-|         |<sub>19:00 - 20:00</sub>| Practical 11: Unimodal responses                    |        |
+|         |<sub>17:00 - 18:00</sub>| Free time                                           |        |
+|         |<sub>18:00 - 19:30</sub>| Dinner                                              |        |
+|         |<sub>19:30 - 20:30</sub>| Practical 11: Unimodal responses                    |Bert    |
 |---------|-------------|----------------------------------------------------------------|--------|
 |Thursday |<sub>09:00 - 09:45</sub>| GLLVMs from A-Z                                     |Audun   |
 |         |<sub>09:45 - 12:30</sub>| 🎤 Participant presentations                        |        |
 |         |<sub>12:30 - 13:15</sub>| 🍽 Lunch                                            |        |
 |         |<sub>13:15 - 17:00</sub>| 🚶 Excursion                                        |        |
-|         |             |          |                                                     |        |
-|         |<sub>19:00 - 20:00</sub>| (Re)analysing article Part I                        |Bert/Audun|
+|         |<sub>17:00 - 18:00</sub>| Free time                                           |        |
+|         |<sub>18:00 - 19:30</sub>| Dinner                                              |        |
+|         |<sub>19:30 - 20:30</sub>| (Re)analysing article Part I                        |Bert/Audun|
 |---------|-------------|----------------------------------------------------------------|--------|
 |Friday   |<sub>08:45 - 09:00</sub>| Wrap-up                                             |Bert    |
 |         |<sub>09:00 - 09:45</sub>| [Concepts in model-based clustering](https://github.com/BertvanderVeen/SSMA/blob/main/Friday/modelbasedclustering.pdf)                  |Francis |
@@ -95,7 +99,6 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 |         |<sub>11:30 - 12:30</sub>| 🍽 Early lunch                                      |        |
 |         |<sub>12:30 - 14:00</sub>| (Re)analysing article Part II / Discussion          |        |
 |         |<sub>14:00 - 16:00</sub>| Analysis of own data                                |        |
-
 
 # Packages to install
 
