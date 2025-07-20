@@ -1,7 +1,7 @@
 #' ---
 #' title: Short live demonstration of the `clustglm` package
 #' author: Original documentation written by Louise McMillan from the VUW clustering group. Modified by FKCH.
-#' date: Last modified June 2025
+#' date: Last modified July 2025
 #' ---
 
 rm(list = ls())
@@ -54,7 +54,7 @@ fit_siteclust2 <- clustglm(formula = count ~ site + species + siteclust:species,
                            fact4clust = "site",
                            clustfactnames = "siteclust",
                            nclust = 2,
-                           start.control = list(randstarts = 10),
+                           start.control = list(randstarts = 5),
                            verbose = 1)
 
 fit_siteclust3 <- clustglm(formula = count ~ site + species + siteclust:species,
@@ -63,40 +63,41 @@ fit_siteclust3 <- clustglm(formula = count ~ site + species + siteclust:species,
                            fact4clust = "site",
                            clustfactnames = "siteclust",
                            nclust = 3,
-                           start.control = list(randstarts = 10),
+                           start.control = list(randstarts = 5),
                            verbose = 1)
 
-fit_siteclust4 <- clustglm(formula = count ~ site + species + siteclust:species,
-                           family = "poisson",
-                           data = avi_dat,
-                           fact4clust = "site",
-                           clustfactnames = "siteclust",
-                           nclust = 4,
-                           start.control = list(randstarts = 10),
-                           verbose = 1)
+# fit_siteclust4 <- clustglm(formula = count ~ site + species + siteclust:species,
+#                            family = "poisson",
+#                            data = avi_dat,
+#                            fact4clust = "site",
+#                            clustfactnames = "siteclust",
+#                            nclust = 4,
+#                            start.control = list(randstarts = 5),
+#                            verbose = 1)
 
 
 #' ## Compare the various using AICs/BICs, to choose the number of clusters, say.
 comparison(list(fit_glm,
                 fit_siteclust2, 
-                fit_siteclust3,
-                fit_siteclust4))
+                fit_siteclust3
+                # fit_siteclust4
+                ))
 
 
 
 #' ## Summaries and outputs of best model
-summary(fit_siteclust3)
+summary(fit_siteclust2)
 
-round(fit_siteclust3$pp.list$siteclust, 3) #' Posterior probabilities of site cluster membership
-apply(fit_siteclust3$pp.list$siteclust, 1, which.max) #' Classifications of sites into clusters, with the highest posterior probability cluster being the classification for each site
-get_classifications <- apply(fit_siteclust3$pp.list$siteclust, 1, which.max)
+round(fit_siteclust2$pp.list$siteclust, 3) #' Posterior probabilities of site cluster membership
+apply(fit_siteclust2$pp.list$siteclust, 1, which.max) #' Classifications of sites into clusters, with the highest posterior probability cluster being the classification for each site
+get_classifications <- apply(fit_siteclust2$pp.list$siteclust, 1, which.max)
 
-findpars(fit_siteclust3)
+findpars(fit_siteclust2)
 
 
 
 #' ## Profile plot shows how the estimated species profiles, giving an idea of which species occur more often or less often than expected across the profiles there.
-profplot_fit_siteclust <- profileplot(model = fit_siteclust3,
+profplot_fit_siteclust <- profileplot(model = fit_siteclust2,
                                       x.factor = "species",
                                       trace.factor = "siteclust",
                                       sort.x = 1,
@@ -106,7 +107,7 @@ round(profplot_fit_siteclust, 3)
 avi_resp[get_classifications == 1, profplot_fit_siteclust %>% rownames()]
 
 
-profplot_fit_siteclust <- profileplot(model = fit_siteclust3,
+profplot_fit_siteclust <- profileplot(model = fit_siteclust2,
                                       x.factor = "species",
                                       trace.factor = "siteclust",
                                       sort.x = 2,
@@ -131,7 +132,7 @@ fit_speciesclust2 <- clustglm(formula = count ~ site + species + site:speciesclu
                               fact4clust = "species", 
                               clustfactnames = "speciesclust",
                               nclust = 2,
-                              start.control = list(randstarts = 10),
+                              start.control = list(randstarts = 5),
                               verbose = 1)
 
 fit_speciesclust3 <- clustglm(formula = count ~ site + species + site:speciesclust,
@@ -140,23 +141,24 @@ fit_speciesclust3 <- clustglm(formula = count ~ site + species + site:speciesclu
                               fact4clust = "species", 
                               clustfactnames = "speciesclust",
                               nclust = 3,
-                              start.control = list(randstarts = 10),
+                              start.control = list(randstarts = 5),
                               verbose = 1)
 
-fit_speciesclust4 <- clustglm(formula = count ~ site + species + site:speciesclust,
-                              family = "poisson", 
-                              data = avi_dat,
-                              fact4clust = "species", 
-                              clustfactnames = "speciesclust",
-                              nclust = 4,
-                              start.control = list(randstarts = 10),
-                              verbose = 1)
+# fit_speciesclust4 <- clustglm(formula = count ~ site + species + site:speciesclust,
+#                               family = "poisson", 
+#                               data = avi_dat,
+#                               fact4clust = "species", 
+#                               clustfactnames = "speciesclust",
+#                               nclust = 4,
+#                               start.control = list(randstarts = 5),
+#                               verbose = 1)
 
 #' ## Compare the various using AICs/BICs, to choose the number of clusters, say.
 comparison(list(fit_glm,
                 fit_speciesclust2, 
-                fit_speciesclust3,
-                fit_speciesclust4))
+                fit_speciesclust3
+                # fit_speciesclust4
+                ))
 
 
 #' ## Summaries and outputs of best model
@@ -204,7 +206,7 @@ fit_sitespeciesclust33 <- clustglm(formula = count ~ site + species + siteclust:
                                    fact4clust = c("site","species"),
                                    clustfactnames = c("siteclust","speciesclust"),
                                    nclust = c(3, 3),
-                                   start.control = list(randstarts = 10), 
+                                   start.control = list(randstarts = 5), 
                                    verbose = 1)
 
 
@@ -223,6 +225,13 @@ comparison(list(fit_glm,
                 fit_siteclust3, 
                 fit_speciesclust2,
                 fit_sitespeciesclust33))
+
+
+avi_resp[apply(fit_sitespeciesclust33$pp.list$siteclust, 1, which.max) == 1, 
+         apply(fit_sitespeciesclust33$pp.list$speciesclust, 1, which.max) == 2]
+ 
+avi_resp[apply(fit_sitespeciesclust33$pp.list$siteclust, 1, which.max) == 2, 
+         apply(fit_sitespeciesclust33$pp.list$speciesclust, 1, which.max) == 1]
 
 
 #' See the [clustglm GitHub page](https://github.com/vuw-clustering/clustglm/blob/main/vignettes/clustglmTutorial.Rmd) for even info and other applications e.g., in capture-recapture models. But please note there are **lots of limitations!** to the current implementation.
