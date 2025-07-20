@@ -52,7 +52,7 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 |         |<sub>14:45 - 15:15</sub>| ☕ Break                                             |        |
 |         |<sub>15:15 - 16:15</sub>| Practical 3: Comparing multispecies GLMs            |        | <!-- model selection, hypo testing ?-->
 |         |<sub>16:15 - 17:00</sub>| Lecture: Introduction to the gllvm R-package                 |Pekka   |
-|         |<sub>17:00 - 19:30</sub>| Free time + Dinner                                        |        |
+|         |<sub>17:00 - 19:30</sub>| Free time + 🍽 Dinner                                        |        |
 |         |<sub>19:30 - 20:30</sub>| Recap of the day                                    |Bert    |
 |---------|-------------|----------------------------------------------------------------|--------|
 |Tuesday  |<sub>09:00 - 09:45</sub>| Lecture: Multispecies mixed effects models                   |Jenni   |
@@ -65,7 +65,7 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 |         |<sub>14:45 - 15:15</sub>| ☕ Break                                             |        |
 |         |<sub>15:15 - 16:15</sub>| Practical 6: Spatial or temporal JSDMs              |        |
 |         |<sub>16:15 - 17:00</sub>| [Lecture: Hierarchical environmental responses](https://github.com/BertvanderVeen/SSMA/blob/main/Tuesday/HierarchicalResponses.pdf)                |Bert    |
-|         |<sub>17:00 - 19:30</sub>| Free time + Dinner                                        |        |
+|         |<sub>17:00 - 19:30</sub>| Free time + 🍽 Dinner                                        |        |
 |         |<sub>19:30 - 20:30</sub>| Practical 7: Traits and the phylogenetic model      |Bert    |
 |---------|-------------|----------------------------------------------------------------|--------|
 |Wednesday|<sub>09:00 - 09:45</sub>| [Lecture: Model-based ordination](https://github.com/BertvanderVeen/SSMA/blob/main/Wednesday/ModelbasedOrdination.pdf)                              |Bert    |
@@ -78,14 +78,14 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 |         |<sub>14:45 - 15:15</sub>| ☕ Break                                             |        |
 |         |<sub>15:15 - 16:15</sub>| Practical 10: Partial ordination                    |        | <!-- bringing together 3 formula interfaces, and the ideas of partial, residual ordination, and accommodating nested designs -->
 |         |<sub>16:15 - 17:00</sub>| [Lecture: Unimodal responses](https://github.com/BertvanderVeen/SSMA/blob/main/Wednesday/Unimodal.pdf)                                  |        |
-|         |<sub>17:00 - 19:30</sub>| Free time + Dinner                                        |        |
+|         |<sub>17:00 - 19:30</sub>| Free time + 🍽 Dinner                                        |        |
 |         |<sub>19:30 - 20:30</sub>| Practical 11: Unimodal responses                    |Bert    |
 |---------|-------------|----------------------------------------------------------------|--------|
 |Thursday |<sub>09:00 - 09:45</sub>| [Lecture: GLLVMs from A-Z](https://github.com/BertvanderVeen/SSMA/blob/main/Thursday/analysis_A-Z/full_analysis.pdf)                                     |Audun   |
 |         |<sub>09:45 - 12:30</sub>| 🎤 Participant presentations                        |        |
 |         |<sub>12:30 - 13:15</sub>| 🍽 Lunch                                            |        |
 |         |<sub>13:15 - 17:00</sub>| 🚶 Excursion                                        |        |
-|         |<sub>17:00 - 19:30</sub>| Free time + Dinner                                        |        |
+|         |<sub>17:00 - 19:30</sub>| Free time + 🍽 Dinner                                        |        |
 |         |<sub>19:30 - 20:30</sub>| (Re)analysing article Part I                        |Bert/Audun|
 |---------|-------------|----------------------------------------------------------------|--------|
 |Friday   |<sub>08:45 - 09:00</sub>| Wrap-up                                             |Bert    |
