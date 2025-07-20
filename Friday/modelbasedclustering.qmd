@@ -427,10 +427,10 @@ But intuitively, sites with *similar environments/habitats should have similar s
 
 
 
-# Model-based bioregionalization
-\center 
+<!-- # Model-based bioregionalization -->
+<!-- \center  -->
 
-![](bioregionschematic.png){height="75%"}
+<!-- ![](bioregionschematic.png){height="75%"} -->
 
 
 # Model-based bioregionalization
