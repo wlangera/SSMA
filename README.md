@@ -45,7 +45,7 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 |         |<sub>09:30 - 10:15</sub>| [Lecture: Modeling data from ecological communities](https://github.com/BertvanderVeen/SSMA/blob/main/Monday/CommunityData.pdf)           |        |
 |         |<sub>10:15 - 10:45</sub>| ☕ Break                                             |        |
 |         |<sub>10:45 - 11:15</sub>| Discussion: properties of community data            |        | <!-- short group-based disucssion (getting to know each other), also what they expect to be an issue/should be addressed -->
-|         |<sub>11:15 - 12:00</sub>| Lecture: Generalised Linear Models for multiple species      |        | <!-- distributions and such-->
+|         |<sub>11:15 - 12:00</sub>| [Lecture: Generalised Linear Models for multiple species](https://github.com/BertvanderVeen/SSMA/blob/main/Monday/GLMs.pdf)      |        | <!-- distributions and such-->
 |         |<sub>12:00 - 13:00</sub>| 🍽 Lunch                                            |        |
 |         |<sub>13:00 - 14:00</sub>| Practical 2: Fitting GLMs                           |        | <!--add VGLM to this practical-->
 |         |<sub>14:00 - 14:45</sub>| [Lecture: Finding a good multispecies GLM](https://github.com/BertvanderVeen/SSMA/blob/main/Monday/ModelComparison.pdf)                     |        |<!-- what it means to have multiple species -->
@@ -90,7 +90,7 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 |---------|-------------|----------------------------------------------------------------|--------|
 |Friday   |<sub>08:45 - 09:00</sub>| Wrap-up                                             |Bert    |
 |         |<sub>09:00 - 09:45</sub>| [Lecture: Concepts in model-based clustering](https://github.com/BertvanderVeen/SSMA/blob/main/Friday/modelbasedclustering.pdf)                  |Francis |
-|         |<sub>09:45 - 10:30</sub>| [Lecture: Other packages for (model-based) multivariate analysis](https://github.com/BertvanderVeen/SSMA/blob/main/Friday/otherPackages.pdf) |Bert  |
+|         |<sub>09:45 - 10:30</sub>| [Lecture: Other packages for multivariate analysis](https://github.com/BertvanderVeen/SSMA/blob/main/Friday/otherPackages.pdf) |Bert  |
 |         |<sub>10:30 - 11:30</sub>| Practical 12: Comparing ordinations                 |        |
 |         |<sub>11:30 - 12:30</sub>| 🍽 Early lunch                                      |        |
 |         |<sub>12:30 - 14:00</sub>| (Re)analysing article Part II / Discussion          |        |
