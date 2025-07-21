@@ -51,7 +51,7 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 |         |<sub>14:00 - 14:45</sub>| [Lecture: Finding a good multispecies GLM](https://github.com/BertvanderVeen/SSMA/blob/main/Monday/ModelComparison.pdf)                     |        |<!-- what it means to have multiple species -->
 |         |<sub>14:45 - 15:15</sub>| ☕ Break                                             |        |
 |         |<sub>15:15 - 16:15</sub>| Practical 3: Comparing multispecies GLMs            |        | <!-- model selection, hypo testing ?-->
-|         |<sub>16:15 - 17:00</sub>| Lecture: Introduction to the gllvm R-package                 |Bert/Pekka   |
+|         |<sub>16:15 - 17:00</sub>| [Lecture: Introduction to the gllvm R-package](https://github.com/BertvanderVeen/SSMA/blob/main/Monday/gllvm_intro.pdf)                 |Pekka/Bert   |
 |         |<sub>17:00 - 19:30</sub>| Free time + 🍽 Dinner                                        |        |
 |         |<sub>19:30 - 20:30</sub>| Recap of the day                                    |Bert    |
 |---------|-------------|----------------------------------------------------------------|--------|
