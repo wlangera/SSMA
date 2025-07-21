@@ -44,7 +44,7 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 |Monday   |<sub>09:00 - 09:30</sub>| [Welcome, introduction, getting started](https://github.com/BertvanderVeen/SSMA/blob/main/Monday/Introduction.pdf)              |Bert    |
 |         |<sub>09:30 - 10:15</sub>| [Lecture: Modeling data from ecological communities](https://github.com/BertvanderVeen/SSMA/blob/main/Monday/CommunityData.pdf)           |        |
 |         |<sub>10:15 - 10:45</sub>| ☕ Break                                             |        |
-|         |<sub>10:45 - 11:15</sub>| Discussion: properties of community data            |        | <!-- short group-based disucssion (getting to know each other), also what they expect to be an issue/should be addressed -->
+|         |<sub>10:45 - 11:15</sub>| Icebreaker and group discussion: properties of community data            |        | <!-- short group-based disucssion (getting to know each other), also what they expect to be an issue/should be addressed -->
 |         |<sub>11:15 - 12:00</sub>| [Lecture: Generalised Linear Models for multiple species](https://github.com/BertvanderVeen/SSMA/blob/main/Monday/GLMs.pdf)      |        | <!-- distributions and such-->
 |         |<sub>12:00 - 13:00</sub>| 🍽 Lunch                                            |        |
 |         |<sub>13:00 - 14:00</sub>| Practical 2: Fitting GLMs                           |        | <!--add VGLM to this practical-->
