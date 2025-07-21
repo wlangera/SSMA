@@ -1,5 +1,5 @@
 ---
-title: "Introduction to advanced community analysis"
+title: "Introduction"
 institute: "Department of Mathematical Sciences, NTNU"
 author: "Bert van der Veen"
 output: 
@@ -44,67 +44,67 @@ knit_hooks$set(
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# Introduction
 
-## Philosophy
-
-- Adjust the model, not the data
-- If you're not sure how to adjust the model, you just need to figure out
-- Unlike "classically" where the data is adjusted to make the method fit
-
-## Classical approach
-
-\columnsbegin
-\column{0.5\textwidth}
-
-Classically:
-
-1) Decide on a distance
-2) Apply a multivariate analysis
-3) Make a plot
-4) Do a hypothesis test
-
-\column{0.5\textwidth}
-
-![](Warton_et_al_2015.png)
-
-\columnsend
-
-
-# Welcome! \emoji{smile}
+## Welcome! \emoji{smile}
 
 \center
 ![](audience.png){width=60%}
 
-# Intro
 
-[See github for all material](https://github.com/BertvanderVeen/GLLVM-workshop)
+## Who we are
 
-Sessions from 14:00 to 20:00 (Tuesday to Friday). Sessions will consist of a mix of lectures, in-class discussion, and practical exercises / case studies over Slack and Zoom.
+![](bert.jpg){height=30%}
+![](jenni.jpg){height=30%}
+![](Pekka.jpeg){height=30%}
+![](audun.jpg){height=30%}
+![](francis.jpg){height=30%}
 
-* Tuesday: Properties of community data, VGLMs and VGLMMs
-* Wednesday: Model checking, hierarchical environmental responses, JSDM
-* Thursday: Model-based ordination, Ordination with covariates, Unimodal responses
-* Friday: Other packages, Beyond \texttt{gllvm}, article reanalysis, analysis of own data
+## Logistics
+
+- All happy with the rooms?
+- Meals are covered by the summer school
+- Lunch at 12:00, dinner at 18:00
+
+Please keep an eye on slack.
+
+## Credits and attendance
+
+- ECTS require applying and an exam
+- Can also opt in for "just" a letter of attendance
+
+I will post a message on slack.
+
+## Introduction
+
+[See github for all material](https://github.com/BertvanderVeen/SSMA)
+
+Sessions from 9:00 to 17:00. Sessions will consist of a mix of lectures, in-class discussion, and practical exercises / case studies over Slack and Zoom. And after dinner (?)
+
+* Monday: Properties of community data, VGLMs, Model checking, intro to gllvm
+* Tuesday: VGLMMs, JSDM, hierarchical environmental responses
+* Wednesday: Model-based ordination, Ordination with covariates, Conditioning, Unimodal responses
+* Workflow A-Z, presentations, hike, article reanalysis
+* Friday: Model-based clustering, Other packages, article reanalysis, analysis of own data
 
 ## How we will do it
 
-Lectures of about 45-60 minutes \newline
-Practicals of about 45-60 minutes: datasets and R
+Lectures of about 45 minutes \newline
+Practicals of about 60 minutes: datasets and R
 
-  - Practical "tasks" that get more complex
-  - Short, live, demonstrations
+  - Practical "tasks"
+  - Potentially short, live, demonstrations
 
-## Friday
+Questions: in person or on slack ("day channels")
 
-Start an hour sooner? Poll in the slack.
+## Presentations
 
-1. Other \texttt{R}-packages for GLLVMs/JSDMs
-2. A brief look at Hierarchical ordination
-3. Article reanalysis
-  - You can send suggestions, the main requirement is published data
-4. Own data analysis/questions/suggestions
+I will still make a schedule for Thursday.
 
-How does that sound?
+- Low key
+- Does not require slides (but nice if you have them)
+- To tell everyone a little about your data
+- And possibly think about what models to fit
 
 ## What I hope you take away
 
@@ -113,13 +113,16 @@ How does that sound?
 3. Model-based ordination methods do many things better (data properties, diagnostics)
 4. One Method To Rule Them All
 
-## Logistics
-
-[All material on github](https://github.com/BertvanderVeen/GLLVM-workshop)
+## Packages
 
 Please make sure you've downloaded data and updated R/packages
 
 ## \texttt{R}-packages
+
+\columnsbegin
+\column{0.5\textwidth}
+
+For Friday:
 
 - gllvm
 - glmmTMB
@@ -127,14 +130,20 @@ Please make sure you've downloaded data and updated R/packages
 - HMSC
 - sjSDM
 - ecopCopula
-- vegan
 - boral
 
-and some spatial packages
+\column{0.5\textwidth}
+and some additional packages:
 
-- terra
+- DHARMa
+- vegan
+- labdsv
+- ggplot2
+- rnaturalearth
+- rnaturalearthdata
 - sf
-- maptiles
+
+\columnsend
 
 ## Some resources on classical ordination
 
@@ -198,10 +207,7 @@ and some spatial packages
 
 (none)
 
-
-# Introduction
-
-## Motivation
+# Motivation
 
 ![Warton et al. 2015](modelbased.png)
 
@@ -221,7 +227,6 @@ GLLVMs are a formal statistical, fully probabilistic, tool for multivariate anal
 1) To step up your multivariate analysis
 2) Maybe you want to incorporate random effects
 3) Negates the need for distances
-
 
 ## Multivariate analysis
 
@@ -247,6 +252,8 @@ corrplot::corrplot(getResidualCor(mod),type = "lower",order = "AOE")
 
 \columnsend
 
+# History
+
 ## Use of ordination
  
 - One of the most used methods of multivariate analysis 
@@ -255,8 +262,6 @@ corrplot::corrplot(getResidualCor(mod),type = "lower",order = "AOE")
   - or any column and row quantity really
 - Summarizes data
 - Find underlying structures (gradients/LVs)
-
-# History
 
 ## A brief history of ordination
 
@@ -443,12 +448,6 @@ glmer(abundance~species+x:species+(0+species|sites))
 \normalsize
 \textbf{\textcolor{red}{Problem: Number of parameters grows quadratically}}
 
-## "Fun" ecological inference
-
-```{r,out.width="55%", fig.align="center", echo=F, fig.cap="Warton et al. 2015 Alpine plants"}
-knitr::include_graphics("Warton_2015_alpineplants.jpg")
-```
-
 ## Model-based ordination
 
 - Generalised Linear Latent Variable Model
@@ -472,61 +471,6 @@ knitr::include_graphics("Warton_2015_alpineplants.jpg")
 \end{bmatrix}
 \end{equation}
 
-## The Minchin dataset
-
-```{r, echo=F, message=F, warning=F, fig.align="center", fig.height = 6, echo = FALSE}
-library(gllvm)
-library(vegan)
-# Download the minchin dataset
-minchin <- read.csv("https://raw.githubusercontent.com/BertvanderVeen/Examples/master/Minchin87_2b_counts.csv") # Data frmo minchin 1987
-# All missing values are zeros
-minchin[is.na(minchin)] <- 0
-minchin<-minchin[,-1]
-# We will first do some classical ordination methods
-# Correspondence analysis
-CA_minchin <- cca(minchin)
-# Detrended CA
-DCA_minchin <- decorana(minchin)
-logDCA_minchin <- decorana(log1p(minchin))
-
-# NMDS
-NMDS_minchin <- metaMDS(minchin, k = 2, trace = F)
-par(mfrow=c(2,2))
-# Let's have a look at the results
-plot(scores(CA_minchin,display="sites"), main="CA",col=rep(1:4,each=12),pch=rep(1:4,each=12), cex = 1.5) # arch effect
-plot(scores(DCA_minchin)[,1:2], main="DCA",col=rep(1:4,each=12),pch=rep(1:4,each=12), cex = 1.5) # This has the tongue effect
-plot(scores(logDCA_minchin, display="sites"), main="log-DCA",col=rep(1:4,each=12),pch=rep(1:4,each=12), cex = 1.5) # suggestion from paper CTB
-plot(NMDS_minchin$points, main="NMDS",col=rep(1:4,each=12),pch=rep(1:4,each=12), cex = 1.5) # This looks pretty OK!
-```
-
-
-```{r minch2, fig.align="center", echo=F, fig.height = 6, dev = "png", fig.show = "none"}
-#mod <- gllvm(minchin,family="negative.binomial",num.lv=2, row.eff="random",starting.val="res", n.init=3, jitter.var=0.2, trace=T, method="EVA", sd.errors = F)
-#save(mod,file="linmodMinchin.RData")
-par(mfrow=c(1,2))
-load("linmodMinchin.RData")
-plot(getLV(mod)%*%diag(mod$params$sigma.lv), xlab="LV1", ylab="LV2", main="linear response GLLVM",col=rep(1:4,each=12),pch=rep(1:4,each=12), cex = 1.5)
-
-#It needs to be with NB!
-#ok this works best:
-#mod3 <- gllvm(minchin,family="poisson",num.lv=2, trace=T, jitter.var=.2,sd.errors=F,n.init=3, quadratic=T)
-#save(mod3,file="quadmodMinchin.RData")
-load("quadmodMinchin.RData")
-plot(getLV(mod3)%*%diag(mod3$params$sigma.lv), xlab="LV1", ylab="LV2", main="quadratic response GLLVM",col=rep(1:4,each=12),pch=rep(1:4,each=12), cex = 1.5)
-```
-
-\only<2>{
-\begin{tikzpicture}[remember picture, overlay]
-    \fill[white,opacity=0.8] (current page.south west) rectangle (current page.north east);
-\end{tikzpicture}
-\begin{center}
-\begin{tikzpicture}[remember picture,overlay]
-    \node[anchor=center] at (current page.center) {\includegraphics[width=0.75\textwidth]{Introduction_files/figure-beamer/minch2-1.png}};
-\end{tikzpicture}
-\end{center}
-}
-
-
 ## Why model-based
 
 - Flexibility
@@ -542,247 +486,15 @@ We can do all kinds of fun things
 - Flexible models
 - Etc.
 
-## Challenges
 
-- Complex model
-  - products of random-effects
-  - identifiability
-- No analytical solution (need approximate methods)
-- Computationally intensive (need fast fitting)
-- Non-convex objective function (need robust optimization)
-- Usability needs a lot more improvements
+# Conclusions
 
-# The \texttt{gllvm} \texttt{R}-package
-
-Many people have put a lot of work into development of the methods presented here
-
-## The \texttt{gllvm} \texttt{R}-package
-
-- Fast
-- Easy to use
-- Many different model structures
-- (Un)constrained ordination with random-effects
-- Tools for ordination (biplot) and regression (model selection, statistical uncertainties)
-- (very) Active support via github (Jenni Niku, me \emoji{smiling-face})
-
-\textbf{Jenni Niku, Wesley Brooks, Riki Herliansyah, Francis K.C. Hui, Pekka Korhonen, Sara Taskinen, Bert van der Veen and David I. Warton (2025). gllvm:
-  Generalized Linear Latent Variable Models. R package version 2.0.2}
-
-## \texttt{gllvm}
-
-![](gllvm.png)
-
-- Originally published in 2019 by Niku et al. 
-- For JSDM, unconstrained, and residual ordination
-- Since then it has been considerably extended
-- Models are fitted in C++ with Template Model Builder \tiny (Kristensen et al. 2015) \normalsize
-
-## Likelihood approximation
-
-\begin{equation}
-\mathcal{L}(\Theta) =\sum \limits_{i=1}^n \log\biggl\{ \displaystyle\int \prod \limits_{j=1}^m f\biggl(y_{ij} \vert \textbf{z}_i, \Theta\biggr)h\biggl(\textbf{z}_i\biggr) d\textbf{z}_i \biggr\},
-\label{gllvm}
-\end{equation}
-
-The package has three methods for approaching the estimation:
-
-- Laplace approximation (LA)
-- Variational approximation (VA)
-- Extended variational approximation (EVA)
-
-\centering
-\textcolor{red}{\textbf{Sometimes we want or need to switch between these}}
-
-## Main function: `gllvm(.)`
-
-![](gllvmhelp1.png)
-
-This has many arguments
-
-\columnsbegin
-\column{0.4\textwidth}
-
-- `y` (community data)
-- `X` (environment)
-- `TR` (traits)
-- `data`
-- `formula`
-- `family`
-
-\column{0.6\textwidth}
-
-- `num.lv` (unconstrained ord.)
-- `num.lv.c` (concurrent ord.)
-- `num.RR` (constrained ord.)
-- `lv.formula`
-- `sd.errors` (can take long)
-- `method` (LA, VA, EVA)
-
-\columnsend
-
-## `gllvm(.)` arguments continued
-
-\small
-
-\columnsbegin
-\column{0.5\textwidth}
-
-- `studyDesign`
-- `dist`
-- `colMat`
-- `colMat.rho.struct`
-- `corWithin`
-- `quadratic`
-- `row.eff`
-- `offset`
-- `randomB`
-- `randomX`
-- `beta0com`
-- `zeta.struc` (only applies to ordinal)
-
-\column{0.5\textwidth}
-
-- `link` (only applies to binomial)
-- `Ntrials` (only applies to binomial)
-- `Power` (only applies to tweedie)
-- `seed` (for reproducibility)
-- `scale.X` (for 4th corner)
-- `return.terms`
-- `gradient.check` (convergence check)
-- `disp.formula` (dispersion parameters)
-- `control`
-- `control.va`
-- `control.start`
-
-\columnsend
-
-
-## Distributions in \texttt{gllvm}
-
-\footnotesize 
-
-\begin{table}[h]
-\begin{tabu} to \linewidth {*4{X}}
-\toprule
-Type of data & Distribution & Method & Link\\
-\midrule
-Normal & Gaussian & VA/LA & identity\\
-Counts & Poisson & VA/LA & log \\
-& NB & VA/LA & log \\
-& ZIP & VA/LA  & log \\
-& ZINB & VA/LA & log \\
-& binomial & VA/LA & probit \\
-& binomial & LA & logit \\ 
-Binary & Bernoulli & EVA VA/LA & probit logit \\
-Ordinal & Multinomial & VA & cumulative probit \\
-Biomass & Tweedie & EVA/LA & log \\
-Positive continuous & Gamma & VA/LA &log \\
-& Exponential & VA/LA & log \\
-Percent cover & beta & LA/EVA & probit/logit \\
-\tiny with zeros or ones \normalsize & ordered beta & EVA & probit \\
-\bottomrule
-\end{tabu}
-\end{table}
-\normalsize
-
-## Functions in the package
-
-\columnsbegin
-\column{0.5\textwidth}
-
-- `gllvm()`
-- `logLik()`
-- `summary()`
-- `confint()`
-- `predict()`
-- `coefplot()`
-
-\column{0.5\textwidth}
-
-- `randomCoefplot()`
-- `plot()` and `residuals()`
-- `se()` and `vcov()`
-- `getLV()`
-- `getLoadings()`
-- `predictLVs()`
-- `phyloPlot`
-- `VP()` and `plotVP()`
-
-\columnsend 
-
-\columnsbegin
-\column{0.99\textwidth}
-
-- `getPredictErr()`
-- `getResidualCor()` and `getResidualCov()`
-- `getEnvironmentalCor()` and `getEnvironmentalCov()`
-- `optima()` and `tolerances()`
-- `simulate()`
-
-\column{0.01\textwidth}<!--dummy column for alignment-->
-\columnsend
-
-## Model structures
-
-\footnotesize 
-
-- Covariates outside of ordination: `X` and `formula` ("conditioning" or "covariate-adjusted")
-- Unconstrained ordination: `num.lv` and (optional) `quadratic`
-- Constrained ordination:  `num.RR` and (optional) `lv.formula` or `randomB` or `quadratic`
-- Concurrent ordination: `num.lv.c` and (optional) `lv.formula` or `randomB` or `quadratic`
-- Fourth-corner LVM: `X` and `TR` and `formula` and (optional) `randomX` or  `beta0comm`
-- Random species effects: `formula` and `X` and (optional) `beta0comm`
-  - Phylogenetic effects: `colMat` and `colMat.rho.struct`
-- Random site effects: `row.eff` and (optional) `dist` or `studyDesign`
-
-\centering
-\textcolor{red}{\textbf{Some of these can be combined, not all}} \newline
-\textcolor{red}{E.g., no traits with constrained/concurrent ordination}
-\tiny that might be the only limitation at present
-
-## Insight into the algorithm
-
-Little shiny app here: https://bertvdveen.shinyapps.io/shinygllvm/ \newline
-Or, e.g., : `gllvm(y, family = "poisson", TMB = FALSE, plot = TRUE) `
-
-## Multiple starting values
-
-\footnotesize 
-
-One "quirk" about such models: they can give different solutions each time. \texttt{gllvm} strategy \tiny (think: \texttt{lme4} + `metaMDS` combined) \normalsize:
-
-- `starting.val`: different types of (smartly) generated starting values
-- `jitter.var`: add a little noise to starting values
-- `optimizer`: changing it can help at times
-- `n.init`: run model multiple times and pick best
-- `n.init.max`: maximum number of tries before exit
-
-![](Niku2019.png)
-
-## Where to go
-
-\centering
-
-Bugs: https://github.com/JenniNiku/gllvm/issues \newline
-Questions: https://github.com/JenniNiku/gllvm/discussions \newline
-Examples: https://jenniniku.github.io/gllvm/ \newline
-
-Citing: `citation("gllvm")`
-
-# Outline
+## Outline today
 
 * ~~Introduction~~
-* Brainstorm community data
-* Vector GLMs
-* Multispecies random effects
-
-\begin{center}
-\textcolor{red}{15-20 minute break 15:30-15:45}
-\end{center}
-\begin{center}
-\textcolor{red}{45 minute break 17:45-18:30}
-\end{center}
-
+* Community data
+* (Vector) GLMs
+* Introduction to gllvm
 
 ##
 
