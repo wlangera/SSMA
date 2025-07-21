@@ -46,13 +46,13 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 |         |<sub>10:15 - 10:45</sub>| ☕ Break                                             |        |
 |         |<sub>10:45 - 11:15</sub>| Icebreaker/group discussion: properties of community data            |        | <!-- short group-based disucssion (getting to know each other), also what they expect to be an issue/should be addressed -->
 |         |<sub>11:15 - 12:00</sub>| [Lecture: Generalised Linear Models for multiple species](https://github.com/BertvanderVeen/SSMA/blob/main/Monday/GLMs.pdf)      |        | <!-- distributions and such-->
-|         |<sub>12:00 - 13:00</sub>| 🍽 Lunch                                            |        |
-|         |<sub>13:00 - 14:00</sub>| Practical 2: Fitting GLMs                           |        | <!--add VGLM to this practical-->
-|         |<sub>14:00 - 14:45</sub>| [Lecture: Finding a good multispecies GLM](https://github.com/BertvanderVeen/SSMA/blob/main/Monday/ModelComparison.pdf)                     |        |<!-- what it means to have multiple species -->
-|         |<sub>14:45 - 15:15</sub>| ☕ Break                                             |        |
-|         |<sub>15:15 - 16:15</sub>| Practical 3: Comparing multispecies GLMs            |        | <!-- model selection, hypo testing ?-->
-|         |<sub>16:15 - 17:00</sub>| [Lecture: Introduction to the gllvm R-package](https://github.com/BertvanderVeen/SSMA/blob/main/Monday/gllvm_intro.pdf)                 |Pekka/Bert   |
-|         |<sub>17:00 - 19:30</sub>| Free time + 🍽 Dinner                                        |        |
+|         |<sub>12:30 - 13:30</sub>| 🍽 Lunch                                            |        |
+|         |<sub>13:30 - 14:30</sub>| Practical 2: Fitting GLMs                           |        | <!--add VGLM to this practical-->
+|         |<sub>14:30 - 15:15</sub>| [Lecture: Finding a good multispecies GLM](https://github.com/BertvanderVeen/SSMA/blob/main/Monday/ModelComparison.pdf)                     |        |<!-- what it means to have multiple species -->
+|         |<sub>15:15 - 15:30</sub>| ☕ Break                                             |        |
+|         |<sub>15:30 - 16:30</sub>| Practical 3: Comparing multispecies GLMs            |        | <!-- model selection, hypo testing ?-->
+|         |<sub>16:30 - 17:15</sub>| [Lecture: Introduction to the gllvm R-package](https://github.com/BertvanderVeen/SSMA/blob/main/Monday/gllvm_intro.pdf)                 |Pekka/Bert   |
+|         |<sub>17:15 - 19:30</sub>| Free time + 🍽 Dinner                                        |        |
 |         |<sub>19:30 - 20:30</sub>| Recap of the day                                    |Bert    |
 |---------|-------------|----------------------------------------------------------------|--------|
 |Tuesday  |<sub>09:00 - 09:45</sub>| [Lecture: Multispecies mixed effects models](https://github.com/BertvanderVeen/SSMA/blob/main/Tuesday/MGLMM.pdf)                   |Jenni   |
@@ -61,7 +61,7 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 |         |<sub>11:15 - 12:00</sub>| [Lecture: Joint Species Distribution Models (JSDMs)](https://github.com/BertvanderVeen/SSMA/blob/main/Tuesday/JSDM.pdf)           |Pekka   |
 |         |<sub>12:00 - 13:00</sub>| 🍽 Lunch                                            |        |
 |         |<sub>13:00 - 14:00</sub>| Practical 5: Fitting JSDMs                          |        |
-|         |<sub>14:00 - 14:45</sub>| Lecture: Accommodating spatial or temporal autocorrelation   |        |
+|         |<sub>14:00 - 14:45</sub>| [Lecture: Accommodating spatial or temporal autocorrelation](https://github.com/BertvanderVeen/SSMA/blob/main/Tuesday/spatialGLLVM.pdf)   |        |
 |         |<sub>14:45 - 15:15</sub>| ☕ Break                                             |        |
 |         |<sub>15:15 - 16:15</sub>| Practical 6: Spatial or temporal JSDMs              |        |
 |         |<sub>16:15 - 17:00</sub>| [Lecture: Hierarchical environmental responses](https://github.com/BertvanderVeen/SSMA/blob/main/Tuesday/HierarchicalResponses.pdf)                |Bert    |
