@@ -99,12 +99,6 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 # Packages to install
 The latest stable version of all of these packages can be installed from CRAN courtesy of the `install.packages` function.
 - gllvm
-- mvabund
-- glmmTMB
-- HMSC
-- sjSDM
-- ecopCopula
-- boral
 - DHARMa
 - vegan
 - labdsv
@@ -112,6 +106,12 @@ The latest stable version of all of these packages can be installed from CRAN co
 - rnaturalearth
 - rnaturalearthdata
 - sf
+- glmmTMB (mainly for Friday) 
+- mvabund (mainly for Friday)
+- HMSC (mainly for Friday)
+- sjSDM (mainly for Friday)
+- ecopCopula (mainly for Friday)
+- boral (mainly for Friday)
 
 <!-- auxiliary topics 
 a) How to choose an ordination
