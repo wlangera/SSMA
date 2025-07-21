@@ -1,0 +1,75 @@
+---
+title: "Practical: conditioning"
+subtitle: "Summer school in model-based multivariate analysis"
+author: "Bert van der Veen"
+output: html_document
+---
+
+# Description
+
+In the previous practical we implemented ordination with predictors (constrained or concurrent). Adding predictors to an ordination helps to explore the patterns we see in an unconstrained ordination, i.e., to better examine species-environment relationships with sparse community data. If, as in such cases, we want to use the ordination as our primary vehicle for inference, but there are confounding variables, conditioning can greatly help us out.
+
+Conditioning is, more or less, a counterpart to constrained/concurrent ordination. When we include covariate in an ordination, we pull information into the ordination. In conditioning we do the opposite: we are deliberately trying to remove information from the ordination. As demonstrated in the lecture, this can have different purposes: because there is variation due to sampling or measurement that we want to remove, or there is a (very) dominant gradient that requires either more precise estimation, or that we just do not want to look at further.
+
+This practical will include covariates in and outside of the ordination. We can do this with random effects, or with fixed effects, as before. This combination of effects provides us with many possibilities, but we also need to keep thinking carefully about formulation of the models. With great power...
+
+# Part I
+
+In this first part, we will focus on fitting a fixed effects constrained ordination. Whether to treat your constrained ordination as fixed effect or random is up to you; the reasons for doing so are exactly the same as for the VGLM(M). Random effects tend to be a bit more stable, but we can explore that in the second part of the exercise.
+
+I will use the same data, but you are free to use the examples from the presentation (Swiss alpine plants and the Wadden data) or yet another dataset. Although we may not have discussed it yet, the orderedBeta model can benefit from using the `zetacutoff` argument, which allows us to provide starting values for the cut-off parameters. There is also the `zeta.struc` argument which we can use to reduce the number of cut-off parameters from two per species, to two for all species.
+
+```{r, message = FALSE}
+library(gllvm)
+TMB::openmp(parallel::detectCores()-1, DLL = "gllvm", autopar = TRUE)
+Y <- read.csv("../../data/roadY.csv")[,-1]
+Y <- Y/100 # Beta responses should be in the range 0,1
+Y <- Y[,colSums(ifelse(Y==0,0,1))>3]
+X <- read.csv("../../data/roadX.csv")[,-1]
+X$site <- as.factor(X$site)
+X <- data.frame(lapply(X, function(x)if(is.numeric(x)){scale(x)}else{as.factor(x)}))
+X$plot<- factor(ave(seq_along(X$site), X$site, FUN = seq_along))
+X$gf <- relevel(X$gf, ref = "ref") #for easier comparison
+```
+
+To recap, the covariates were: "method": the restoration treatment (pn: planted natural, nat: naturally re-vegetated, ref: pristine vegetation, seed: seeded plots), dis_int_veg": distance to road, "caco": canopy cover, "slope", "grain_size_stand_f": soil grain size, "years_since_n": time since restoration, "gf": ecosystem type, "loi": loss on ignition (organic content), and "site": indicating that there were replications for each location.
+ 
+A basic constrained ordination (similar to e.g., CCA) was fitted as:
+
+```{r mod1, cache = TRUE}
+model1  <- gllvm(y = Y[,order(colSums(ifelse(Y==0,0,1)),decreasing=FALSE)], X = X, 
+                 lv.formula = ~dist_int_veg+caco+slope+loi+grain_size_stand_f+years_since_n+gf, num.RR = 2, 
+                 family = "orderedBeta", disp.formula = rep(1,ncol(Y)), n.init = 3, zetacutoff = c(0,2))
+ordiplot(model1)
+VP(model1)
+```
+
+This is nearly the same model as in the last practical. The ordination plot, and the variation partitioning, indicates that `gf` exhibits the most pronounced effect. So pronounced, that it is difficult to discern anything else going on in the ordination plot. So, let's take out the effect of `gf` to see what else is going on:
+
+```{r, fig.width = 10, cache = TRUE}
+model2  <- gllvm(y = Y, X = X, formula=~gf,
+                 lv.formula = ~dist_int_veg+caco+slope+loi+grain_size_stand_f+years_since_n, num.RR = 2, 
+                 family = "orderedBeta", disp.formula = rep(1,ncol(Y)), n.init = 3, zetacutoff = c(0,2))
+VP(model2, group=c(rep(1,3),rep(2, 6)))
+
+rbPal <- colorRampPalette(c('mediumspringgreen', 'blue'))
+cols <- rbPal(20)[as.numeric(cut(X$years_since_n, breaks = 20))]
+
+ordiplot(model2, s.colors = cols)
+```
+
+Look at that; the effect for `gf` explains much more information than the constrained ordination, but we can indeed see something else in the constrained ordination now. The largest effect is that of the years since restoration, in essence, time. It indicates that the composition has indeed change considerably over time, but that the biggest factor driving composition is still the ecosystem type (which is not a very surprising result, it is just not related to the restoration subject we are looking it). Places that have more recently been restored are located on one side of the plot, and places that have had longer to recover since the intervention on the other side.
+
+We can still look at the effect of `gf`:
+
+```{r, fig.width = 10, cache = TRUE}
+coefplot(model2, which.Xcoef=c("gf1","gf2","gf3"))
+```
+
+The standard errors are quite small; here that is because most species are data deficient, so we tend to get very extreme effects with little (or extreme) variability.
+
+There are multiple ways that we can interpret the difference between models one and two. Clearly, we are removing information due to ecosystem type from the ordination. However, as you learned in the lecture, constrained ordination is a way to represent covariate effects using fewer parameters. When we do that, we make a sacrifice in the accuracy of those estimates. Taking the covariate out of the ordination introduces many more parameters, but that also means we can estimate the effect much more accurately.
+
+## Tasks I
+
+In this practical, I would like you to explore a bit. For inspiration, I suggest you also have a look at the slides from the lecture. There three main interfaces to use are `formula`, `lv.formula` and `row.eff`, and of course the latent variable arguments. You can play around with formulation effects as fixed or random, and conditioning the ordination(s) to various degrees.
