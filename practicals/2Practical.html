@@ -885,7 +885,8 @@ with <code>formula</code>, but note that the same effect cannot be in
 reasons. There is a separate argument that takes the covariates related
 to <code>row.eff</code>, which is “studyDesign”, so the code to fit this
 model is:</p>
-<pre class="r"><code>summary(model6)</code></pre>
+<pre class="r"><code>model6 &lt;- gllvm(Y, studyDesign = X, row.eff = ~scale(silt_clay) + scale(elevation), family = &quot;poisson&quot;, num.lv = 0)
+summary(model6)</code></pre>
 <pre><code>## 
 ## Call:
 ## gllvm(y = Y, family = &quot;poisson&quot;, num.lv = 0, studyDesign = X, 
