@@ -58,7 +58,7 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 |Tuesday  |<sub>09:00 - 09:45</sub>| [Lecture: Multispecies mixed effects models](https://github.com/BertvanderVeen/SSMA/blob/main/Tuesday/MGLMM.pdf)                   |Jenni   |
 |         |<sub>09:45 - 10:45</sub>| Practical 4: Fitting mixed-effects models           |        |
 |         |<sub>10:45 - 11:15</sub>| ☕ Break                                             |        |
-|         |<sub>11:15 - 12:00</sub>| Lecture: Joint Species Distribution Models (JSDMs)           |Pekka   |
+|         |<sub>11:15 - 12:00</sub>| [Lecture: Joint Species Distribution Models (JSDMs)](https://github.com/BertvanderVeen/SSMA/blob/main/Tuesday/JSDM.pdf)           |Pekka   |
 |         |<sub>12:00 - 13:00</sub>| 🍽 Lunch                                            |        |
 |         |<sub>13:00 - 14:00</sub>| Practical 5: Fitting JSDMs                          |        |
 |         |<sub>14:00 - 14:45</sub>| Lecture: Accommodating spatial or temporal autocorrelation   |        |
