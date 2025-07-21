@@ -100,6 +100,11 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 The latest stable version of all of these packages can be installed from CRAN courtesy of the `install.packages` function.
 - gllvm
 - mvabund
+- glmmTMB
+- HMSC
+- sjSDM
+- ecopCopula
+- boral
 - DHARMa
 - vegan
 - labdsv
