@@ -1,0 +1,132 @@
+---
+title: "Practical: Validation and comparison"
+subtitle: "Summer school in model-based multivariate analysis"
+author: "Bert van der Veen"
+output: html_document
+---
+
+# Description
+
+We have fitted a VGLM at this point in the workshop. Hopefully, it is now clear to you that when we fit these models we make assumptions about the data generating process. If these assumptions do not hold, there are consequences for the conclusions that we connect to the results (they are most likely wrong). So, we need to understand the assumptions that we make, and more importantly, we need to know how to check and address assumption violations.
+
+With assumptions, we can distinguish between statistical assumptions and ecological assumptions. Here, we will first focus on the latter, but the former is not less important. Statistical assumptions include:
+
+1. Correct distribution
+2. Correct link function
+3. Correct variance function
+4. No outliers
+5. No systematic departure from the model of another kind (e.g., non-linearity)
+6. Independence of observations
+7. The dispersion parameter is appropriately selected (e.g., per species, per group, or the same)
+
+With ecological assumptions I mean the hypotheses and understandings we convey when we formulate a model. We select and validate those with things like model comparison (information criteria, likelihood ratio test) and residual diagnostics.
+
+Residual diagnostics are a very important part to model checking, why would we compare models if one of them is not a valid model in the first place?
+
+However, there are different ways to approach your final workflow; we could first perform model selection and cross our fingers that the final model has all its assumptions met, so that we don't have to reiterate our process. Ultimately, model fitting, validation, and comparison is a process with an iterative nature. We fit models, we compare or check them, and we refine.
+
+# Data
+
+As for data, you are free to pick a dataset again, but I suggest you take one that has some flexibility or ambiguity as to the right response distribution. For biomass you could work with Tweedie or gamma, for count data it is usually Poisson or negative-binomial, for binary data the response distribution is binomial, but there is choice in the link function: it can be logit, probit, or cloglog. Every data type has a natural response distribution connected to it, usually based on its domain (i.e., the limits of the data; biomass cannot be zero, counts cannot be negative and binary cannot be different from 0 or 1). I suggest to work with the gllvm package for this practical, as it has all the distributions we need.
+
+I will again start with the waddensea (abundance) data, because it allows me to demonstrate the consequences of not accommodating overdispersion, and how to check for overdispersion.
+
+
+```{r data}
+Y <- read.table("../../data/waddenY.csv", sep="," ,header=TRUE, row.names = 2)[,-1]
+X <- read.table("../../data/waddenX.csv", sep=",", header=TRUE, row.names = 2)[,-1]
+X <- X[,-which(apply(X,2, anyNA))] # remove column with NAs
+```
+
+The natural point of departure for count data is the Poisson distribution, or the binomial distribution if you want to condition on the total count.
+
+# Part I
+
+Let's fit a few models to the data with different covariates and complexity, so we can compare them:
+
+```{r, message=FALSE}
+library(gllvm)
+model1 <- gllvm(Y, X, formula = ~scale(silt_clay), family = "poisson", num.lv = 0)
+model2 <- gllvm(Y, X, formula = ~ scale(elevation), family = "poisson", num.lv = 0)
+model3 <- gllvm(Y, X, formula = ~scale(silt_clay) + scale(elevation), family = "poisson", num.lv = 0)
+```
+
+There are a few ways that we can compare these models, the most obvious is by looking at their coefficients with standard errors (use the `coefplot` or `summary` functions), using information criteria (`AIC`, `AICc` or `BIC`), or with hypothesis tests (`anova`).
+
+Exhaustive model comparison will only lead us into trouble due to Freedman's paradox (by chance, some variables will associate to the noise in our response data, and thus sometimes show as statistically significant effects). Make sure not to combine model selection with information criteria, and hypothesis testing, in practice as these are two completely different paradigms that should not be mixed (you will end up p-hacking; information criteria naturally selects models with statistical significance as the concepts are related).
+
+The approximation for the likelihood ratio test implemented in <tt>gllvm</tt> also assumes that the log-likelihood is quadratic. In practice, this means that it is relatively safe to test for if including new fixed effects improves your model, although there are some theoretical underpinnings that say it might sometimes go wrong. Information criteria (such as for example AIC) rely on the same assumptions.
+
+The `anova` method has as main limitations that 1) the model need to be nested, 2) the number of parameters difference can not be too large, the null hypothesis cannot be on the boundary of the parameter space (such as a zero variance estimate because you are omitting species-specific random effects). Especially regarding 2) the function will throw a (relative conservative) warning. For example, we may want to compare the first model to a model with elevation:
+
+```{r}
+anova(model1, model3)
+```
+
+The warning is not because the test does not work. This has to do with the fact that when we include additional species-specific fixed effects, there is a large number of parameters added to the model. The difference in the number of parameters for a model with and without a single covariate is given by the number of species, and we often have many. The likelihood improves with every parameter that we add, so a single covariate difference often means a considerable change in the likelihood. This is one of the main challenges when fitting multispecies models.
+
+## Tasks I
+
+1. Pick a dataset, see what it entails (e.g., what covariates are included) and formulate a question (e.g., is my community affected by elevation).
+1. Choose a paradigm: exploratory or confirmatory. This is usually indicated by the nature of your question (the example is exploratory).
+2. Use `anova` if your analysis is confirmatory, or information criteria if your analysis is exploratory, to determine which covariate(s) in the data drive your community.
+3. You don't have to limit yourself to the example above, it is good to try this for a few datasets and/or covariates. Note, that you can also use information criteria to compare the `family` argument of the model.
+
+# Part II
+
+Let's say you have found a "good" model, we now want to check if that model is also valid.
+
+Similar to a linear regression, we can use `plot` function to visualize the residuals from a <tt>gllvm</tt> type object. There is also a `residuals` function if you actually want to have the residuals, but that is rarely needed in practice. This `plot` function makes five plots:
+
+1. Residuals vs. linear predictors (also called Residuals vs. fitted)
+2. Normal QQ-plot
+3. Residuals vs. rows
+4. Residual vs. columns
+5. Scale-location
+
+Here the residual is defined as the Dunn-Smyth residual, also referred to as the randomized quantile residual. It is the gold standard of residuals when it comes to complex statistical models, is straightforward to define for all our statistical models, and is exactly normally distributed even in small samples, regardless of the response distribution that we select. It has a random component to is, which means that your residual will not look __exactly__ the same every time you use the function, but there will only be minor differences that should not affect your conclusion.
+
+Residual diagnostics is pretty straightforward: there should be no odd looking patterns in the plots. If there are, the conclusions we connect to it, and the consequences it has, depend on the exact assumption that is violated. Safe to say, if all assumptions are met, we do not need to concern ourselves further with the details, so let's focus on that instead!
+
+We check the following assumptions with the following plots:
+
+1. Correct link function, Correct variance function, systematic departure from the model, outliers
+2. Correct distribution, outliers, appropriateness of the dispersion parameter(s)
+3. Independence of observations (particularly sites), systematic depature
+4. Correct variance function, systematic depature from the model, appropriateness of the dispersion parameter(s)
+5. Correct link function, correct variance function, outliers
+
+There is some grey area here; assumptions violations can be extreme and easy to spot, or subtle and difficult to conclude. If you are afraid an assumption is violated, the safe thing to do is to relax the assumption to the best of your ability by adjusting the model, and seeing if the results have changed. If they haven't, the assumption was not violated or it simply didn't matter for your results.
+
+Each of the aforementioned assumptions tends to result in particular patterns in the plots; most violations will show in the first plot, but particularly systematic depature of the model. If you select the wrong distribution the QQ-plot will show departure from the diagonal line. If there is dependence of observations; usually spatially or temporally of sites, this will show in the third plot as clustering. Similarly, similarity of species (e.g., due to relatedness) will show as clustering in the fourth plot. Outliers will show in all the plots; particularly in the fifth plot as points that lay high above the line.
+
+In our case, if we look at the QQ-plot of the first model: 
+
+```{r, fig.width = 10}
+plot(model1, which = 2)
+```
+
+We see that in the tails of the distribution there is a lot of deviation; the absolute size of the residuals is much larger than what corresponds to the Poisson distribution, so that the distributional assumption is violated. Also from some of the other plots it is not hard to determine that the model is a poor fit:
+
+```{r, fig.width = 10}
+plot(model1, which = c(1, 3, 4, 5))
+```
+
+The residuals vs. linear predictors (fitted) shows a fan pattern that is indicative of overdispersion, residuals vs. rows shows some very extreme residuals for particular species, which we also see in the residuals vs. columns plot. The scale-location plot leads to the same conclusion: the variance function is not correct. If you work with count data in community ecology, this would quickly lead you to the conclusion that a negative-binomial model will fit better.
+
+```{r, fig.width = 10}
+model4 <- update(model1, family = "negative.binomial")
+plot(model4, which = c(1,2))
+```
+
+The QQ-plot shows no departure and the residuals vs. linear predictors plot shows no extreme outliers or patterns. That does not make it a good model, just one with valid assumptions!
+
+## Tasks I
+
+Here is what I want you to do:
+
+1. Take one (or multiple) of the models you fitted, and examine their residuals. 
+2. Can you spot any particular assumption deviations?
+3. If you do, based on the information above, can you figure out how to address the assumption violation?
+4. If there are assumption violations, can you manage to change the model and to improve it?
+5. Do the results change?

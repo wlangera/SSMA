@@ -336,6 +336,8 @@ Things to think about:
 # Pattern detection models 
 Brief live demonstration using the \texttt{R} package [clustglm](https://github.com/vuw-clustering/clustglm) and the \texttt{aviurba} dataset in [ade4](https://cran.r-project.org/web/packages/ade4/index.html).
 
+You can also work through the [clustglmTutorial_newapplication.R](https://github.com/BertvanderVeen/SSMA/blob/main/Friday/clustglmTutorial_newapplication.R) script in your own time. 
+
 \center
 
 ![](whatcouldpossiblygowrong.jpg){height="50%"}
@@ -427,10 +429,10 @@ But intuitively, sites with *similar environments/habitats should have similar s
 
 
 
-# Model-based bioregionalization
-\center 
+<!-- # Model-based bioregionalization -->
+<!-- \center  -->
 
-![](bioregionschematic.png){height="75%"}
+<!-- ![](bioregionschematic.png){height="75%"} -->
 
 
 # Model-based bioregionalization
