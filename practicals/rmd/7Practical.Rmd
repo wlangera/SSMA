@@ -33,10 +33,7 @@ Start by choosing a dataset, I will choose a different dataset this time, becaus
 
 ```{r data}
 # Response data
-Y <- t(read.csv("../../data/beetlesY.csv"))
-colnames(Y) <- Y[2,]
-Y<-Y[-c(1:2),-c(1,70:71)]
-Y <- as.data.frame(apply(Y,2,as.integer))
+Y <- read.csv("../../data/beetlesY.csv")[,-1]
 
 # Environmental predictors
 X <- read.csv("../../data/beetlesX.csv")[,-c(1:5)]
@@ -131,8 +128,6 @@ model2 <- gllvm(y = Y, X = X, TR = TR,
 Similar as in the previous models we can plot the species-specific responses with `randomCoefPlot`.
 
 ```{r res, message=FALSE, fig.width = 10}
-# there is a little bug in the software, this first line circumvents that. Will be fixed in the upcoming CRAN submission
-model2$randomX <- model2$Xrandom <- NULL
 randomCoefplot(model2)
 ```
 
@@ -285,8 +280,6 @@ phyloplot(model6, tree = tree)
 and plot the associations due to the environmental variables and phylogeny:
 
 ```{r, fig.width = 15, fig.height = 10}
-# little bug that will be addressed on next CRAN submission
-model6$col.eff$colMat <- model6$col.eff$colMat[[1]]
 library(Matrix)
 corrplot::corrplot(cov2cor(getEnvironCov(model6)$cov), type = "lower", order = "AOE", diag = FALSE, tl.pos = "l", tl.cex = 0.2, addgrid.col = NA)
 ```
