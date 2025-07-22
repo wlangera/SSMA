@@ -1,0 +1,115 @@
+"","sample","date","Depth","age","SampleType","PlatformID","LatStart","LonStart"
+"1","Biodiv offshore hardsub K9-A all depths SP0214",2014-08-27,5,17,"foundation","K9-A",53.5202416699999,3.99246111099999
+"2","Biodiv offshore hardsub L10-AD all depths SP0706",2015-10-09,5,43,"foundation","L10-AD",53.40333889,4.200880556
+"3","Biodiv offshore hardsub L10-AD all depths SP0708",2015-10-09,20,43,"foundation","L10-AD",53.40333889,4.200880556
+"4","Biodiv offshore hardsub L15-A all depths SP0126",2014-06-07,15,22,"foundation","L15-A",53.3295409999999,4.830158
+"5","Biodiv offshore hardsub K9-A all depths SP0210",2014-08-27,10,17,"foundation","K9-A",53.5202416699999,3.99246111099999
+"6","Biodiv offshore hardsub D15-A all depths SP0407",2015-10-04,0,16,"foundation","D15-A",54.32474444,2.934611111
+"7","Biodiv offshore hardsub D15-A all depths SP0383",2015-10-03,5,16,"foundation","D15-A",54.32474444,2.934611111
+"8","Biodiv offshore hardsub D15-A all depths SP0385",2015-10-03,5,16,"foundation","D15-A",54.32474444,2.934611111
+"9","Biodiv offshore hardsub D15-A all depths SP0389",2015-10-03,10,16,"foundation","D15-A",54.32474444,2.934611111
+"10","Biodiv offshore hardsub D15-A all depths SP0390",2015-10-03,10,16,"foundation","D15-A",54.32474444,2.934611111
+"11","Biodiv offshore hardsub D15-A all depths SP0393",2015-10-03,15,16,"foundation","D15-A",54.32474444,2.934611111
+"12","Biodiv offshore hardsub D15-A all depths SP0399",2015-10-04,20,16,"foundation","D15-A",54.32474444,2.934611111
+"13","Biodiv offshore hardsub D15-A all depths SP0400",2015-10-04,20,16,"foundation","D15-A",54.32474444,2.934611111
+"14","Biodiv offshore hardsub D15-A all depths SP0401",2015-10-04,20,16,"foundation","D15-A",54.32474444,2.934611111
+"15","Biodiv offshore hardsub D15-A all depths SP0403",2015-10-04,30,16,"foundation","D15-A",54.32474444,2.934611111
+"16","Biodiv offshore hardsub L10-AD all depths SP0704",2015-10-09,26,43,"scour protection layer","L10-AD",53.40333889,4.200880556
+"17","Biodiv offshore hardsub L10-AD all depths SP0705",2015-10-09,26,43,"scour protection layer","L10-AD",53.40333889,4.200880556
+"18","Biodiv offshore hardsub L10-AP all depths SP0378",2015-10-12,5,40,"foundation","L10-AP",53.2498,4.12483999999999
+"19","Biodiv offshore hardsub L10-AP all depths SP0375",2015-10-12,10,40,"foundation","L10-AP",53.2498,4.12483999999999
+"20","Biodiv offshore hardsub L10-AR all depths SP0088",2014-04-27,14,39,"foundation","L10-AR",53.2474899999999,4.12692999999999
+"21","Biodiv offshore hardsub L10-G all depths SP0176",2014-06-08,11,30,"foundation","L10-G",53.292538,4.114281
+"22","Biodiv offshore hardsub L10-G all depths SP0143",2014-06-08,15,30,"foundation","L10-G",53.292538,4.114281
+"23","Biodiv offshore hardsub L10-G all depths SP0181",2014-06-09,25,30,"foundation","L10-G",53.292538,4.114281
+"24","Biodiv offshore hardsub L15-A all depths SP0120",2014-06-07,6,22,"foundation","L15-A",53.3295409999999,4.830158
+"25","Biodiv offshore hardsub L15-A all depths SP0118",2014-06-07,7,22,"foundation","L15-A",53.3295409999999,4.830158
+"26","Biodiv offshore hardsub L15-A all depths SP0119",2014-06-07,7,22,"foundation","L15-A",53.3295409999999,4.830158
+"27","Biodiv offshore hardsub L15-A all depths SP0130",2014-06-07,10,22,"foundation","L15-A",53.3295409999999,4.830158
+"28","Biodiv offshore hardsub L15-A all depths SP0131",2014-06-07,11,22,"foundation","L15-A",53.3295409999999,4.830158
+"29","Biodiv offshore hardsub L15-A all depths SP0132",2014-06-07,11,22,"foundation","L15-A",53.3295409999999,4.830158
+"30","Biodiv offshore hardsub L15-A all depths SP0133",2014-06-07,11,22,"foundation","L15-A",53.3295409999999,4.830158
+"31","Biodiv offshore hardsub L15-A all depths SP0127",2014-06-07,15,22,"foundation","L15-A",53.3295409999999,4.830158
+"32","Biodiv offshore hardsub L15-A all depths SP0128",2014-06-07,15,22,"foundation","L15-A",53.3295409999999,4.830158
+"33","Biodiv offshore hardsub L15-A all depths SP0129",2014-06-07,15,22,"foundation","L15-A",53.3295409999999,4.830158
+"34","Biodiv offshore hardsub L15-A all depths SP0122",2014-06-07,20,22,"foundation","L15-A",53.3295409999999,4.830158
+"35","Biodiv offshore hardsub L15-A all depths SP0123",2014-06-07,20,22,"foundation","L15-A",53.3295409999999,4.830158
+"36","Biodiv offshore hardsub L15-A all depths SP0124",2014-06-07,20,22,"foundation","L15-A",53.3295409999999,4.830158
+"37","Biodiv offshore hardsub L15-A all depths SP0125",2014-06-07,20,22,"foundation","L15-A",53.3295409999999,4.830158
+"38","Biodiv offshore hardsub L15-A all depths SP0137",2014-06-07,22,22,"scour protection layer","L15-A",53.3295409999999,4.830158
+"39","Biodiv offshore hardsub K9-A all depths SP0192",2014-08-27,0,17,"foundation","K9-A",53.5202416699999,3.99246111099999
+"40","Biodiv offshore hardsub K9-A all depths SP0193",2014-08-27,0,17,"foundation","K9-A",53.5202416699999,3.99246111099999
+"41","Biodiv offshore hardsub K9-A all depths SP0209",2014-08-27,10,17,"foundation","K9-A",53.5202416699999,3.99246111099999
+"42","Biodiv offshore hardsub K9-A all depths SP0206",2014-08-27,15,17,"foundation","K9-A",53.5202416699999,3.99246111099999
+"43","Biodiv offshore hardsub K9-A all depths SP0217",2014-08-29,30,17,"foundation","K9-A",53.5202416699999,3.99246111099999
+"44","Biodiv offshore hardsub K9-A all depths SP0221",2014-08-29,32,17,"scour protection layer","K9-A",53.5202416699999,3.99246111099999
+"45","Biodiv offshore hardsub K9-A all depths SP0222",2014-08-29,32,17,"scour protection layer","K9-A",53.5202416699999,3.99246111099999
+"46","Biodiv offshore hardsub D15-A all depths SP0387",2015-10-03,10,16,"foundation","D15-A",54.32474444,2.934611111
+"47","Biodiv offshore hardsub D15-A all depths SP0391",2015-10-03,15,16,"foundation","D15-A",54.32474444,2.934611111
+"48","Biodiv offshore hardsub D15-A all depths SP0402",2015-10-04,30,16,"foundation","D15-A",54.32474444,2.934611111
+"49","Biodiv offshore hardsub K9-A all depths SP0223",2014-08-29,32,17,"scour protection layer","K9-A",53.5202416699999,3.99246111099999
+"50","Biodiv offshore hardsub L15-A all depths SP0117",2014-06-07,7,22,"foundation","L15-A",53.3295409999999,4.830158
+"51","Biodiv offshore hardsub L10-AD all depths SP0707",2015-10-09,5,43,"foundation","L10-AD",53.40333889,4.200880556
+"52","Biodiv offshore hardsub L10-AD all depths SP0711",2015-10-09,15,43,"foundation","L10-AD",53.40333889,4.200880556
+"53","Biodiv offshore hardsub L10-AD all depths SP0712",2015-10-09,15,43,"foundation","L10-AD",53.40333889,4.200880556
+"54","Biodiv offshore hardsub L10-AD all depths SP0702",2015-10-09,26,43,"scour protection layer","L10-AD",53.40333889,4.200880556
+"55","Biodiv offshore hardsub L10-AD all depths SP0703",2015-10-09,26,43,"scour protection layer","L10-AD",53.40333889,4.200880556
+"56","Biodiv offshore hardsub L10-AP all depths SP0373",2015-10-12,15,40,"foundation","L10-AP",53.2498,4.12483999999999
+"57","Biodiv offshore hardsub L10-AR all depths SP0094",2014-04-28,0,39,"foundation","L10-AR",53.2474899999999,4.12692999999999
+"58","Biodiv offshore hardsub L10-G all depths SP0138",2014-06-08,0,30,"foundation","L10-G",53.292538,4.114281
+"59","Biodiv offshore hardsub L10-G all depths SP0139",2014-06-08,0,30,"foundation","L10-G",53.292538,4.114281
+"60","Biodiv offshore hardsub L10-G all depths SP0141",2014-06-08,0,30,"foundation","L10-G",53.292538,4.114281
+"61","Biodiv offshore hardsub L10-G all depths SP0178",2014-06-08,5,30,"foundation","L10-G",53.292538,4.114281
+"62","Biodiv offshore hardsub L10-G all depths SP0179",2014-06-08,5,30,"foundation","L10-G",53.292538,4.114281
+"63","Biodiv offshore hardsub L10-G all depths SP0177",2014-06-08,11,30,"foundation","L10-G",53.292538,4.114281
+"64","Biodiv offshore hardsub L10-G all depths SP0144",2014-06-08,16,30,"foundation","L10-G",53.292538,4.114281
+"65","Biodiv offshore hardsub L15-A all depths SP0135",2014-06-07,22,22,"scour protection layer","L15-A",53.3295409999999,4.830158
+"66","Biodiv offshore hardsub L15-A all depths SP0136",2014-06-07,22,22,"scour protection layer","L15-A",53.3295409999999,4.830158
+"67","Biodiv offshore hardsub K9-A all depths SP0191",2014-08-27,0,17,"foundation","K9-A",53.5202416699999,3.99246111099999
+"68","Biodiv offshore hardsub K9-A all depths SP0212",2014-08-27,5,17,"foundation","K9-A",53.5202416699999,3.99246111099999
+"69","Biodiv offshore hardsub K9-A all depths SP0213",2014-08-27,5,17,"foundation","K9-A",53.5202416699999,3.99246111099999
+"70","Biodiv offshore hardsub K9-A all depths SP0211",2014-08-27,10,17,"foundation","K9-A",53.5202416699999,3.99246111099999
+"71","Biodiv offshore hardsub K9-A all depths SP0207",2014-08-27,15,17,"foundation","K9-A",53.5202416699999,3.99246111099999
+"72","Biodiv offshore hardsub K9-A all depths SP0218",2014-08-29,20,17,"foundation","K9-A",53.5202416699999,3.99246111099999
+"73","Biodiv offshore hardsub K9-A all depths SP0219",2014-08-29,20,17,"foundation","K9-A",53.5202416699999,3.99246111099999
+"74","Biodiv offshore hardsub K9-A all depths SP0220",2014-08-29,20,17,"foundation","K9-A",53.5202416699999,3.99246111099999
+"75","Biodiv offshore hardsub D15-A all depths SP0405",2015-10-04,0,16,"foundation","D15-A",54.32474444,2.934611111
+"76","Biodiv offshore hardsub D15-A all depths SP0406",2015-10-04,0,16,"foundation","D15-A",54.32474444,2.934611111
+"77","Biodiv offshore hardsub D15-A all depths SP0388",2015-10-03,10,16,"foundation","D15-A",54.32474444,2.934611111
+"78","Biodiv offshore hardsub D15-A all depths SP0392",2015-10-03,15,16,"foundation","D15-A",54.32474444,2.934611111
+"79","Biodiv offshore hardsub Q13-A all depths SP0432",2015-10-06,3,2,"foundation","Q13-A",52.1911083333333,4.13608888888889
+"80","Biodiv offshore hardsub Q13-A all depths SP0071",2015-10-07,21,2,"scour protection layer","Q13-A",52.1911083333333,4.13608888888889
+"81","Biodiv offshore hardsub L10-AD all depths SP0709",2015-10-09,20,43,"foundation","L10-AD",53.40333889,4.200880556
+"82","Biodiv offshore hardsub L10-AR all depths SP0089",2014-04-27,10,39,"foundation","L10-AR",53.2474899999999,4.12692999999999
+"83","Biodiv offshore hardsub L10-G all depths SP0180",2014-06-08,5,30,"foundation","L10-G",53.292538,4.114281
+"84","Biodiv offshore hardsub L10-AP all depths SP0374",2015-10-12,15,40,"foundation","L10-AP",53.2498,4.12483999999999
+"85","Biodiv offshore hardsub L10-AR all depths SP0095",2014-04-28,0,39,"foundation","L10-AR",53.2474899999999,4.12692999999999
+"86","Biodiv offshore hardsub L10-AR all depths SP0096",2014-04-28,0,39,"foundation","L10-AR",53.2474899999999,4.12692999999999
+"87","Biodiv offshore hardsub L10-G all depths SP0140",2014-06-08,0,30,"foundation","L10-G",53.292538,4.114281
+"88","Biodiv offshore hardsub Q13-A all depths SP0074",2015-10-07,21,2,"scour protection layer","Q13-A",52.1911083333333,4.13608888888889
+"89","Biodiv offshore hardsub L10-G all depths SP0183",2014-06-09,25,30,"foundation","L10-G",53.292538,4.114281
+"90","Biodiv offshore hardsub L10-G all depths SP0142",2014-06-08,14,30,"foundation","L10-G",53.292538,4.114281
+"91","Biodiv offshore hardsub L10-G all depths SP0184",2014-06-09,20,30,"foundation","L10-G",53.292538,4.114281
+"92","Biodiv offshore hardsub Q13-A all depths SP0073",2015-10-07,21,2,"scour protection layer","Q13-A",52.1911083333333,4.13608888888889
+"93","Biodiv offshore hardsub L10-AR all depths SP0091",2014-04-27,10,39,"foundation","L10-AR",53.2474899999999,4.12692999999999
+"94","Biodiv offshore hardsub K9-A all depths SP0208",2014-08-27,15,17,"foundation","K9-A",53.5202416699999,3.99246111099999
+"95","Biodiv offshore hardsub L10-AR all depths SP0090",2014-04-27,10,39,"foundation","L10-AR",53.2474899999999,4.12692999999999
+"96","Biodiv offshore hardsub L10-AR all depths SP0087",2014-04-27,15,39,"foundation","L10-AR",53.2474899999999,4.12692999999999
+"97","Biodiv offshore hardsub L10-G all depths SP0145",2014-06-08,10,30,"foundation","L10-G",53.292538,4.114281
+"98","Biodiv offshore hardsub L10-G all depths SP0185",2014-06-09,20,30,"foundation","L10-G",53.292538,4.114281
+"99","Biodiv offshore hardsub L10-AP all depths SP0376",2015-10-12,10,40,"foundation","L10-AP",53.2498,4.12483999999999
+"100","Biodiv offshore hardsub L10-G all depths SP0182",2014-06-09,25,30,"foundation","L10-G",53.292538,4.114281
+"101","Biodiv offshore hardsub K9-A all depths SP0216",2014-08-29,30,17,"foundation","K9-A",53.5202416699999,3.99246111099999
+"102","Biodiv offshore hardsub D15-A all depths SP0404",2015-10-04,30,16,"foundation","D15-A",54.32474444,2.934611111
+"103","Biodiv offshore hardsub L10-AP all depths SP0377",2015-10-12,5,40,"foundation","L10-AP",53.2498,4.12483999999999
+"104","Biodiv offshore hardsub L10-AP all depths SP0379",2015-10-12,20,40,"foundation","L10-AP",53.2498,4.12483999999999
+"105","Biodiv offshore hardsub L10-AP all depths SP0380",2015-10-12,20,40,"foundation","L10-AP",53.2498,4.12483999999999
+"106","Biodiv offshore hardsub L10-AP all depths SP0381",2015-10-12,24,40,"foundation","L10-AP",53.2498,4.12483999999999
+"107","Biodiv offshore hardsub L10-AP all depths SP0382",2015-10-12,24,40,"foundation","L10-AP",53.2498,4.12483999999999
+"108","Biodiv offshore hardsub L10-AR all depths SP0085",2014-04-26,14,39,"foundation","L10-AR",53.2474899999999,4.12692999999999
+"109","Biodiv offshore hardsub L10-G all depths SP0186",2014-06-09,20,30,"foundation","L10-G",53.292538,4.114281
+"110","Biodiv offshore hardsub K9-A all depths SP0190",2014-08-27,0,17,"foundation","K9-A",53.5202416699999,3.99246111099999
+"111","Biodiv offshore hardsub K9-A all depths SP0215",2014-08-29,30,17,"foundation","K9-A",53.5202416699999,3.99246111099999
+"112","Biodiv offshore hardsub L10-AR all depths SP0084",2014-04-26,14,39,"foundation","L10-AR",53.2474899999999,4.12692999999999
+"113","Biodiv offshore hardsub L10-AR all depths SP0086",2014-04-27,15,39,"foundation","L10-AR",53.2474899999999,4.12692999999999
+"114","Biodiv offshore hardsub L10-AR all depths SP0093",2014-04-28,0,39,"foundation","L10-AR",53.2474899999999,4.12692999999999
