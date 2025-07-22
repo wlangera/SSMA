@@ -247,7 +247,7 @@ OK, it is not __exactly__ the same as before, but pretty close. That is because 
 
 Species-common effects are specified with the `row.eff` argument, and work on average abundance at sites. We can combine this with `formula`, but note that the same effect cannot be in `row.eff` and in `formula` for identifiability reasons. There is a separate argument that takes the covariates related to `row.eff`, which is "studyDesign", so the code to fit this model is:
 
-```{r, message=FALSE, echo = -1}
+```{r, message=FALSE}
 model6 <- gllvm(Y, studyDesign = X, row.eff = ~scale(silt_clay) + scale(elevation), family = "poisson", num.lv = 0)
 summary(model6)
 ```
