@@ -85,8 +85,8 @@ JSDMs are geard towards prediction: often on a map. Let's go ahead and do that, 
 
 ```{r}
 download.file("https://raw.githubusercontent.com/BertvanderVeen/GLLVM-workshop/main/data/slope.tif", 
-              destfile = "/tmp/slope.tif", mode = "wb")
-slope <- terra::rast("/tmp/slope.tif")
+              destfile = file.path(tempdir(), "slope.tif"), mode = "wb")
+slope <- terra::rast(file.path(tempdir(), "slope.tif"))
 
 slp_scale = scale(X$SLOPE)
 Xnew = cbind(1, terra::values(slope)-attr(slp_scale,"scaled:center"))/attr(slp_scale,"scaled:scale")
