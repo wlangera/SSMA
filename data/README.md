@@ -1,7 +1,7 @@
 # Data sources
 
 *Alpine*: via [van der Veen et al. (2021)](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13595). Originally by [D'amen et al. (2018)](https://doi.org/10.1111/ecog.03148) <br>
-*Alpine2*: via the jSDM package. Originally by [Choler 2004](https://www.tandfonline.com/doi/full/10.1657/1523-0430%282005%29037%5B0444%3ACSIAPT%5D2.0.CO%3B2#abstract)<br>
+*Alpine2*: via the <tt>jSDM</tt> package. Originally by [Choler 2004](https://www.tandfonline.com/doi/full/10.1657/1523-0430%282005%29037%5B0444%3ACSIAPT%5D2.0.CO%3B2#abstract)<br>
 *Ants*: in <tt>mvabund</tt> . Originally by [Gibb et al. (2015)](https://link.springer.com/article/10.1007/s00442-014-3101-9) <br>
 *BCI*: in <tt>vegan</tt>.<br>
 *Beetles*: via [Niku et al. (2022)](https://onlinelibrary.wiley.com/doi/10.1002/env.2683). Originally by [Ribera et al. (2001)](https://esajournals.onlinelibrary.wiley.com/doi/10.1890/0012-9658%282001%29082%5B1112%3AEOLDAS%5D2.0.CO%3B2) <br>
