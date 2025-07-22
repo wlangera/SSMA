@@ -106,6 +106,7 @@ The latest stable version of all of these packages can be installed from CRAN co
 - rnaturalearth
 - rnaturalearthdata
 - sf
+- terra
 - glmmTMB (mainly for Friday) 
 - mvabund (mainly for Friday)
 - HMSC (mainly for Friday)
