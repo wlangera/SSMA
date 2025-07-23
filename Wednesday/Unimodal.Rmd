@@ -64,9 +64,6 @@ TMB::openmp(parallel::detectCores()-1, autopar=TRUE, DLL = "gllvm")
 
 ![](../questions.jpg){width=40%}
 
-
-# Unimodal, unfolding, y = x^2 is a 2d space in 1 dimension, dissimilar points are close together, connect to alpine plants
-
 # Unimodal model
 
 ## Unimodal responses models and ordination
@@ -591,6 +588,26 @@ res <- rbind(cbind(data.frame(model = "quadratic unequal"), cor(getLV(model3), X
       cbind(data.frame(model = "linear row"), cor(getLV(model5), X)),
       cbind(data.frame(model = "linear"), cor(getLV(model6), X)))
 print(res, row.names = FALSE)
+```
+
+<!--# Unimodal, unfolding, y = x^2 is a 2d space in 1 dimension, dissimilar points are close together, connect to alpine plants
+-->
+
+## Example 2: the elevation gradient
+
+```{r, echo = FALSE, fig.width = 10, fig.height = 6}
+par(mar=c(5,6,2,2))
+ncut = 20
+elevcol <- colorRampPalette(c(
+    "#004529",   # dark green (lowlands)
+    "#78c679",   # light green (foothills)
+    "#ffffcc",   # pale yellow (plains)
+    "#fdae61",   # tan (mid elevation)
+    "#d7191c",   # red-orange (high)
+    "#7f3b08"    # dark brown (highest)
+))
+cols = elevcol(ncut)[(as.numeric(cut(X$ELEV, ncut)))]
+gllvm::ordiplot(model3, symbols = TRUE, s.colors = cols, pch = 16, main = "quadratic model", cex.main = 4, s.cex = 4, cex.lab = 4, rotate = FALSE)
 ```
 
 ## Example 2: curve plotting from common tolerances

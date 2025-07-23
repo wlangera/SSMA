@@ -196,7 +196,7 @@ X2 <- fungi$X
 X2 <- data.frame(lapply(X2, function(x)if(is.numeric(x)){scale(x)}else{as.factor(x)}))
 tree <- fungi$tree
 covMat<- ape::vcv(tree)
-distMat <- ape::vcv(tree)
+distMat <- ape::cophenetic.phylo(tree)
 TR <- fungi$TR
 colnames(TR)[8] <- "Sp.log.vol" # funky column name needs to be changed
 ```

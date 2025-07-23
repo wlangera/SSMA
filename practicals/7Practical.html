@@ -665,7 +665,7 @@ X2 &lt;- fungi$X
 X2 &lt;- data.frame(lapply(X2, function(x)if(is.numeric(x)){scale(x)}else{as.factor(x)}))
 tree &lt;- fungi$tree
 covMat&lt;- ape::vcv(tree)
-distMat &lt;- ape::vcv(tree)
+distMat &lt;- ape::cophenetic.phylo(tree)
 TR &lt;- fungi$TR
 colnames(TR)[8] &lt;- &quot;Sp.log.vol&quot; # funky column name needs to be changed</code></pre>
 <p>We explore the data a little:</p>
