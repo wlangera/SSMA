@@ -81,10 +81,10 @@ The days last from 09:00 to 17:00(ish), and a session after dinner. Each day wil
 |         |<sub>17:00 - 19:30</sub>| Free time + 🍽 Dinner                                        |        |
 |         |<sub>19:30 - 20:30</sub>| Practical 11: Unimodal responses                    |Bert    |
 |---------|-------------|----------------------------------------------------------------|--------|
-|Thursday |<sub>09:00 - 11:45</sub>| 🚶 Excursion                                        |        |
-|         |<sub>11:45 - 12:30</sub>| [Lecture: GLLVMs from A-Z](https://github.com/BertvanderVeen/SSMA/blob/main/Thursday/analysis_A-Z/full_analysis.pdf)                                     |Audun   |
-|         |<sub>12:30 - 13:30</sub>| 🍽 Lunch                                            |        |
-|         |<sub>13:30 - 17:00</sub>| 🎤 Participant presentations                        |        |
+|Thursday |<sub>09:00 - 12:00</sub>| 🚶 Excursion                                        |        |
+|         |<sub>12:00 - 13:00</sub>| 🍽 Lunch                                            |        |
+|         |<sub>13:00 - 13:45</sub>| [Lecture: GLLVMs from A-Z](https://github.com/BertvanderVeen/SSMA/blob/main/Thursday/analysis_A-Z/full_analysis.pdf)                                     |Audun   |
+|         |<sub>13:45 - 17:00</sub>| 🎤 Participant presentations and beyond                        |        |
 |         |<sub>17:00 - 19:30</sub>| Free time + 🍽 Dinner                                        |        |
 |         |<sub>19:30 - 20:30</sub>| (Re)analysing article Part I                        |Bert/Audun|
 |---------|-------------|----------------------------------------------------------------|--------|
