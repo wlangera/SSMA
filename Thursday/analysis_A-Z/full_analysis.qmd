@@ -3,7 +3,7 @@ title: "GLLVMs from A-Å"
 #subtitle: "Using the models in a complete study context"
 institute: "Summer School on model-based multivariate analysis for ecologists"
 author: "Audun Rugstad, Ph.D. candidate"
-date: "April 2025"
+date: "July 24, 2025"
 bibliography: references.bib
 format: 
   beamer:
@@ -810,7 +810,7 @@ In other words:
 
 ## Example 2: Invasive trees in Argentina
 
-From @fernandez2021: Measures of 20 common tree species in rainforest plots in Argentina, where the one of most interest is the invasive broad-leaf privet *Ligustrum Lucidum.*
+From @fernandez2021: Measures of 20 common tree species in forest plots in Argentina, where the focus is on the invasive broad-leaf privet *Ligustrum Lucidum.*
 
 ![Ligustrum lucidum (source: Encyclopedia of life)](graphics/lluc.jpg){width="190"}
 
@@ -873,6 +873,8 @@ Pretty neat!
 
 What kind of data is this anyway
 
+\footnotesize
+
 ```{r}
 #| eval: false
 #| echo: true
@@ -881,11 +883,13 @@ What kind of data is this anyway
 hist(species$L.luc)
 ```
 
-![](graphics/lluchist.png){width="196"}
+![](graphics/lluchist.png){width="165"}
+
+\normalsize
 
 . . .
 
-Positive, continuos, with a lot of zeros -\> The **tweedie** distribution might be a good choice
+Positive, continuous, with a lot of zeros -\> The **tweedie** distribution might be a good choice
 
 ## Model setup
 
@@ -942,7 +946,7 @@ Pretty good, I would say!
 
 Maybe a little less good(?)
 
-## Making inferences
+## Making inferences (with prediction errors)
 
 ```{r fig.width=4, fig.height=2.5}
 
@@ -950,6 +954,8 @@ load("data/fernandes_uc.Rdata")
 ```
 
 **Model 1**
+
+\footnotesize
 
 ```{r fig.width=4, fig.height=2.5}
 #| echo: true
@@ -966,6 +972,8 @@ Seems like L. lucidum is associated with the opposite end of latent variable 1 t
 ## Making inferences
 
 We can also look directly at the estimated correlation between L. lucidum and the other species that the species loadings produce:
+
+\footnotesize
 
 ```{r fig.width=4, fig.height=2.5}
 #| echo: true

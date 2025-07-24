@@ -329,7 +329,7 @@ The model is flexible, $\tikzmarknode{n1}{\textbf{u}_i}$ can be all kinds of thi
 
 \begin{center}
 \textcolor{red}{Essentially a linear mixed-effects model of the latent variable $\textbf{u}_i$}
-\scriptsize{(hiearchcally)}
+\scriptsize{(hierarchically)}
 \end{center}
 
 \pause 

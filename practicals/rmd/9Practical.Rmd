@@ -36,7 +36,7 @@ A basic constrained ordination (similar to e.g., CCA) is fitted as:
 ```{r mod1, cache = TRUE}
 model1  <- gllvm(y = Y, X = X, 
                  lv.formula = ~dist_int_veg+caco+slope+loi+grain_size_stand_f+years_since_n+gf, num.RR = 2, 
-                 family = "orderedBeta", disp.formula = rep(1,ncol(Y)), n.init = 3)
+                 family = "orderedBeta", disp.formula = rep(1,ncol(Y)), n.init = 3, method = "EVA")
 ordiplot(model1)
 ```
 
@@ -63,7 +63,7 @@ You can combine this constrained ordination with species-common effects `row.eff
 model2  <- gllvm(y = Y, X = X, 
                  lv.formula = ~dist_int_veg+caco+slope+loi+grain_size_stand_f+years_since_n+gf, num.RR = 2, 
                  row.eff = ~(1|site/plot), studyDesign = X, 
-                 family = "orderedBeta", disp.formula = rep(1,ncol(Y)))
+                 family = "orderedBeta", disp.formula = rep(1,ncol(Y)), method = "EVA")
 ```
 Here, the difference with the first model is in the specified `row.eff`, which includes a nested random effect of plots in sites, to accommodate the study design. This expands into two terms "under the hood": `~(1|site) + (1|site:plot)`, each of which gets their own variance parameter.
 
@@ -73,7 +73,7 @@ The thing with constrained ordinations, is that if you include the wrong environ
 model3  <- gllvm(y = Y, X = X, 
                  lv.formula = ~dist_int_veg+caco+slope+loi+grain_size_stand_f+years_since_n+gf, num.lv.c = 2, 
                  row.eff = ~(1|site/plot), studyDesign = X, 
-                 family = "orderedBeta", disp.formula = rep(1,ncol(Y)), n.init = 10)
+                 family = "orderedBeta", disp.formula = rep(1,ncol(Y)), n.init = 10, method = "EVA")
 ```
 So that the only difference with the second model, is that we changed `num.RR = 2` to `num.lv.c = 2`, and set `n.init` a little higher. You may get some warnings here; the model has trouble "starting", and from the 10 times that we try, some of the starts do not work out. We do manage to fit the model, after repeatedly trying.
 
@@ -87,12 +87,12 @@ model3 <- knitr::load_cache(label = "mod3", object = "model3", path = "9Practica
 
 model4  <- gllvm(y = Y, X = cbind(X, obs = factor(1:nrow(X))), lv.formula = ~obs, num.RR = 2, 
                  row.eff = ~(1|site/plot), studyDesign = X, 
-                 family = "orderedBeta", disp.formula = rep(1,ncol(Y)))
+                 family = "orderedBeta", disp.formula = rep(1,ncol(Y)), method = "EVA")
 anova(model2, model4)
 
 model5  <- gllvm(y = Y, num.lv = 2, 
                  row.eff = ~(1|site/plot), studyDesign = X, 
-                 family = "orderedBeta", disp.formula = rep(1,ncol(Y)))
+                 family = "orderedBeta", disp.formula = rep(1,ncol(Y)), method = "EVA")
 anova(model3, model5)
 anova(model2, model3)
 ```
@@ -115,7 +115,7 @@ So far, we treated the covariate effects in the ordination as fixed-effects. We 
 
 ```{r mod6, cache = TRUE, warning=FALSE, message=FALSE, fig.width = 10}
 model6 <- gllvm(y = Y, X = X, lv.formula = ~(0+dist_int_veg|1)+(0+caco|1)+(0+slope|1)+(0+loi|1)+(0+grain_size_stand_f|1)+(0+years_since_n|1)+(0+gf|1), num.RR = 2, randomB = "P", 
-                family = "orderedBeta", disp.formula = rep(1,ncol(Y)), n.init = 10)
+                family = "orderedBeta", disp.formula = rep(1,ncol(Y)), n.init = 10, method = "EVA")
 gllvm::ordiplot(model6)
 summary(model6)
 ```
@@ -124,7 +124,7 @@ and
 
 ```{r mod7, cache = TRUE, warning=FALSE, message=FALSE, fig.width = 10}
 model7 <- gllvm(y = Y, X = X, lv.formula = ~(0+dist_int_veg|1)+(0+caco|1)+(0+slope|1)+(0+loi|1)+(0+grain_size_stand_f|1)+(0+years_since_n|1)+(0+gf|1), num.RR = 2, randomB = "LV", 
-                family = "orderedBeta", disp.formula = rep(1,ncol(Y)), n.init = 10)
+                family = "orderedBeta", disp.formula = rep(1,ncol(Y)), n.init = 10, method = "EVA")
 gllvm::ordiplot(model7)
 corrplot::corrplot(getEnvironCor(model7), type = "lower", order = "AOE", diag = FALSE, tl.pos = "l", tl.cex = 0.2, addgrid.col = NA)
 ```
