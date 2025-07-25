@@ -1,6 +1,6 @@
 ---
 title: "Practical: ordination with other packages"
-subtitle: "Physalia workshop on GLLVMs"
+subtitle: "Summer school in model-based multivariate analysis"
 author: "Bert van der Veen"
 output: html_document
 ---
