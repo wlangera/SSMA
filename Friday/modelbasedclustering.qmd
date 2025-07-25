@@ -458,7 +458,7 @@ Things to think about:
 
 
 # Outgoing remarks
-- Model-based clustering ecology is much *less* developed than model-based ordination, both in terms of methods and software;
+- Model-based clustering for ecology is much *less* developed than model-based ordination, both in terms of methods and software;
 - Why do ecologists want to cluster?
 - Model-based hierarchical clustering is a big gap!
 - Conversely, models open up interesting new flavors of clustering e.g., [Bystrova et al., 2021](https://doi.org/10.3389/fevo.2021.601384); [Hui et al., 2024](https://doi.org/10.1093/biomtc/ujad001). 
